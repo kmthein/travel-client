@@ -13,7 +13,7 @@ const { Meta } = Card;
 const OurService = () => {
   return (
     <section className="py-6">
-      <div className="max-w-screen-xl mx-auto my-10">
+      <div className="max-w-screen-xl mx-auto my-20">
         <h2 className="text-center font-bold text-3xl mb-10">Our Services</h2>
         <div className="flex justify-center gap-10 flex-wrap text-center">
           <Card
