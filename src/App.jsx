@@ -3,6 +3,7 @@ import Homepage from "./pages/user/Homepage";
 import Userlayout from "./layouts/Userlayout";
 import Hotelpage from "./pages/user/Hotelpage";
 import Destinationpage from "./pages/user/Destinationpage";
+import FlightAndHotelConfirmation from "./pages/user/FlightAndHotelConfirmation";
 
 function App() {
   const router = createBrowserRouter([

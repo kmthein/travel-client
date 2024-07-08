@@ -12,28 +12,6 @@ import { FaCalendarAlt, FaSearch, FaUser } from "react-icons/fa";
 import beachImg from "../../../assets/img/hotel/beach_hotel_1.jpg";
 
 function Hotel() {
-  const [search, setSearch] = useState("");
-  const [checkInDate, setCheckInDate] = useState(null);
-  const [checkOutDate, setCheckOutDate] = useState(null);
-  const [numberOfGuest, setNumberOfGuest] = useState("1 passenger");
-
-  const disabledCheckInDate = (current) => {
-    // Can not select days before today and today
-    return current && current < new Date();
-  };
-  const disabledCheckOutDate = (current) => {
-    // Can not select days before today and today
-
-    return current && current < new Date();
-  };
-
-  // works when >= 5.6.0, recommended ✅
-  const text = `
-A dog is a type of domesticated animal.
-Known for its loyalty and faithfulness,
-it can be found as a welcome guest in many households across the world.
-`;
-
   const items = [
     {
       key: "1",
@@ -178,6 +156,7 @@ it can be found as a welcome guest in many households across the world.
       </div>
       <div className="flex justify-between m-10">
         <div
+          name="side"
           style={{
             width: "20%",
             margin: "0 auto",
@@ -191,10 +170,9 @@ it can be found as a welcome guest in many households across the world.
             defaultActiveKey={[1, 2, 3]}
           />
         </div>
-        <div>
+        <div name="main" style={{ width: "70%" }}>
           <div
             style={{
-              width: "70%",
               margin: "10px auto",
               padding: "10px",
               border: "1px solid #cad2de",
@@ -209,22 +187,38 @@ it can be found as a welcome guest in many households across the world.
                 margin: "5px",
               }}
             >
-              <Image src={beachImg} />
+              <Image src={beachImg} width="200px" height="200px" />
             </div>
             <div
               style={{
                 width: "70%",
-                backgroundColor: "#2b5bcc",
                 padding: "5px",
                 margin: "5px",
               }}
             >
-              Content
+              <div className="flex justify-between">
+                <p className="text-lg font-bold">
+                  Ngwe Saung Yacht Club and Resort
+                </p>
+                <p className="text-lg font-bold">USD 72</p>
+              </div>
+              <Rate value={5} className="text-sm" />
+              <div className="flex items-center mb-5">
+                <FaLocationDot className="size-4 mr-2 text-blue-400" />
+                <p className="text-base font-semibold text-blue-400">
+                  Beach front, Ngwe Saung Beach
+                </p>
+              </div>
+              <p className="mb-5">This property offers:</p>
+              <div>
+                <Button className="mr-2">Breakfast</Button>
+                <Button className="mr-2">Sea View</Button>
+                <Button className="mr-2">Free Wifi</Button>
+              </div>
             </div>
           </div>
           <div
             style={{
-              width: "70%",
               margin: "10px auto",
               padding: "10px",
               border: "1px solid #cad2de",
@@ -239,21 +233,85 @@ it can be found as a welcome guest in many households across the world.
                 margin: "5px",
               }}
             >
-              <Image src={beachImg} />
+              <Image src={beachImg} width="200px" height="200px" />
             </div>
             <div
               style={{
                 width: "70%",
-                backgroundColor: "#2b5bcc",
                 padding: "5px",
                 margin: "5px",
               }}
             >
-              <h3>Content</h3>
+              <div className="flex justify-between">
+                <p className="text-lg font-bold">
+                  Ngwe Saung Yacht Club and Resort
+                </p>
+                <p className="text-lg font-bold">USD 72</p>
+              </div>
+              <Rate value={5} className="text-sm" />
+              <div className="flex items-center mb-5">
+                <FaLocationDot className="size-4 mr-2 text-blue-400" />
+                <p className="text-base font-semibold text-blue-400">
+                  Beach front, Ngwe Saung Beach
+                </p>
+              </div>
+              <p className="mb-5">This property offers:</p>
+              <div>
+                <Button className="mr-2">Breakfast</Button>
+                <Button className="mr-2">Sea View</Button>
+                <Button className="mr-2">Free Wifi</Button>
+              </div>
+            </div>
+          </div>
+          <div
+            style={{
+              margin: "10px auto",
+              padding: "10px",
+              border: "1px solid #cad2de",
+              borderRadius: "20px",
+              display: "flex",
+            }}
+          >
+            <div
+              style={{
+                width: "30%",
+                padding: "5px",
+                margin: "5px",
+              }}
+            >
+              <Image src={beachImg} width="200px" height="200px" />
+            </div>
+            <div
+              style={{
+                width: "70%",
+                padding: "5px",
+                margin: "5px",
+              }}
+            >
+              <div className="flex justify-between">
+                <p className="text-lg font-bold">
+                  Ngwe Saung Yacht Club and Resort
+                </p>
+                <p className="text-lg font-bold">USD 72</p>
+              </div>
+              <Rate value={5} className="text-sm" />
+              <div className="flex items-center mb-5">
+                <FaLocationDot className="size-4 mr-2 text-blue-400" />
+                <p className="text-base font-semibold text-blue-400">
+                  Beach front, Ngwe Saung Beach
+                </p>
+              </div>
+              <p className="mb-5">This property offers:</p>
+              <div>
+                <Button className="mr-2">Breakfast</Button>
+                <Button className="mr-2">Sea View</Button>
+                <Button className="mr-2">Free Wifi</Button>
+              </div>
             </div>
           </div>
         </div>
       </div>
+      <CustomFooter />
     </div>
   );
 }
