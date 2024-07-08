@@ -1,9 +1,9 @@
 import { Button, Select, DatePicker } from "antd";
 import { useState } from "react";
-import { FaBus, FaCalendarAlt } from "react-icons/fa";
+import { FaCalendarAlt, FaPlane } from "react-icons/fa";
 import { FaLocationDot, FaUser } from "react-icons/fa6";
 
-function BusTicket() {
+const BusTicketSearch = () => {
   const [ticketOption, setTicketOption] = useState("Round Trip");
   const [from, setFrom] = useState("");
   const [destination, setDestination] = useState("");
@@ -55,13 +55,13 @@ function BusTicket() {
         ]}
       />
       <Select
-        placeholder="Start From"
+        placeholder="Flying From"
         style={{
           width: "130px",
         }}
         variant="filled"
         showSearch={true}
-        suffixIcon={<FaBus />}
+        suffixIcon={<FaPlane />}
         onChange={(value) => setFrom(value)}
         options={[
           {
@@ -132,7 +132,6 @@ function BusTicket() {
           onChange={(value) => setReturnDate(value.$d)}
         />
       )}
-
       <Select
         defaultValue={1}
         style={{
@@ -181,6 +180,6 @@ function BusTicket() {
       </Button>
     </div>
   );
-}
+};
 
-export default BusTicket;
+export default BusTicketSearch;

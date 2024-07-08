@@ -3,7 +3,7 @@ import { useState } from "react";
 import { FaCalendarAlt, FaPlane } from "react-icons/fa";
 import { FaLocationDot, FaUser } from "react-icons/fa6";
 
-function FlightAndHotel() {
+const FlightAndHotelSearch = () => {
   const [ticketOption, setTicketOption] = useState("Round Trip");
   const [from, setFrom] = useState("");
   const [destination, setDestination] = useState("");
@@ -226,6 +226,6 @@ function FlightAndHotel() {
       </div>
     </div>
   );
-}
+};
 
-export default FlightAndHotel;
+export default FlightAndHotelSearch;
