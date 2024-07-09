@@ -8,6 +8,9 @@ import HotelPage from "./pages/admin/HotelPage";
 import AirlinePage from "./pages/admin/AirlinePage";
 import BusServicePage from "./pages/admin/BusServicePage";
 import useSearch from "./hooks/useSearch";
+import Hotelpage from "./pages/user/Hotelpage";
+import Destinationpage from "./pages/user/Destinationpage";
+import FlightAndHotelConfirmation from "./pages/user/FlightAndHotelConfirmation";
 
 function App() {
   const {
@@ -28,6 +31,14 @@ function App() {
         {
           index: "/",
           element: <Homepage />,
+        },
+        {
+          path: "/hotel",
+          element: <Hotelpage />,
+        },
+        {
+          path: "/destination",
+          element: <Destinationpage />,
         },
       ],
     },
@@ -62,5 +73,4 @@ function App() {
   ]);
   return <RouterProvider router={router} />;
 }
-
 export default App;

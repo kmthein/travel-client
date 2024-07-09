@@ -2,8 +2,8 @@ import React from "react";
 import Beach from "../../../assets/img/home/beach.png";
 const About = () => {
   return (
-    <div className="max-w-screen-xl mx-auto py-16">
-      <div className="flex items-start space-x-14">
+    <div className="max-w-screen-xl  mx-auto py-16">
+      <div className="flex items-start space-x-14 pt-20">
         <img src={Beach} alt="" />
         <div>
           <h2 className="text-4xl font-bold">
