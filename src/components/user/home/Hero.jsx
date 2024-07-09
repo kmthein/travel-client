@@ -8,56 +8,29 @@ import FlightAndHotel from "../common/FlightAndHotelSearch";
 import BusTicket from "../common/BusTicketSearch";
 import Destinationbox from "../common/Destinationbox";
 import HotelBox from "../common/HotelBox";
-import { Link } from "react-router-dom";
-import { IoMdPerson } from "react-icons/io";
-import { useDispatch, useSelector } from "react-redux";
-import { openModal, uiState } from "../../../features/ui/UiSlice";
-
+import BusAndHotelSearch from "../common/BusAndHotelSearch";
+import Navbar from "../common/Navbar";
+import Video from "../../../assets/video.mp4";
 const Hero = () => {
   const [option, setOption] = useState("destination");
   const handleOption = (o) => {
     setOption(o);
   };
-  const dispatch = useDispatch();
-  const { isModal } = useSelector(uiState);
-  console.log(isModal);
+
   return (
-    <div
-      className="h-screen text-white relative"
-      style={{
-        backgroundImage: `url(${MainImg})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-      }}
-    >
-      <nav className="w-[1660px] mx-auto flex justify-between p-10">
-        <div className="text-3xl font-bold ">
-          Travel<span className="text-blue-600">Trax</span>
-        </div>
-        <ul className="flex space-x-10 items-center text-xl">
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link>Stay</Link>
-          </li>
-          <li>
-            <Link>Flights</Link>
-          </li>
-          <li>
-            <Link>Flight + Hotel</Link>
-          </li>
-          <li>
-            <Link>Packages</Link>
-          </li>
-          <li className="cursor-pointer">
-            <IoMdPerson onClick={() => dispatch(openModal())} />
-          </li>
-        </ul>
-      </nav>
+    <div className="h-screen text-white relative">
+      <video
+        src={Video}
+        autoPlay
+        loop
+        muted
+        className="h-full w-full absolute inset-0 object-cover"
+      />
+      <div className="relative z-40">
+        <Navbar />
+      </div>
       <div className="w-full h-full flex flex-col justify-center">
-        <div className="w-[1660px] mx-auto relative p-8 md:p-12 lg:p-16 rounded-lg z-10">
+        <div className=" mx-auto relative p-8 md:p-12 lg:p-16 rounded-lg z-10">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6">
             Discover Your Perfect Getaway
           </h1>
@@ -132,6 +105,22 @@ const Hero = () => {
               <p className="text-lg md:text-xl">Bus Ticket</p>
               <p className="text-sm text-gray-300">Book your bus rides here</p>
             </div>
+            <div
+              className={`relative flex flex-col items-center gap-2 cursor-pointer ${
+                option === "busandhotel" &&
+                "after:content-[''] after:absolute after:-bottom-1 after:h-[2px] after:bg-yellow-400 after:w-full "
+              }`}
+              onClick={() => handleOption("busandhotel")}
+            >
+              <div className="flex gap-1">
+                <FaBus size={30} />
+                <MdOutlineHotel size={30} />
+              </div>
+              <p className="text-lg md:text-xl">Flight + Hotel</p>
+              <p className="text-sm text-gray-300">
+                Combine flights and hotels for savings
+              </p>
+            </div>
           </div>
           <div className="w-full min-h-[200px] rounded-lg">
             {option === "destination" && <Destinationbox />}
@@ -139,6 +128,7 @@ const Hero = () => {
             {option === "flight" && <FlightTicket />}
             {option === "flightandhotel" && <FlightAndHotel />}
             {option === "bus" && <BusTicket />}
+            {option === "busandhotel" && <BusAndHotelSearch />}
           </div>
         </div>
       </div>

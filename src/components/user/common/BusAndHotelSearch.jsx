@@ -22,10 +22,11 @@ const BusAndHotelSearch = () => {
   return (
     <div
       style={{
-        width: "1100px",
+        width: "100%",
         margin: "20px auto",
         border: "1px solid #cad2de",
         borderRadius: "20px",
+        background: "#fff",
       }}
     >
       <div

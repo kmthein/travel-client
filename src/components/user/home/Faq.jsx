@@ -8,7 +8,7 @@ const { Panel } = Collapse;
 const Faq = () => {
   return (
     <section className="py-20 ">
-      <div className="max-w-screen-xl mx-auto px-6 lg:px-10">
+      <div className="w-[70%] mx-auto px-6 lg:px-10">
         <div className="text-center mb-14">
           <h2 className="text-5xl font-extrabold text-gray-900 mb-6">
             Frequently Asked Questions

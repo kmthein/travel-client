@@ -1,6 +1,6 @@
 import React from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import CustomFooter from "../components/user/common/Footer";
+import Footer from "../components/user/common/Footer";
 import Navbar from "../components/user/common/Navbar";
 import FormModal from "../components/user/common/FormModal";
 
@@ -11,7 +11,7 @@ const Userlayout = () => {
       {pathname !== "/" && <Navbar />}
       <FormModal />
       <Outlet />
-      <CustomFooter />
+      <Footer />
     </>
   );
 };

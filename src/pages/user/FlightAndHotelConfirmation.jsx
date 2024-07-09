@@ -3,10 +3,6 @@ import Heading from "../../components/user/common/Heading";
 import { Steps, Rate, Button, Image } from "antd";
 import { FaBed, FaCheckCircle, FaLongArrowAltRight } from "react-icons/fa";
 
-import CustomFooter from "../../components/user/common/Footer";
-
-import maiImg from "../../assets/mai_logo.jpg";
-
 const FlightAndHotelConfirmation = () => {
   return (
     <div
@@ -17,8 +13,6 @@ const FlightAndHotelConfirmation = () => {
         border: "1px solid black",
       }}
     >
-      <Heading />
-
       <div
         className="flex w-full h-32 bg-blue-100 bg-no-repeat bg-cover"
         style={{ backgroundImage: "url('src/assets/banner.jpg')" }}
@@ -72,7 +66,6 @@ const FlightAndHotelConfirmation = () => {
           }}
         ></div>
       </div>
-      <CustomFooter />
     </div>
   );
 };

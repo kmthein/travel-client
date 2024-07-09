@@ -2,14 +2,14 @@ import React from "react";
 import Beach from "../../../assets/img/home/beach.png";
 const About = () => {
   return (
-    <div className="max-w-screen-xl  mx-auto py-16">
+    <div className="w-[70%]  mx-auto py-16">
       <div className="flex items-start space-x-14 pt-20">
         <img src={Beach} alt="" />
         <div>
           <h2 className="text-4xl font-bold">
             Start Your Ultimate Travel Planning Experience
           </h2>
-          <p className="my-10 text-xl">
+          <p className="my-20 text-xl">
             Welcome to TravelTrax, your trusted partner in seamless travel
             planning. Our mission is to make your travel experience as smooth
             and enjoyable as possible by offering a comprehensive platform where

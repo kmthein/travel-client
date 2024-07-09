@@ -44,7 +44,7 @@ const PopularPlace = () => {
   return (
     <div className="w-full py-16">
       <img src={Journey} alt="journey" className="w-full" />
-      <div className="max-w-screen-xl mx-auto px-6 lg:px-8">
+      <div className="w-[70%] mx-auto px-6 lg:px-8">
         <h2 className="text-4xl font-extrabold text-gray-900 my-12">
           Top Destination to Visit
         </h2>
