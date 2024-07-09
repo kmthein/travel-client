@@ -7,10 +7,11 @@ import DashboardPage from "./pages/admin/DashboardPage";
 import AirlinePage from "./pages/admin/AirlinePage";
 import BusServicePage from "./pages/admin/BusServicePage";
 import Hotelpage from "./pages/user/Hotelpage";
-import DestinationDetailpage from "./pages/user/DestinationDetailpage";
-import Aboutpage from "./pages/user/Aboutpage";
-import DestinationPage from "./pages/admin/DestinationPage";
-import HotelPage from "./pages/admin/HotelPage";
+import Destinationpage from "./pages/user/Destinationpage";
+import FlightClassPage from "./pages/admin/FlightClassPage";
+import BusClassPage from "./pages/admin/BusClassPage";
+import FlightSchedulePage from "./pages/admin/FlightSchedulePage";
+import BusSchedulePage from "./pages/admin/BusSchedulePage";
 
 function App() {
   const router = createBrowserRouter([
