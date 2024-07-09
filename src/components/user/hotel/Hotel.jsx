@@ -7,8 +7,10 @@ import {
   Collapse,
   Checkbox,
   Image,
+  Rate,
 } from "antd";
 import { FaCalendarAlt, FaSearch, FaUser } from "react-icons/fa";
+import { FaLocationDot } from "react-icons/fa6";
 import beachImg from "../../../assets/img/hotel/beach_hotel_1.jpg";
 
 function Hotel() {
@@ -62,6 +64,15 @@ function Hotel() {
       ),
     },
   ];
+
+  const disabledCheckInDate = (current) => {
+    // Can not select days before today and today
+    return current && current < new Date();
+  };
+  const disabledCheckOutDate = (current) => {
+    // Can not select days before today and today
+    return current && current < new Date();
+  };
 
   return (
     <div style={{ width: "90%", margin: "0 auto", border: "1px solid black" }}>
@@ -311,7 +322,6 @@ function Hotel() {
           </div>
         </div>
       </div>
-      <CustomFooter />
     </div>
   );
 }
