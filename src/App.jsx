@@ -69,11 +69,35 @@ function App() {
         },
         {
           path: "airline",
-          element: <AirlinePage />,
+          element: <AirlinePage getColumnSearchProps={getColumnSearchProps} />,
+        },
+        {
+          path: "airline/class",
+          element: (
+            <FlightClassPage getColumnSearchProps={getColumnSearchProps} />
+          ),
+        },
+        {
+          path: "airline/schedule",
+          element: (
+            <FlightSchedulePage getColumnSearchProps={getColumnSearchProps} />
+          ),
         },
         {
           path: "bus",
-          element: <BusServicePage />,
+          element: (
+            <BusServicePage getColumnSearchProps={getColumnSearchProps} />
+          ),
+        },
+        {
+          path: "bus/class",
+          element: <BusClassPage getColumnSearchProps={getColumnSearchProps} />,
+        },
+        {
+          path: "bus/schedule",
+          element: (
+            <BusSchedulePage getColumnSearchProps={getColumnSearchProps} />
+          ),
         },
       ],
     },
