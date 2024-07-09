@@ -24,15 +24,13 @@ const BusTicketSearch = () => {
   return (
     <div
       style={{
-        display: "flex",
         width: "100%",
         margin: "0 auto",
         border: "1px solid #cad2de",
         borderRadius: "20px",
-        padding: "20px",
-        justifyContent: "space-evenly",
         background: "#fff",
       }}
+      className="p-5 space-x-10"
     >
       <Select
         defaultValue="Round Trip"

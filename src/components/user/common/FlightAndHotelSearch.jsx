@@ -30,7 +30,7 @@ const FlightAndHotelSearch = () => {
         border: "1px solid #cad2de",
         borderRadius: "20px",
         background: "#fff",
-        padding: "5px",
+        padding: "10px",
       }}
     >
       <div

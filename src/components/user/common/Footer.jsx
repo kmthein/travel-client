@@ -7,11 +7,9 @@ import {
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
-const { Footer } = Layout;
-
-const CustomFooter = () => (
-  <Footer className="py-4 max-w-screen-xl mx-auto bg-transparent">
-    <div className="flex justify-between items-start">
+const Footer = () => (
+  <footer className="py-4 w-[70%] mx-auto bg-transparent mt-20">
+    <div className="flex justify-between items-start w-full">
       <div className="flex flex-col gap-3">
         <h2 className="text-3xl font-bold">
           Travel <span className="text-blue-400">Trax</span>
@@ -64,7 +62,7 @@ const CustomFooter = () => (
     <div className="container mx-auto text-center ">
       <p className="text-gray-600">© 2024 TravelTrax. All Rights Reserved.</p>
     </div>
-  </Footer>
+  </footer>
 );
 
-export default CustomFooter;
+export default Footer;

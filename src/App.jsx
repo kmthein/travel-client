@@ -11,6 +11,11 @@ import useSearch from "./hooks/useSearch";
 import Hotelpage from "./pages/user/Hotelpage";
 import Destinationpage from "./pages/user/Destinationpage";
 import FlightAndHotelConfirmation from "./pages/user/FlightAndHotelConfirmation";
+import FlightAndHotelSelectFlight from "./pages/user/FlightAndHotelSelectFlight";
+import FlightAndHotelSelectHotel from "./pages/user/FlightAndHotelSelectHotel";
+import FlightAndHotelSelectRoom from "./pages/user/FlightAndHotelSelectRoom";
+import DestinationDetailpage from "./pages/user/DestinationDetailpage";
+import Aboutpage from "./pages/user/Aboutpage";
 
 function App() {
   const {
@@ -33,12 +38,20 @@ function App() {
           element: <Homepage />,
         },
         {
-          path: "/hotel",
+          path: "/hotels",
           element: <Hotelpage />,
         },
         {
           path: "/destination",
           element: <Destinationpage />,
+        },
+        {
+          path: "/destination/:id",
+          element: <DestinationDetailpage />,
+        },
+        {
+          path: "/about",
+          element: <Aboutpage />,
         },
       ],
     },
