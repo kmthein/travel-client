@@ -1,25 +1,16 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Homepage from "./pages/user/Homepage";
 import Userlayout from "./layouts/Userlayout";
-import Hotelpage from "./pages/user/Hotelpage";
 import Destinationpage from "./pages/user/Destinationpage";
-import TravelReceipt from "./pages/user/TravelReceipt";
-import FlightAndHotelConfirmation from "./pages/user/FlightAndHotelConfirmation";
 import AdminLayout from "./layouts/AdminLayout";
 import DashboardPage from "./pages/admin/DashboardPage";
-import DestinationPage from "./pages/admin/DestinationPage";
-import HotelPage from "./pages/admin/HotelPage";
 import AirlinePage from "./pages/admin/AirlinePage";
 import BusServicePage from "./pages/admin/BusServicePage";
-import useSearch from "./hooks/useSearch";
 import Hotelpage from "./pages/user/Hotelpage";
-import Destinationpage from "./pages/user/Destinationpage";
-import FlightAndHotelConfirmation from "./pages/user/FlightAndHotelConfirmation";
-import FlightAndHotelSelectFlight from "./pages/user/FlightAndHotelSelectFlight";
-import FlightAndHotelSelectHotel from "./pages/user/FlightAndHotelSelectHotel";
-import FlightAndHotelSelectRoom from "./pages/user/FlightAndHotelSelectRoom";
 import DestinationDetailpage from "./pages/user/DestinationDetailpage";
 import Aboutpage from "./pages/user/Aboutpage";
+import DestinationPage from "./pages/admin/DestinationPage";
+import HotelPage from "./pages/admin/HotelPage";
 
 function App() {
   const router = createBrowserRouter([

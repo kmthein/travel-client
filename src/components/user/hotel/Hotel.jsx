@@ -10,9 +10,7 @@ import {
   Rate,
 } from "antd";
 import { FaCalendarAlt, FaSearch, FaUser } from "react-icons/fa";
-import { FaLocationDot } from "react-icons/fa6";
 import beachImg from "../../../assets/img/hotel/beach_hotel_1.jpg";
-import { FaLocationDot } from "react-icons/fa6";
 
 function Hotel() {
   const [search, setSearch] = useState("");
