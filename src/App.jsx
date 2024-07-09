@@ -12,6 +12,7 @@ import FlightClassPage from "./pages/admin/FlightClassPage";
 import BusClassPage from "./pages/admin/BusClassPage";
 import FlightSchedulePage from "./pages/admin/FlightSchedulePage";
 import BusSchedulePage from "./pages/admin/BusSchedulePage";
+import DestinationDetailpage from "./pages/user/DestinationDetailpage";
 
 function App() {
   const router = createBrowserRouter([
