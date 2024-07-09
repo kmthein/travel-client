@@ -2,44 +2,60 @@ import { Button, Table } from "antd";
 import React, { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import { Link } from "react-router-dom";
-import BaseForm from "../../components/admin/form/BaseForm";
+import ClassForm from "../../components/admin/form/ClassForm";
 
-const BusServicePage = ({ getColumnSearchProps }) => {
+const FlightClassPage = ({ getColumnSearchProps }) => {
   const dataSource = [
     {
       key: "1",
       image:
-        "https://firebasestorage.googleapis.com/v0/b/travel-3b0bf.appspot.com/o/mai.png?alt=media&token=80606e77-7a5a-40ea-a036-84d99014851c",
-      name: "Myanmar Airways International",
+        "https://firebasestorage.googleapis.com/v0/b/travel-3b0bf.appspot.com/o/ngwesaung1.png?alt=media&token=53cc4e2e-b1a3-4856-b71f-f651e0130942",
+      name: "Economy Class",
+      price: 57,
+      seat: 34,
+      airline: "Air Bagan Airlines",
     },
     {
       key: "2",
       image:
         "https://firebasestorage.googleapis.com/v0/b/travel-3b0bf.appspot.com/o/ngwesaung2.png?alt=media&token=94433001-e67c-40f4-8909-0ab108086406",
-      name: "Myanmar National Airlines",
+      name: "Premium Economy Class",
+      price: 68,
+      seat: 52,
+      airline: "Myanmar National Airlines",
     },
   ];
 
   const columns = [
     {
-      title: "Image",
-      dataIndex: "image",
-      key: "image",
-      render: (text, record) => (
-        <img
-          src={record.image}
-          alt="image"
-          style={{ width: "40%", objectFit: "contain" }}
-        />
-      ),
-      width: "15%",
-    },
-    {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      width: "40%",
+      width: "20%",
       ...getColumnSearchProps("name"),
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
+      width: "20%",
+      ...getColumnSearchProps("price"),
+    },
+    {
+      title: "Total Seat",
+      dataIndex: "seat",
+      key: "seat",
+      width: "20%",
+      ...getColumnSearchProps("seat"),
+    },
+    {
+      title: "Airline",
+      dataIndex: "airline",
+      key: "airline",
+      width: "30%",
+      ...getColumnSearchProps("airline"),
+      sorter: (a, b) => a.airline - b.airline,
+      sortDirections: ["descend", "ascend"],
     },
     {
       title: "Action",
@@ -75,7 +91,7 @@ const BusServicePage = ({ getColumnSearchProps }) => {
     <>
       <div>
         <div className="flex justify-between my-4">
-          <h4 className=" font-semibold">All Bus Services</h4>
+          <h4 className=" font-semibold">All Flight Class</h4>
           <Button
             type="primary"
             icon={<IoMdAdd />}
@@ -88,12 +104,12 @@ const BusServicePage = ({ getColumnSearchProps }) => {
             Add New
           </Button>
         </div>
-        <BaseForm
+        <ClassForm
           open={open}
           setOpen={setOpen}
           editForm={editForm}
-          busForm={true}
           setEditForm={setEditForm}
+          flightClass={true}
         />
       </div>
       <Table dataSource={dataSource} columns={columns} />
@@ -101,4 +117,4 @@ const BusServicePage = ({ getColumnSearchProps }) => {
   );
 };
 
-export default BusServicePage;
+export default FlightClassPage;

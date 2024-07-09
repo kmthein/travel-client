@@ -11,6 +11,10 @@ import useSearch from "./hooks/useSearch";
 import Hotelpage from "./pages/user/Hotelpage";
 import Destinationpage from "./pages/user/Destinationpage";
 import FlightAndHotelConfirmation from "./pages/user/FlightAndHotelConfirmation";
+import FlightClassPage from "./pages/admin/FlightClassPage";
+import BusClassPage from "./pages/admin/BusClassPage";
+import FlightSchedulePage from "./pages/admin/FlightSchedulePage";
+import BusSchedulePage from "./pages/admin/BusSchedulePage";
 
 function App() {
   const {
@@ -62,11 +66,35 @@ function App() {
         },
         {
           path: "airline",
-          element: <AirlinePage />,
+          element: <AirlinePage getColumnSearchProps={getColumnSearchProps} />,
+        },
+        {
+          path: "airline/class",
+          element: (
+            <FlightClassPage getColumnSearchProps={getColumnSearchProps} />
+          ),
+        },
+        {
+          path: "airline/schedule",
+          element: (
+            <FlightSchedulePage getColumnSearchProps={getColumnSearchProps} />
+          ),
         },
         {
           path: "bus",
-          element: <BusServicePage />,
+          element: (
+            <BusServicePage getColumnSearchProps={getColumnSearchProps} />
+          ),
+        },
+        {
+          path: "bus/class",
+          element: <BusClassPage getColumnSearchProps={getColumnSearchProps} />,
+        },
+        {
+          path: "bus/schedule",
+          element: (
+            <BusSchedulePage getColumnSearchProps={getColumnSearchProps} />
+          ),
         },
       ],
     },

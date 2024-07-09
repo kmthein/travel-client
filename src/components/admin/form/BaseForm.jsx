@@ -13,7 +13,14 @@ import { FaPlus, FaTrashAlt } from "react-icons/fa";
 import firebase from "firebase/compat/app";
 import "firebase/compat/storage";
 
-const HotelForm = ({ open, setOpen, editForm, setEditForm }) => {
+const BaseForm = ({
+  open,
+  setOpen,
+  editForm,
+  setEditForm,
+  airlineForm,
+  busForm,
+}) => {
   const [previewImg, setPreviewImg] = useState([]);
   const [images, setImages] = useState([]);
   const [savedImages, setSavedImages] = useState([]);
@@ -91,7 +98,8 @@ const HotelForm = ({ open, setOpen, editForm, setEditForm }) => {
         onFinish={(values) => onCreate(values)}
       >
         <h1 className=" text-xl mb-3 font-medium">
-          {editForm ? "Edit" : "Add New"} Hotel
+          {editForm ? "Edit" : "Add New"}{" "}
+          {airlineForm ? "Airline" : "Bus Service"}
         </h1>
         <Form.Item
           name="name"
@@ -99,57 +107,19 @@ const HotelForm = ({ open, setOpen, editForm, setEditForm }) => {
           rules={[
             {
               required: true,
-              message: "Please input the name of destination!",
+              message: airlineForm
+                ? "Please input the name of airline!"
+                : "Please input the name of bus service!",
             },
           ]}
         >
           <Input />
         </Form.Item>
-        <Form.Item
-          name="description"
-          label="Description"
-          rules={[
-            {
-              required: true,
-              message: "Please select the description of destination!",
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <div className="flex gap-2">
-          <Form.Item
-            name="rating"
-            label="Rating"
-            className="w-[50%]"
-            rules={[
-              {
-                required: true,
-                message: "Please input the rating of destination!",
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="location"
-            label="Location"
-            className="w-[50%]"
-            rules={[
-              {
-                required: true,
-                message: "Please select the location of book!",
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-        </div>
-        <Form.Item name="img" label="Hotel Image">
+        <Form.Item name="img" label={airlineForm ? "Airline Logo" : "Bus Logo"}>
           <div className=" flex gap-2 my-2">
             {previewImg &&
               previewImg.map((img, index) => (
-                <div className=" h-20 relative" key={index}>
+                <div className=" h-40 relative" key={index}>
                   <img
                     src={img}
                     key={index}
@@ -162,13 +132,13 @@ const HotelForm = ({ open, setOpen, editForm, setEditForm }) => {
                 </div>
               ))}
           </div>
-          {
+          {previewImg.length < 1 && (
             <label htmlFor="upload">
               <div className=" border-[2px] border-dashed rounded-md w-full flex items-center h-[100px]">
                 <FaPlus className="mx-auto text-xl cursor-pointer text-black/50 hover:text-black/70 hover:text-[1.3rem]" />
               </div>
             </label>
-          }
+          )}
           <input
             type="file"
             id="upload"
@@ -183,4 +153,4 @@ const HotelForm = ({ open, setOpen, editForm, setEditForm }) => {
   );
 };
 
-export default HotelForm;
+export default BaseForm;

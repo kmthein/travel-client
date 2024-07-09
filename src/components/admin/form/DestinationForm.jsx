@@ -24,8 +24,6 @@ const DestinationForm = ({ open, setOpen, editForm, setEditForm }) => {
 
   const onCreate = async (values) => {
     setConfirmLoading(true);
-    console.log(values);
-    console.log(images);
     for (let i = 0; i < images.length; i++) {
       const selectedFile = images[i];
       const storageRef = firebase.storage().ref();
