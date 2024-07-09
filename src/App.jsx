@@ -10,6 +10,7 @@ import BusServicePage from "./pages/admin/BusServicePage";
 import useSearch from "./hooks/useSearch";
 import Hotelpage from "./pages/user/Hotelpage";
 import Destinationpage from "./pages/user/Destinationpage";
+import TravelReceipt from "./pages/user/TravelReceipt";
 import FlightAndHotelConfirmation from "./pages/user/FlightAndHotelConfirmation";
 import FlightAndHotelSelectFlight from "./pages/user/FlightAndHotelSelectFlight";
 import FlightAndHotelSelectHotel from "./pages/user/FlightAndHotelSelectHotel";
