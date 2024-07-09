@@ -17,6 +17,10 @@ import FlightAndHotelSelectHotel from "./pages/user/FlightAndHotelSelectHotel";
 import FlightAndHotelSelectRoom from "./pages/user/FlightAndHotelSelectRoom";
 import DestinationDetailpage from "./pages/user/DestinationDetailpage";
 import Aboutpage from "./pages/user/Aboutpage";
+import FlightClassPage from "./pages/admin/FlightClassPage";
+import BusClassPage from "./pages/admin/BusClassPage";
+import FlightSchedulePage from "./pages/admin/FlightSchedulePage";
+import BusSchedulePage from "./pages/admin/BusSchedulePage";
 
 function App() {
   const {
