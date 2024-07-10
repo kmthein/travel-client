@@ -21,6 +21,7 @@ import FlightClassPage from "./pages/admin/FlightClassPage";
 import BusClassPage from "./pages/admin/BusClassPage";
 import FlightSchedulePage from "./pages/admin/FlightSchedulePage";
 import BusSchedulePage from "./pages/admin/BusSchedulePage";
+import MemberPage from "./pages/admin/MemberPage";
 
 function App() {
   const {
@@ -67,6 +68,12 @@ function App() {
         {
           index: true,
           element: <DashboardPage />,
+        },
+        {
+          path: "member",
+          element: (
+            <MemberPage getColumnSearchProps={getColumnSearchProps} />
+          ),
         },
         {
           path: "destination",
