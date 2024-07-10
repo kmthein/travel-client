@@ -3,16 +3,12 @@ import { FaLongArrowAltLeft, FaLongArrowAltRight } from "react-icons/fa";
 
 import maiLogo from "../../assets/mai_logo.jpg";
 import beachImg from "../../assets/img/hotel/beach_hotel_1.jpg";
+import { useNavigate } from "react-router-dom";
 
 const TravelReceipt = () => {
+  const navigate = useNavigate();
   return (
-    <div
-      style={{
-        width: "90%",
-        minHeight: "100vh",
-        margin: "0 auto",
-      }}
-    >
+    <div className="w-[70%] mx-auto">
       <div
         className="flex w-full h-32 bg-blue-100 bg-no-repeat bg-cover"
         style={{ backgroundImage: "url('src/assets/banner.jpg')" }}
@@ -144,7 +140,12 @@ const TravelReceipt = () => {
         </div>
       </div>
       <div className="flex justify-end">
-        <Button className="w-32 text-white bg-blue-500 mr-24 my-5">Done</Button>
+        <Button
+          className="w-32 text-white bg-blue-500 mr-24 my-5"
+          onClick={() => navigate("/")}
+        >
+          Done
+        </Button>
       </div>
     </div>
   );

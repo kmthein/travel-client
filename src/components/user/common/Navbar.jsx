@@ -21,7 +21,7 @@ const Navbar = () => {
   const dispatch = useDispatch();
   return (
     <div>
-      <div className="w-[70%] mx-auto flex justify-between p-10 z-20">
+      <div className="w-[70%] mx-auto flex justify-between py-10 z-20">
         <div className="text-3xl font-bold ">
           Travel<span className="text-blue-600">Trax</span>
         </div>

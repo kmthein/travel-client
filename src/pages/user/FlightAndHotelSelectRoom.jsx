@@ -3,8 +3,10 @@ import { Steps, Button, Image } from "antd";
 import { FaBed, FaCheckCircle } from "react-icons/fa";
 
 import roomImg from "../../assets/room.jpg";
+import { useNavigate } from "react-router-dom";
 
 const FlightAndHotelSelectRoom = () => {
+  const navigate = useNavigate();
   return (
     <div className="w-[70%] mx-auto px-4">
       <div
@@ -74,7 +76,10 @@ const FlightAndHotelSelectRoom = () => {
                 <li>Shower</li>
               </ul>
               <div className="flex justify-end mt-4">
-                <Button className="bg-blue-500 text-white p-2">
+                <Button
+                  className="bg-blue-500 text-white p-2"
+                  onClick={() => navigate("/flight")}
+                >
                   Book Room
                 </Button>
               </div>

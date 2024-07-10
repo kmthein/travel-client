@@ -11,11 +11,11 @@ const Aboutpage = () => {
       <div className="relative">
         <img
           src={Tower}
-          className="w-full h-[500px] object-bottom filter brightness-50"
+          className="w-full h-[650px] object-bottom "
           alt="Tower"
         />
-        <h2 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-5xl text-white font-bold">
-          About <span className="text-blue-400">Us</span>
+        <h2 className="absolute text-black top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-5xl font-bold">
+          ABOUT <span className="text-blue-400">US</span>
         </h2>
       </div>
 
@@ -50,24 +50,24 @@ const Aboutpage = () => {
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row items-start mb-16">
-          <div className="w-full md:w-1/2 mb-8 md:mb-0">
+        <div className="flex flex-col md:flex-row items-center mb-16">
+          <div className="w-full  md:w-1/2 mb-8 md:mb-0">
             <Image
               src={AboutImg}
-              className="object-cover w-full h-full rounded-lg shadow-lg"
+              className="object-button w-full  rounded-lg shadow-lg"
               alt="About"
             />
           </div>
-          <div className="w-full md:w-1/2 md:pl-8">
-            <h2 className="text-3xl font-bold mb-6">Who We Are</h2>
-            <p className="text-xl leading-8 mb-10">
+          <div className="w-full md:w-1/2 md:pl-8 flex flex-col justify-center">
+            <h2 className="text-3xl font-bold mb-6">Who Are We</h2>
+            <p className="text-xl leading-9 mb-10">
               Welcome to TravelTrax, your trusted partner in seamless travel
               planning. Our mission is to make your travel experience as smooth
               and enjoyable as possible by offering a comprehensive platform
               where you can book hotels, purchase bus or flight tickets, and
               access a variety of other travel-related services.
             </p>
-            <p className="text-xl leading-8">
+            <p className="text-xl leading-9">
               At TravelTrax, we are a team of passionate travel enthusiasts
               dedicated to revolutionizing the way you plan your journeys. Our
               team combines years of experience in the travel industry with
@@ -77,7 +77,7 @@ const Aboutpage = () => {
           </div>
         </div>
 
-        <div className="flex flex-row-reverse items-start mb-16">
+        <div className="flex flex-row-reverse items-center mb-16">
           <div className="w-full md:w-1/2 mb-8 md:mb-0">
             <Image
               src={Hotel}
@@ -96,7 +96,7 @@ const Aboutpage = () => {
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row items-start mb-16">
+        <div className="flex flex-col md:flex-row items-center mb-16">
           <div className="w-full md:w-1/2 mb-8 md:mb-0">
             <Image
               src={BusandTicket}

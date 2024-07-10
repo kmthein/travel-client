@@ -10,7 +10,6 @@ import Destinationbox from "../common/Destinationbox";
 import HotelBox from "../common/HotelBox";
 import BusAndHotelSearch from "../common/BusAndHotelSearch";
 import Navbar from "../common/Navbar";
-import Video from "../../../assets/video.mp4";
 const Hero = () => {
   const [option, setOption] = useState("destination");
   const handleOption = (o) => {
@@ -18,17 +17,12 @@ const Hero = () => {
   };
 
   return (
-    <div className="h-screen text-white relative">
-      <video
-        src={Video}
-        autoPlay
-        loop
-        muted
-        className="h-full w-full absolute inset-0 object-cover"
-      />
-      <div className="relative z-40">
-        <Navbar />
-      </div>
+    <div
+      className="h-screen text-white relative bg-cover bg-center"
+      style={{ backgroundImage: `url(${MainImg})` }}
+    >
+      <Navbar />
+
       <div className="w-full h-full flex flex-col justify-center">
         <div className=" mx-auto relative p-8 md:p-12 lg:p-16 rounded-lg z-10">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6">

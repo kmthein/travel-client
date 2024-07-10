@@ -127,6 +127,7 @@ function Hotel() {
         <div className="w-1/5">
           <h3 className="mb-4 text-lg font-bold">Your Filters</h3>
           <Collapse
+            className="bg-blue-50/50"
             items={items}
             expandIconPosition="end"
             ghost
@@ -134,6 +135,7 @@ function Hotel() {
           />
         </div>
         <div className="w-4/5">
+          <h2 className="text-2xl font-bold mb-4">All Hotels</h2>
           {[...Array(3)].map((_, index) => (
             <div
               key={index}

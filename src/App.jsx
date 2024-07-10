@@ -1,7 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Homepage from "./pages/user/Homepage";
 import Userlayout from "./layouts/Userlayout";
-import TravelReceipt from "./pages/user/TravelReceipt";
 import AdminLayout from "./layouts/AdminLayout";
 import DashboardPage from "./pages/admin/DashboardPage";
 import DestinationPage from "./pages/admin/DestinationPage";
@@ -11,16 +10,19 @@ import BusServicePage from "./pages/admin/BusServicePage";
 import useSearch from "./hooks/useSearch";
 import Hotelpage from "./pages/user/Hotelpage";
 import Destinationpage from "./pages/user/Destinationpage";
-import FlightAndHotelConfirmation from "./pages/user/FlightAndHotelConfirmation";
-import FlightAndHotelSelectFlight from "./pages/user/FlightAndHotelSelectFlight";
 import FlightAndHotelSelectHotel from "./pages/user/FlightAndHotelSelectHotel";
-import FlightAndHotelSelectRoom from "./pages/user/FlightAndHotelSelectRoom";
 import DestinationDetailpage from "./pages/user/DestinationDetailpage";
 import Aboutpage from "./pages/user/Aboutpage";
 import FlightClassPage from "./pages/admin/FlightClassPage";
 import BusClassPage from "./pages/admin/BusClassPage";
 import FlightSchedulePage from "./pages/admin/FlightSchedulePage";
 import BusSchedulePage from "./pages/admin/BusSchedulePage";
+import Flightpage from "./pages/user/Flightpage";
+import Buspage from "./pages/user/Buspage";
+import FlightAndHotelSelectRoom from "./pages/user/FlightAndHotelSelectRoom";
+import FlightAndHotelSelectFlight from "./pages/user/FlightAndHotelSelectFlight";
+import FlightAndHotelConfirmation from "./pages/user/FlightAndHotelConfirmation";
+import TravelReceipt from "./pages/user/TravelReceipt";
 
 function App() {
   const {
@@ -57,6 +59,34 @@ function App() {
         {
           path: "/about",
           element: <Aboutpage />,
+        },
+        {
+          path: "/flights",
+          element: <Flightpage />,
+        },
+        {
+          path: "/bus",
+          element: <Buspage />,
+        },
+        {
+          path: "/flightandhotel",
+          element: <FlightAndHotelSelectHotel />,
+        },
+        {
+          path: "/room",
+          element: <FlightAndHotelSelectRoom />,
+        },
+        {
+          path: "/flight",
+          element: <FlightAndHotelSelectFlight />,
+        },
+        {
+          path: "/confirmation",
+          element: <FlightAndHotelConfirmation />,
+        },
+        {
+          path: "/travelreceipt",
+          element: <TravelReceipt />,
         },
       ],
     },

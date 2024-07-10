@@ -17,19 +17,13 @@ import wavepayImg from "../../assets/img/icons/wavepay.jpg";
 
 import beachImg from "../../assets/img/hotel/beach_hotel_1.jpg";
 import maiLogo from "../../assets/mai_logo.jpg";
+import { useNavigate } from "react-router-dom";
 
 const FlightAndHotelConfirmation = () => {
   const [paymentMethod, setPaymentMethod] = useState(null);
-
+  const navigate = useNavigate();
   return (
-    <div
-      style={{
-        width: "90%",
-        minHeight: "100vh",
-        margin: "0 auto",
-        border: "1px solid black",
-      }}
-    >
+    <div className="w-[70%] mx-auto">
       <div
         className="flex w-full h-32 bg-blue-100 bg-no-repeat bg-cover"
         style={{ backgroundImage: "url('src/assets/banner.jpg')" }}
@@ -198,8 +192,16 @@ const FlightAndHotelConfirmation = () => {
             <p>$183</p>
           </div>
           <div className="flex justify-end ">
-            <Button className=" m-4 w-32 text-white bg-red-500">Cancel</Button>
-            <Button className=" m-4 w-32 bg-blue-500  text-white">
+            <Button
+              className=" m-4 w-32 text-white bg-red-500"
+              onClick={() => navigate("/")}
+            >
+              Cancel
+            </Button>
+            <Button
+              className=" m-4 w-32 bg-blue-500  text-white"
+              onClick={() => navigate("/travelreceipt")}
+            >
               Confirm
             </Button>
           </div>
