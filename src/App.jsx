@@ -17,13 +17,9 @@ import FlightClassPage from "./pages/admin/FlightClassPage";
 import BusClassPage from "./pages/admin/BusClassPage";
 import FlightSchedulePage from "./pages/admin/FlightSchedulePage";
 import BusSchedulePage from "./pages/admin/BusSchedulePage";
-import DestinationDetailpage from "./pages/user/DestinationDetailpage";
 import Flightpage from "./pages/user/Flightpage";
 import Buspage from "./pages/user/Buspage";
 import FlightAndHotelSelectRoom from "./pages/user/FlightAndHotelSelectRoom";
-import FlightAndHotelSelectFlight from "./pages/user/FlightAndHotelSelectFlight";
-import FlightAndHotelConfirmation from "./pages/user/FlightAndHotelConfirmation";
-import TravelReceipt from "./pages/user/TravelReceipt";
 
 function App() {
   const {
