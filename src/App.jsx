@@ -20,6 +20,9 @@ import BusSchedulePage from "./pages/admin/BusSchedulePage";
 import Flightpage from "./pages/user/Flightpage";
 import Buspage from "./pages/user/Buspage";
 import FlightAndHotelSelectRoom from "./pages/user/FlightAndHotelSelectRoom";
+import useSearch from "./hooks/useSearch";
+import DestinationPage from "./pages/admin/DestinationPage";
+import HotelPage from "./pages/admin/HotelPage";
 
 function App() {
   const {
