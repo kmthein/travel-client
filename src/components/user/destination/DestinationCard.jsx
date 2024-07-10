@@ -5,11 +5,14 @@ import { FaBus, FaHotel } from "react-icons/fa6";
 import { MdOutlineFlight } from "react-icons/md";
 
 import { Card } from "antd";
+import { useNavigate } from "react-router-dom";
 const DestinationCard = ({ img, name, hotel, bus, flight }) => {
+  const navigate = useNavigate();
   return (
     <Card
+      onClick={() => navigate("/destination/1")}
       hoverable
-      className="rounded-lg overflow-hidden p-5 shadow-lg"
+      className="rounded-lg overflow-hidden p-3 shadow-lg"
       cover={
         <img alt="example" src={img} className="object-cover w-full h-48" />
       }

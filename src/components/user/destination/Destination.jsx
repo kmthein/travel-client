@@ -45,11 +45,12 @@ const Destination = () => {
           Search
         </Button>
       </div>
-      <div className="flex flex-wrap justify-between mt-10 space-x-10">
-        <div className="w-[30%]">
+      <div className="flex flex-wrap justify-between mt-10 space-x-3 ">
+        <div className="w-1/5  p-3 rounded-lg">
           <h3 className="mb-4 font-bold text-xl">Your Filters</h3>
           <Collapse
             items={items}
+            className="bg-blue-50/50"
             expandIconPosition="end"
             ghost
             defaultActiveKey={["1", "2"]}
@@ -57,7 +58,7 @@ const Destination = () => {
         </div>
         <div className="flex-1">
           <h2 className="text-2xl font-bold mb-4">All Destinations</h2>
-          <div className="flex flex-wrap gap-10">
+          <div className="flex flex-wrap gap-2">
             <DestinationCard
               img={InLeLake}
               name="InLe Lake"

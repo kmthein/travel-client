@@ -1,34 +1,29 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Homepage from "./pages/user/Homepage";
 import Userlayout from "./layouts/Userlayout";
-<<<<<<< HEAD
-import Destinationpage from "./pages/user/Destinationpage";
-=======
 import TravelReceipt from "./pages/user/TravelReceipt";
->>>>>>> cc62c14c02bbfa9fbd0c031cf3e09ea5626db488
 import AdminLayout from "./layouts/AdminLayout";
 import DashboardPage from "./pages/admin/DashboardPage";
 import AirlinePage from "./pages/admin/AirlinePage";
 import BusServicePage from "./pages/admin/BusServicePage";
 import Hotelpage from "./pages/user/Hotelpage";
 import Destinationpage from "./pages/user/Destinationpage";
-<<<<<<< HEAD
-=======
 import FlightAndHotelConfirmation from "./pages/user/FlightAndHotelConfirmation";
 import FlightAndHotelSelectFlight from "./pages/user/FlightAndHotelSelectFlight";
 import FlightAndHotelSelectHotel from "./pages/user/FlightAndHotelSelectHotel";
-import FlightAndHotelSelectRoom from "./pages/user/FlightAndHotelSelectRoom";
 import DestinationDetailpage from "./pages/user/DestinationDetailpage";
 import Aboutpage from "./pages/user/Aboutpage";
->>>>>>> cc62c14c02bbfa9fbd0c031cf3e09ea5626db488
 import FlightClassPage from "./pages/admin/FlightClassPage";
 import BusClassPage from "./pages/admin/BusClassPage";
 import FlightSchedulePage from "./pages/admin/FlightSchedulePage";
 import BusSchedulePage from "./pages/admin/BusSchedulePage";
-<<<<<<< HEAD
 import DestinationDetailpage from "./pages/user/DestinationDetailpage";
-=======
->>>>>>> cc62c14c02bbfa9fbd0c031cf3e09ea5626db488
+import Flightpage from "./pages/user/Flightpage";
+import Buspage from "./pages/user/Buspage";
+import FlightAndHotelSelectRoom from "./pages/user/FlightAndHotelSelectRoom";
+import FlightAndHotelSelectFlight from "./pages/user/FlightAndHotelSelectFlight";
+import FlightAndHotelConfirmation from "./pages/user/FlightAndHotelConfirmation";
+import TravelReceipt from "./pages/user/TravelReceipt";
 
 function App() {
   const {
@@ -65,6 +60,34 @@ function App() {
         {
           path: "/about",
           element: <Aboutpage />,
+        },
+        {
+          path: "/flights",
+          element: <Flightpage />,
+        },
+        {
+          path: "/bus",
+          element: <Buspage />,
+        },
+        {
+          path: "/flightandhotel",
+          element: <FlightAndHotelSelectHotel />,
+        },
+        {
+          path: "/room",
+          element: <FlightAndHotelSelectRoom />,
+        },
+        {
+          path: "/flight",
+          element: <FlightAndHotelSelectFlight />,
+        },
+        {
+          path: "/confirmation",
+          element: <FlightAndHotelConfirmation />,
+        },
+        {
+          path: "/travelreceipt",
+          element: <TravelReceipt />,
         },
       ],
     },
