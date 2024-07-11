@@ -1,25 +1,11 @@
 import { Button, Table } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import { Link } from "react-router-dom";
 import BaseForm from "../../components/admin/form/BaseForm";
+import { getAllAirline } from "../../api/airlineapi";
 
 const AirlinePage = ({ getColumnSearchProps }) => {
-  const dataSource = [
-    {
-      key: "1",
-      image:
-        "https://firebasestorage.googleapis.com/v0/b/travel-3b0bf.appspot.com/o/mai.png?alt=media&token=80606e77-7a5a-40ea-a036-84d99014851c",
-      name: "Myanmar Airways International",
-    },
-    {
-      key: "2",
-      image:
-        "https://firebasestorage.googleapis.com/v0/b/travel-3b0bf.appspot.com/o/ngwesaung2.png?alt=media&token=94433001-e67c-40f4-8909-0ab108086406",
-      name: "Myanmar National Airlines",
-    },
-  ];
-
   const columns = [
     {
       title: "Image",
@@ -27,7 +13,7 @@ const AirlinePage = ({ getColumnSearchProps }) => {
       key: "image",
       render: (text, record) => (
         <img
-          src={record.image}
+          src={record.image ? record.image.imgUrl : ""}
           alt="image"
           style={{ width: "40%", objectFit: "contain" }}
         />
@@ -50,7 +36,7 @@ const AirlinePage = ({ getColumnSearchProps }) => {
           <span
             className=" cursor-pointer"
             onClick={() => {
-              setSelectedBookId(record.key);
+              setSelectedAirlineId(record.id);
               setOpen(true);
               setEditForm(true);
             }}
@@ -68,9 +54,29 @@ const AirlinePage = ({ getColumnSearchProps }) => {
   const [data, setData] = useState([]);
   const [editForm, setEditForm] = useState(false);
   const [open, setOpen] = useState(false);
+  const [selectedAirlineId, setSelectedAirlineId] = useState(null);
+
+  const getAirLines = async () => {
+    try {
+      let res = await getAllAirline();
+      const modifiedData = res.data.map((d) => {
+        return {
+          ...d,
+          key: d.id,
+          image: d.image[0],
+        };
+      });
+      setData(modifiedData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const showModal = () => {
     setOpen(true);
   };
+  useEffect(() => {
+    getAirLines();
+  }, [open]);
   return (
     <>
       <div>
@@ -94,9 +100,11 @@ const AirlinePage = ({ getColumnSearchProps }) => {
           editForm={editForm}
           airlineForm={true}
           setEditForm={setEditForm}
+          selectedAirlineId={selectedAirlineId}
+          getAirLines={getAirLines}
         />
       </div>
-      <Table dataSource={dataSource} columns={columns} />
+      <Table dataSource={data} columns={columns} />
     </>
   );
 };
