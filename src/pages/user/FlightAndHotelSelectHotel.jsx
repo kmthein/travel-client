@@ -80,7 +80,7 @@ const FlightAndHotelSelectHotel = () => {
               <div className="flex justify-end">
                 <Button
                   className="bg-blue-500 text-white p-3"
-                  onClick={() => navigate("/room")}
+                  onClick={() => navigate("/flightandroom")}
                 >
                   Select Room
                 </Button>

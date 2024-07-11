@@ -23,6 +23,10 @@ import FlightAndHotelSelectRoom from "./pages/user/FlightAndHotelSelectRoom";
 import useSearch from "./hooks/useSearch";
 import DestinationPage from "./pages/admin/DestinationPage";
 import HotelPage from "./pages/admin/HotelPage";
+import BusAndHotelSelectBus from "./pages/user/BusAndHotelSelectBus";
+import BusAndHotelSelectHotel from "./pages/user/BusAndHotelSelectHotel";
+import BusAndHotelSelectRoom from "./pages/user/BusAndHotelSelectRoom";
+import BusAndHotelConfirmation from "./pages/user/BusAndHotelConfirmation";
 
 function App() {
   const {
@@ -65,7 +69,7 @@ function App() {
           element: <Flightpage />,
         },
         {
-          path: "/bus",
+          path: "/buses",
           element: <Buspage />,
         },
         {
@@ -73,7 +77,7 @@ function App() {
           element: <FlightAndHotelSelectHotel />,
         },
         {
-          path: "/room",
+          path: "/flightandroom",
           element: <FlightAndHotelSelectRoom />,
         },
         {
@@ -81,12 +85,28 @@ function App() {
           element: <FlightAndHotelSelectFlight />,
         },
         {
-          path: "/confirmation",
+          path: "/flightconfirmation",
           element: <FlightAndHotelConfirmation />,
         },
         {
           path: "/travelreceipt",
           element: <TravelReceipt />,
+        },
+        {
+          path: "/busandhotel",
+          element: <BusAndHotelSelectHotel />,
+        },
+        {
+          path: "/busandroom",
+          element: <BusAndHotelSelectRoom />,
+        },
+        {
+          path: "/bus",
+          element: <BusAndHotelSelectBus />,
+        },
+        {
+          path: "/busconfirmation",
+          element: <BusAndHotelConfirmation />,
         },
       ],
     },

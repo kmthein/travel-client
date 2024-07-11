@@ -156,7 +156,7 @@ const FlightAndHotelConfirmation = () => {
                 src={maiLogo}
                 width="200px"
                 height="150px"
-                className="p-3"
+                className="p-3 object-cover"
               />
               <div className="w-full m-3">
                 <div className="flex justify-between ">

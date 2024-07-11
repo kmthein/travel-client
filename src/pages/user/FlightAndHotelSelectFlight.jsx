@@ -55,7 +55,7 @@ const FlightAndHotelSelectFlight = () => {
           >
             <div className="w-2/5 m-1 p-1 flex items-center">
               <Image
-                className="inline-block"
+                className="inline-block object-contain"
                 src={maiImg}
                 width="150px"
                 height="150px"
@@ -79,8 +79,8 @@ const FlightAndHotelSelectFlight = () => {
             <div className="w-1/5 m-1 p-1 flex flex-col justify-between">
               <p className="text-lg font-bold text-right">+ USD 72</p>
               <Button
-                className="bg-blue-500 p-3 w-full"
-                onClick={() => navigate("/confirmation")}
+                className="bg-blue-500 p-3 w-full text-white"
+                onClick={() => navigate("/flightconfirmation")}
               >
                 Select
               </Button>

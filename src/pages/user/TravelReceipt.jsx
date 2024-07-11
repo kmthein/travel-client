@@ -86,7 +86,12 @@ const TravelReceipt = () => {
           </div>
           <div className="flex m-5">
             <div className="w-1/4">
-              <Image src={maiLogo} width="150px" height="150px" />
+              <Image
+                src={maiLogo}
+                width="150px"
+                height="150px"
+                className="object-cover"
+              />
             </div>
             <div className="w-1/4">
               <p className="mb-2">From</p>
@@ -121,7 +126,12 @@ const TravelReceipt = () => {
           </div>
           <div className="flex m-5">
             <div className="w-1/4">
-              <Image src={maiLogo} width="150px" height="150px" />
+              <Image
+                src={maiLogo}
+                width="150px"
+                height="150px"
+                className="object-cover"
+              />
             </div>
             <div className="w-1/4">
               <p className="mb-2">From</p>

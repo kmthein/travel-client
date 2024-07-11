@@ -2,8 +2,10 @@ import { FaHotel, FaLocationDot, FaBus } from "react-icons/fa6";
 import { Steps, Rate, Button, Image } from "antd";
 import { FaBed, FaCheckCircle } from "react-icons/fa";
 import beachImg from "../../assets/img/hotel/beach_hotel_1.jpg";
+import { useNavigate } from "react-router-dom";
 
 const BusAndHotelSelectHotel = () => {
+  const navigate = useNavigate();
   return (
     <div className="w-[70%] mx-auto px-4">
       <div
@@ -75,7 +77,10 @@ const BusAndHotelSelectHotel = () => {
                 <Button className="mr-2 mb-2">Free Wifi</Button>
               </div>
               <div className="flex justify-end">
-                <Button className="bg-blue-500 text-white p-3">
+                <Button
+                  className="bg-blue-500 text-white p-3"
+                  onClick={() => navigate("/busandroom")}
+                >
                   Select Room
                 </Button>
               </div>

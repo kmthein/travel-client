@@ -3,8 +3,10 @@ import { Steps, Button, Image } from "antd";
 import { FaBed, FaCheckCircle, FaLongArrowAltRight } from "react-icons/fa";
 
 import busLogo2 from "../../assets/img/bus/busLogo2.jpg";
+import { useNavigate } from "react-router-dom";
 
 const BusAndHotelSelectBus = () => {
+  const navigate = useNavigate();
   return (
     <div className="w-[70%] mx-auto">
       <div
@@ -77,7 +79,12 @@ const BusAndHotelSelectBus = () => {
             </div>
             <div className="w-1/5 m-1 p-1 flex flex-col justify-between">
               <p className="text-lg font-bold text-right">+ USD 72</p>
-              <Button className="bg-blue-500 p-3 w-full">Select</Button>
+              <Button
+                className="bg-blue-500 p-3 w-full text-white"
+                onClick={() => navigate("/busconfirmation")}
+              >
+                Select
+              </Button>
             </div>
           </div>
         ))}

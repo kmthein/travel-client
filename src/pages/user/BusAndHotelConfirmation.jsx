@@ -17,19 +17,13 @@ import wavepayImg from "../../assets/img/icons/wavepay.jpg";
 
 import beachImg from "../../assets/img/hotel/beach_hotel_1.jpg";
 import busLogo2 from "../../assets/img/bus/busLogo2.jpg";
+import { useNavigate } from "react-router-dom";
 
 const BusAndHotelConfirmation = () => {
   const [paymentMethod, setPaymentMethod] = useState(null);
-
+  const navigate = useNavigate();
   return (
-    <div
-      style={{
-        width: "90%",
-        minHeight: "100vh",
-        margin: "0 auto",
-        border: "1px solid black",
-      }}
-    >
+    <div className="w-[70%] mx-auto">
       <div
         className="flex w-full h-32 bg-blue-100 bg-no-repeat bg-cover"
         style={{ backgroundImage: "url('src/assets/banner.jpg')" }}
@@ -162,7 +156,7 @@ const BusAndHotelConfirmation = () => {
                 src={busLogo2}
                 width="200px"
                 height="150px"
-                className="p-3"
+                className="p-3 object-contain"
               />
               <div className="w-full m-3">
                 <div className="flex justify-between ">
@@ -199,7 +193,10 @@ const BusAndHotelConfirmation = () => {
           </div>
           <div className="flex justify-end ">
             <Button className=" m-4 w-32 text-white bg-red-500">Cancel</Button>
-            <Button className=" m-4 w-32 bg-blue-500  text-white">
+            <Button
+              className=" m-4 w-32 bg-blue-500  text-white"
+              onClick={() => navigate("/")}
+            >
               Confirm
             </Button>
           </div>
