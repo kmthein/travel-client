@@ -1,26 +1,39 @@
-import { Button, Table } from "antd";
-import React, { useState } from "react";
+import { Button, message, notification, Table } from "antd";
+import React, { useEffect, useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import { Link } from "react-router-dom";
 import DestinationForm from "../../components/admin/form/DestinationForm";
+import { getAllDestinations } from "../../api/destination";
+import noImg from "../../assets/img/common/no_img.jpg";
 
 const DestinationPage = ({ getColumnSearchProps }) => {
-  const dataSource = [
-    {
-      key: "1",
-      name: "Yangon",
-      country: "Myanmar",
-      highlight: "Sunset Viewing",
-      topPlaces: "Shwedagon Pagoda, Sule Pagoda",
-    },
-    {
-      key: "2",
-      name: "Bagan",
-      country: "Myanmar",
-      highlight: "Hot Air Balloon Rides, Cycling Tours, Sunset Viewing",
-      topPlaces: "Ananda Temple, Shwezigon Pagoda, Dhammayangyi Temple",
-    },
-  ];
+  const [dataSource, setDataSource] = useState([]);
+  const [editForm, setEditForm] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+
+  const getAllDestinationHandler = async () => {
+    try {
+      const response = await getAllDestinations();
+      console.log(response.data);
+      const modifiedData = response.data.map((d) => {
+        return {
+          key: d.id,
+          name: d.name,
+          country: d.country,
+          highlight: d.highlight == "undefined" ? "-" : d.highlight,
+          topPlaces: d.topPlace == "undefined" ? "-" : d.topPlace,
+          ...d,
+          image: d.image[0],
+        };
+      });
+      setDataSource(modifiedData);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    getAllDestinationHandler();
+  }, []);
 
   const columns = [
     {
@@ -28,7 +41,11 @@ const DestinationPage = ({ getColumnSearchProps }) => {
       dataIndex: "image",
       key: "image",
       render: (text, record) => (
-        <img src={record.image} alt="image" style={{ width: "100%" }} />
+        <img
+          src={record.image ? record.image.imgUrl : noImg}
+          alt="image"
+          style={{ width: "100%" }}
+        />
       ),
       width: "10%",
     },
@@ -69,7 +86,7 @@ const DestinationPage = ({ getColumnSearchProps }) => {
           <span
             className=" cursor-pointer"
             onClick={() => {
-              setSelectedBookId(record.key);
+              setSelectedId(record.key);
               setOpen(true);
               setEditForm(true);
             }}
@@ -84,15 +101,15 @@ const DestinationPage = ({ getColumnSearchProps }) => {
     },
   ];
 
-  const [data, setData] = useState([]);
-  const [editForm, setEditForm] = useState(false);
-  const [open, setOpen] = useState(false);
   const showModal = () => {
     setOpen(true);
   };
 
+  const [api, contextHolder] = message.useMessage();
+
   return (
     <>
+      {contextHolder}
       <div>
         <div className="flex justify-between my-4">
           <h4 className=" font-semibold">All Destinations</h4>
@@ -113,6 +130,8 @@ const DestinationPage = ({ getColumnSearchProps }) => {
           setOpen={setOpen}
           editForm={editForm}
           setEditForm={setEditForm}
+          selectedId={selectedId}
+          getAllDestinationHandler={getAllDestinationHandler}
         />
       </div>
       <Table dataSource={dataSource} columns={columns} />

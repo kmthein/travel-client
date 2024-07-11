@@ -1,29 +1,65 @@
 import {
   Form,
   Input,
+  message,
   Modal,
   Radio,
   Select,
   Space,
   Upload,
-  notification,
 } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaPlus, FaTrashAlt } from "react-icons/fa";
 import firebase from "firebase/compat/app";
 import "firebase/compat/storage";
+import {
+  createDestination,
+  getDestinationById,
+} from "../../../api/destination";
 
-const DestinationForm = ({ open, setOpen, editForm, setEditForm }) => {
+const DestinationForm = ({
+  open,
+  setOpen,
+  editForm,
+  setEditForm,
+  selectedId,
+  getAllDestinationHandler,
+}) => {
   const [previewImg, setPreviewImg] = useState([]);
   const [images, setImages] = useState([]);
   const [savedImages, setSavedImages] = useState([]);
   const [imgCount, setImgCount] = useState(0);
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const [deleteImgIds, setDeleteImgIds] = useState([]);
 
   const [form] = Form.useForm();
 
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const getOldDestinationHandler = async () => {
+    try {
+      const response = await getDestinationById({ id: selectedId });
+      const { name, country, description, highlight, topPlace } = response.data;
+      form.setFieldValue("name", name);
+      form.setFieldValue("country", country);
+      form.setFieldValue("description", description || "-");
+      form.setFieldValue("highlight", highlight || "-");
+      form.setFieldValue("topPlace", topPlace);
+      const oldImages = response.data.image.map((i) => {
+        return i;
+      });
+      setPreviewImg([...oldImages]);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    setDeleteImgIds([]);
+    getOldDestinationHandler();
+  }, [editForm]);
+
   const onCreate = async (values) => {
     setConfirmLoading(true);
+    const imgAry = [];
     for (let i = 0; i < images.length; i++) {
       const selectedFile = images[i];
       const storageRef = firebase.storage().ref();
@@ -31,12 +67,22 @@ const DestinationForm = ({ open, setOpen, editForm, setEditForm }) => {
 
       const snapshot = await fileRef.put(selectedFile);
       const downloadURL = await snapshot.ref.getDownloadURL();
-      console.log(downloadURL);
+      imgAry.push(downloadURL);
     }
-    await console.log("All image uploaded");
+    const formData = new FormData();
+    for (const key in values) {
+      formData.append(key, values[key]);
+    }
+    formData.append("img_urls", imgAry);
+    let response;
+    if (editForm) {
+    } else {
+      response = await createDestination(formData);
+    }
     setConfirmLoading(false);
     form.resetFields();
     setOpen(false);
+    getAllDestinationHandler();
   };
 
   const handleCancel = () => {
@@ -45,7 +91,11 @@ const DestinationForm = ({ open, setOpen, editForm, setEditForm }) => {
     setEditForm(false);
   };
 
+  console.log(deleteImgIds);
+
   const deleteHandler = (img) => {
+    setDeleteImgIds((prev) => [...prev, img.id]);
+    console.log(img);
     const indexToDelete = previewImg.findIndex((e) => e == img);
     if (indexToDelete != -1) {
       const updatedSelectedImg = [...images];
@@ -139,13 +189,13 @@ const DestinationForm = ({ open, setOpen, editForm, setEditForm }) => {
         <Form.Item name="topPlace" label="Top Places">
           <Input />
         </Form.Item>
-        <Form.Item name="img" label="Destination Image">
+        <Form.Item label="Destination Image">
           <div className=" flex gap-2 my-2">
             {previewImg &&
               previewImg.map((img, index) => (
                 <div className=" h-20 relative" key={index}>
                   <img
-                    src={img}
+                    src={editForm ? img.imgUrl : img}
                     key={index}
                     className="w-full h-full object-contain rounded-md"
                   />
