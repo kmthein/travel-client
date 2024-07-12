@@ -8,10 +8,20 @@ import {
   Upload,
   notification,
 } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaPlus, FaTrashAlt } from "react-icons/fa";
 import firebase from "firebase/compat/app";
 import "firebase/compat/storage";
+import {
+  createAirline,
+  getAirlineById,
+  updateAirline,
+} from "../../../api/airlineapi";
+import {
+  createBusService,
+  getBusById,
+  updateBusService,
+} from "../../../api/busservice";
 
 const BaseForm = ({
   open,
@@ -20,28 +30,69 @@ const BaseForm = ({
   setEditForm,
   airlineForm,
   busForm,
+  selectedAirlineId,
+  getAirLines,
+  getAllBus,
+  selectedBusId,
 }) => {
   const [previewImg, setPreviewImg] = useState([]);
   const [images, setImages] = useState([]);
-  const [savedImages, setSavedImages] = useState([]);
   const [imgCount, setImgCount] = useState(0);
   const [confirmLoading, setConfirmLoading] = useState(false);
-
   const [form] = Form.useForm();
-
+  useEffect(() => {
+    if (editForm) {
+      handleEdit(airlineForm ? selectedAirlineId : selectedBusId);
+    }
+  }, [editForm]);
   const onCreate = async (values) => {
     setConfirmLoading(true);
+    const formdata = new FormData();
+    let downloadURL;
     for (let i = 0; i < images.length; i++) {
       const selectedFile = images[i];
       const storageRef = firebase.storage().ref();
       const fileRef = storageRef.child(selectedFile.name);
-
       const snapshot = await fileRef.put(selectedFile);
-      const downloadURL = await snapshot.ref.getDownloadURL();
-      console.log(downloadURL);
+      downloadURL = await snapshot.ref.getDownloadURL();
     }
-    await console.log("All image uploaded");
+    if (airlineForm) {
+      if (!editForm) {
+        formdata.append("name", values.name);
+        formdata.append("imgUrl", downloadURL);
+        createAirline(formdata);
+      } else {
+        formdata.append("name", values.name);
+        if (downloadURL) {
+          formdata.append("imgUrl", downloadURL);
+        } else {
+          formdata.append("imgUrl", previewImg[0]);
+        }
+        updateAirline(selectedAirlineId, formdata);
+      }
+      await getAirLines();
+    }
+
+    if (busForm) {
+      if (busForm && !editForm) {
+        formdata.append("name", values.name);
+        formdata.append("imgUrl", downloadURL);
+        createBusService(formdata);
+      } else {
+        formdata.append("name", values.name);
+        if (downloadURL) {
+          formdata.append("imgUrl", downloadURL);
+        } else {
+          formdata.append("imgUrl", previewImg[0]);
+        }
+        updateBusService(selectedBusId, formdata);
+      }
+      await getAllBus();
+    }
+
     setConfirmLoading(false);
+    setPreviewImg([]);
+    setImages([]);
     form.resetFields();
     setOpen(false);
   };
@@ -51,7 +102,21 @@ const BaseForm = ({
     setOpen(false);
     setEditForm(false);
   };
-
+  const handleEdit = async (id) => {
+    let response;
+    try {
+      if (airlineForm) {
+        response = await getAirlineById(id);
+      } else if (busForm) {
+        response = await getBusById(id);
+      }
+      const { name, image } = response.data;
+      setPreviewImg([image[0].imgUrl]);
+      form.setFieldValue("name", name);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   const deleteHandler = (img) => {
     const indexToDelete = previewImg.findIndex((e) => e == img);
     if (indexToDelete != -1) {

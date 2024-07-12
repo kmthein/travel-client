@@ -1,26 +1,27 @@
-import {
-  Form,
-  Input,
-  Modal,
-  Radio,
-  Select,
-  Space,
-  Upload,
-  notification,
-} from "antd";
-import React, { useState } from "react";
-import { FaPlus, FaTrashAlt } from "react-icons/fa";
-import firebase from "firebase/compat/app";
+import { Form, Input, Modal, Select } from "antd";
+import React, { useEffect, useState } from "react";
 import "firebase/compat/storage";
+import { getAllAirline } from "../../../api/airlineapi";
+import { getAllBusServices } from "../../../api/busservice";
+import { createAirlineClass } from "../../../api/airlineclass";
 
 const ClassForm = ({ open, setOpen, editForm, setEditForm, flightClass }) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
-
+  const [transport, setTransport] = useState([]);
   const [form] = Form.useForm();
 
   const onCreate = async (values) => {
+    const formData = new FormData();
+    if (!editForm) {
+      if (flightClass) {
+        formData.append("name", values.name);
+        formData.append("price", values.price);
+        formData.append("validSeat", values.validSeat);
+        formData.append("airlineId", values.airlineId);
+        createAirlineClass(formData);
+      }
+    }
     setConfirmLoading(true);
-    await console.log("All image uploaded");
     setConfirmLoading(false);
     form.resetFields();
     setOpen(false);
@@ -31,28 +32,29 @@ const ClassForm = ({ open, setOpen, editForm, setEditForm, flightClass }) => {
     setOpen(false);
     setEditForm(false);
   };
-
-  const allAirlines = [
-    {
-      value: 1,
-      label: "Myanmar National Airlines",
-    },
-    {
-      value: 2,
-      label: "Air Bagan Airlines",
-    },
-  ];
-
-  const allBus = [
-    {
-      value: 1,
-      label: "GI Group Express",
-    },
-    {
-      value: 2,
-      label: "High Boss Express",
-    },
-  ];
+  useEffect(() => {
+    getTransportName();
+  }, []);
+  const getTransportName = async () => {
+    let response;
+    try {
+      if (flightClass) {
+        response = await getAllAirline();
+      } else {
+        response = await getAllBusServices();
+      }
+      setTransport(
+        response.data.map((res) => {
+          return {
+            value: res.id,
+            label: res.name,
+          };
+        })
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <Modal
@@ -106,7 +108,7 @@ const ClassForm = ({ open, setOpen, editForm, setEditForm, flightClass }) => {
               style={{
                 width: "100%",
               }}
-              options={allAirlines}
+              options={transport}
             />
           </Form.Item>
         ) : (
@@ -121,12 +123,11 @@ const ClassForm = ({ open, setOpen, editForm, setEditForm, flightClass }) => {
             ]}
           >
             <Select
-              // defaultValue={oldBook ? oldBook?.author?.name : "Select One"}
               defaultValue={"Select One"}
               style={{
                 width: "100%",
               }}
-              options={allBus}
+              options={transport}
             />
           </Form.Item>
         )}
