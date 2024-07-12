@@ -27,6 +27,7 @@ import BusAndHotelSelectBus from "./pages/user/BusAndHotelSelectBus";
 import BusAndHotelSelectHotel from "./pages/user/BusAndHotelSelectHotel";
 import BusAndHotelSelectRoom from "./pages/user/BusAndHotelSelectRoom";
 import BusAndHotelConfirmation from "./pages/user/BusAndHotelConfirmation";
+import MemberPage from "./pages/admin/MemberPage";
 
 function App() {
   const {
@@ -117,6 +118,10 @@ function App() {
         {
           index: true,
           element: <DashboardPage />,
+        },
+        {
+          path: "member",
+          element: <MemberPage getColumnSearchProps={getColumnSearchProps} />,
         },
         {
           path: "destination",

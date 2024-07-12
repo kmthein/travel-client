@@ -7,6 +7,7 @@ import { MdAirlines } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { Menu } from "antd";
 import { css } from "@emotion/react";
+import { BsPerson } from "react-icons/bs";
 
 const { SubMenu } = Menu;
 
@@ -27,7 +28,7 @@ const customMenuStyle = css`
     line-height: 60px;
     border-radius: 0;
     width: 100% !important;
-    padding-left: 60px !important;
+    padding-left: 20% !important;
   }
 
   .ant-menu-item-selected {
@@ -75,18 +76,21 @@ const Sidebar = () => {
         defaultSelectedKeys={["/admin"]}
         mode="inline"
       >
-        <Menu.Item key="/admin" icon={<ImHome3 className="text-xl" />}>
+        <Menu.Item key="/admin" icon={<ImHome3 style={{fontSize: "17px"}} />}>
           Dashboard
         </Menu.Item>
-        <Menu.Item key="destination" icon={<FaCity className="text-xl" />}>
+        <Menu.Item key="member" icon={<BsPerson style={{fontSize: "17px"}} />}>
+          Member
+        </Menu.Item>
+        <Menu.Item key="destination" icon={<FaCity style={{fontSize: "17px"}} />}>
           Destination
         </Menu.Item>
-        <Menu.Item key="hotel" icon={<FaHotel className="text-xl" />}>
+        <Menu.Item key="hotel" icon={<FaHotel style={{fontSize: "17px"}} />}>
           Hotel
         </Menu.Item>
         <SubMenu
           key="sub1"
-          icon={<MdAirlines className="text-xl" />}
+          icon={<MdAirlines style={{fontSize: "17px"}} />}
           title="Flight Service"
         >
           <Menu.Item key="airline">Airline</Menu.Item>
@@ -95,7 +99,7 @@ const Sidebar = () => {
         </SubMenu>
         <SubMenu
           key="sub2"
-          icon={<BiBus className="text-xl" />}
+          icon={<BiBus style={{fontSize: "17px"}} />}
           title="Bus Service"
         >
           <Menu.Item key="bus">Bus Operator</Menu.Item>
