@@ -1,4 +1,4 @@
-import { Button, message, notification, Table } from "antd";
+import { Button, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import { Link } from "react-router-dom";
@@ -15,13 +15,13 @@ const DestinationPage = ({ getColumnSearchProps }) => {
   const getAllDestinationHandler = async () => {
     try {
       const response = await getAllDestinations();
-      console.log(response.data);
+      console.log("load");
       const modifiedData = response.data.map((d) => {
         return {
           key: d.id,
           name: d.name,
           country: d.country,
-          highlight: d.highlight == "undefined" ? "-" : d.highlight,
+          highlights: d.highlight == "undefined" ? "-" : d.highlight,
           topPlaces: d.topPlace == "undefined" ? "-" : d.topPlace,
           ...d,
           image: d.image[0],
@@ -30,6 +30,8 @@ const DestinationPage = ({ getColumnSearchProps }) => {
       setDataSource(modifiedData);
     } catch (error) {}
   };
+
+  console.log(dataSource);
 
   useEffect(() => {
     getAllDestinationHandler();
@@ -65,10 +67,10 @@ const DestinationPage = ({ getColumnSearchProps }) => {
     },
     {
       title: "Highlights",
-      dataIndex: "highlight",
-      key: "highlight",
+      dataIndex: "highlights",
+      key: "highlights",
       width: "30%",
-      ...getColumnSearchProps("highlight"),
+      ...getColumnSearchProps("highlights"),
     },
     {
       title: "Top Places",
@@ -105,11 +107,8 @@ const DestinationPage = ({ getColumnSearchProps }) => {
     setOpen(true);
   };
 
-  const [api, contextHolder] = message.useMessage();
-
   return (
     <>
-      {contextHolder}
       <div>
         <div className="flex justify-between my-4">
           <h4 className=" font-semibold">All Destinations</h4>
@@ -120,6 +119,7 @@ const DestinationPage = ({ getColumnSearchProps }) => {
             onClick={() => {
               showModal();
               setEditForm(false);
+              setSelectedId(null);
             }}
           >
             Add New

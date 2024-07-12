@@ -15,6 +15,7 @@ import "firebase/compat/storage";
 import {
   createDestination,
   getDestinationById,
+  updateDestination,
 } from "../../../api/destination";
 
 const DestinationForm = ({
@@ -34,17 +35,18 @@ const DestinationForm = ({
 
   const [form] = Form.useForm();
 
-  const [messageApi, contextHolder] = message.useMessage();
-
   const getOldDestinationHandler = async () => {
     try {
       const response = await getDestinationById({ id: selectedId });
       const { name, country, description, highlight, topPlace } = response.data;
       form.setFieldValue("name", name);
       form.setFieldValue("country", country);
-      form.setFieldValue("description", description || "-");
-      form.setFieldValue("highlight", highlight || "-");
-      form.setFieldValue("topPlace", topPlace);
+      form.setFieldValue("description", description);
+      form.setFieldValue(
+        "highlight",
+        highlight == "undefined" ? "-" : highlight
+      );
+      form.setFieldValue("topPlace", topPlace == "undefined" ? "-" : topPlace);
       const oldImages = response.data.image.map((i) => {
         return i;
       });
@@ -53,35 +55,45 @@ const DestinationForm = ({
   };
 
   useEffect(() => {
+    form.resetFields();
+    setPreviewImg([]);
+    setImages([]);
     setDeleteImgIds([]);
     getOldDestinationHandler();
-  }, [editForm]);
+  }, [editForm, selectedId]);
 
   const onCreate = async (values) => {
     setConfirmLoading(true);
     const imgAry = [];
-    for (let i = 0; i < images.length; i++) {
-      const selectedFile = images[i];
-      const storageRef = firebase.storage().ref();
-      const fileRef = storageRef.child(selectedFile.name);
-
-      const snapshot = await fileRef.put(selectedFile);
-      const downloadURL = await snapshot.ref.getDownloadURL();
-      imgAry.push(downloadURL);
-    }
     const formData = new FormData();
     for (const key in values) {
       formData.append(key, values[key]);
     }
-    formData.append("img_urls", imgAry);
+    if (images && images.length > 0) {
+      for (let i = 0; i < images.length; i++) {
+        const selectedFile = images[i];
+        const storageRef = firebase.storage().ref();
+        const fileRef = storageRef.child(selectedFile.name);
+
+        const snapshot = await fileRef.put(selectedFile);
+        const downloadURL = await snapshot.ref.getDownloadURL();
+        imgAry.push(downloadURL);
+      }
+      formData.append("img_urls", imgAry);
+    }
     let response;
     if (editForm) {
+      if (deleteImgIds.length > 0) {
+        formData.append("delete_ids", deleteImgIds);
+      }
+      response = await updateDestination({ id: selectedId, data: formData });
     } else {
       response = await createDestination(formData);
     }
     setConfirmLoading(false);
-    form.resetFields();
     setOpen(false);
+    form.resetFields();
+    setEditForm(false);
     getAllDestinationHandler();
   };
 
@@ -90,8 +102,6 @@ const DestinationForm = ({
     setOpen(false);
     setEditForm(false);
   };
-
-  console.log(deleteImgIds);
 
   const deleteHandler = (img) => {
     setDeleteImgIds((prev) => [...prev, img.id]);
@@ -116,7 +126,7 @@ const DestinationForm = ({
     setImgCount((prev) => prev + selectedImagesArray.length);
 
     const previewImagesArray = selectedImagesArray.map((img) => {
-      return URL.createObjectURL(img);
+      return { imgUrl: URL.createObjectURL(img) };
     });
     setPreviewImg((prev) => prev.concat(previewImagesArray));
   };
@@ -195,7 +205,7 @@ const DestinationForm = ({
               previewImg.map((img, index) => (
                 <div className=" h-20 relative" key={index}>
                   <img
-                    src={editForm ? img.imgUrl : img}
+                    src={img.imgUrl}
                     key={index}
                     className="w-full h-full object-contain rounded-md"
                   />

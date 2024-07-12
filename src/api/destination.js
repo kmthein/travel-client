@@ -27,6 +27,15 @@ export const createDestination = async (payload) => {
   }
 };
 
+export const updateDestination = async ({ id, data }) => {
+  try {
+    const response = await api.put(`/api/destination/${id}`, data);
+    return response;
+  } catch (error) {
+    return error.response;
+  }
+};
+
 export const deleteDestination = async ({ id }) => {
   try {
     const response = await api.delete(`/api/destination/${id}`);
