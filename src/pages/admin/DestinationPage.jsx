@@ -15,7 +15,6 @@ const DestinationPage = ({ getColumnSearchProps }) => {
   const getAllDestinationHandler = async () => {
     try {
       const response = await getAllDestinations();
-      console.log("load");
       const modifiedData = response.data.map((d) => {
         return {
           key: d.id,
@@ -30,8 +29,6 @@ const DestinationPage = ({ getColumnSearchProps }) => {
       setDataSource(modifiedData);
     } catch (error) {}
   };
-
-  console.log(dataSource);
 
   useEffect(() => {
     getAllDestinationHandler();

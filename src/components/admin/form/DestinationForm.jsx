@@ -1,13 +1,4 @@
-import {
-  Form,
-  Input,
-  message,
-  Modal,
-  Radio,
-  Select,
-  Space,
-  Upload,
-} from "antd";
+import { Form, Input, Modal } from "antd";
 import React, { useEffect, useState } from "react";
 import { FaPlus, FaTrashAlt } from "react-icons/fa";
 import firebase from "firebase/compat/app";
@@ -78,6 +69,7 @@ const DestinationForm = ({
         const snapshot = await fileRef.put(selectedFile);
         const downloadURL = await snapshot.ref.getDownloadURL();
         imgAry.push(downloadURL);
+        console.log(downloadURL);
       }
       formData.append("img_urls", imgAry);
     }
@@ -121,7 +113,7 @@ const DestinationForm = ({
   const onChangeHandler = (e) => {
     const selectedImages = e.target.files;
     const selectedImagesArray = Array.from(selectedImages);
-    setImages(selectedImagesArray);
+    setImages(images.concat(selectedImagesArray));
 
     setImgCount((prev) => prev + selectedImagesArray.length);
 
