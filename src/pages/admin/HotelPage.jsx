@@ -75,7 +75,6 @@ const HotelPage = ({ getColumnSearchProps }) => {
           <span
             className=" cursor-pointer"
             onClick={() => {
-              setSelectedBookId(record.key);
               setOpen(true);
               setEditForm(true);
             }}

@@ -1,25 +1,11 @@
 import { Button, Table } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import { Link } from "react-router-dom";
 import BaseForm from "../../components/admin/form/BaseForm";
+import { getAllBusServices } from "../../api/busservice";
 
 const BusServicePage = ({ getColumnSearchProps }) => {
-  const dataSource = [
-    {
-      key: "1",
-      image:
-        "https://firebasestorage.googleapis.com/v0/b/travel-3b0bf.appspot.com/o/mai.png?alt=media&token=80606e77-7a5a-40ea-a036-84d99014851c",
-      name: "Myanmar Airways International",
-    },
-    {
-      key: "2",
-      image:
-        "https://firebasestorage.googleapis.com/v0/b/travel-3b0bf.appspot.com/o/ngwesaung2.png?alt=media&token=94433001-e67c-40f4-8909-0ab108086406",
-      name: "Myanmar National Airlines",
-    },
-  ];
-
   const columns = [
     {
       title: "Image",
@@ -27,7 +13,7 @@ const BusServicePage = ({ getColumnSearchProps }) => {
       key: "image",
       render: (text, record) => (
         <img
-          src={record.image}
+          src={record.image ? record.image.imgUrl : ""}
           alt="image"
           style={{ width: "40%", objectFit: "contain" }}
         />
@@ -50,7 +36,7 @@ const BusServicePage = ({ getColumnSearchProps }) => {
           <span
             className=" cursor-pointer"
             onClick={() => {
-              setSelectedBookId(record.key);
+              setSelectedBusId(record.id);
               setOpen(true);
               setEditForm(true);
             }}
@@ -68,8 +54,27 @@ const BusServicePage = ({ getColumnSearchProps }) => {
   const [data, setData] = useState([]);
   const [editForm, setEditForm] = useState(false);
   const [open, setOpen] = useState(false);
+  const [selectedBusId, setSelectedBusId] = useState(null);
+  useEffect(() => {
+    getAllBus();
+  }, [open]);
   const showModal = () => {
     setOpen(true);
+  };
+  const getAllBus = async () => {
+    try {
+      let res = await getAllBusServices();
+      const modifiedData = res.data.map((d) => {
+        return {
+          ...d,
+          key: d.id,
+          image: d.image[0],
+        };
+      });
+      setData(modifiedData);
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <>
@@ -94,9 +99,11 @@ const BusServicePage = ({ getColumnSearchProps }) => {
           editForm={editForm}
           busForm={true}
           setEditForm={setEditForm}
+          getAllBus={getAllBus}
+          selectedBusId={selectedBusId}
         />
       </div>
-      <Table dataSource={dataSource} columns={columns} />
+      <Table dataSource={data} columns={columns} />
     </>
   );
 };

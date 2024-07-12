@@ -1,8 +1,8 @@
 import { api } from "../config/axios";
 
-export const createAirline = async (payload) => {
+export const createBusService = async (payload) => {
   try {
-    const response = await api.post("/api/airlines", payload, {
+    const response = await api.post("/api/bus-services", payload, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -13,27 +13,28 @@ export const createAirline = async (payload) => {
   }
 };
 
-export const getAllAirline = async () => {
+export const getAllBusServices = async () => {
   try {
-    const response = await api.get("/api/airlines");
+    const response = await api.get("/api/bus-services");
     return response;
   } catch (error) {
     return error.response;
   }
 };
 
-export const getAirlineById = async (id) => {
+export const getBusById = async (id) => {
   try {
-    const response = await api.get(`/api/airlines/${id}`);
+    const response = await api.get(`/api/bus-services/${id}`);
     return response;
   } catch (error) {
     return error.response;
   }
 };
 
-export const updateAirline = async (id, payload) => {
+export const updateBusService = async (id, payload) => {
+  console.log(id);
   try {
-    const response = await api.put(`/api/airlines/${id}`, payload, {
+    const response = await api.put(`/api/bus-services/${id}`, payload, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

@@ -17,6 +17,11 @@ import {
   getAirlineById,
   updateAirline,
 } from "../../../api/airlineapi";
+import {
+  createBusService,
+  getBusById,
+  updateBusService,
+} from "../../../api/busservice";
 
 const BaseForm = ({
   open,
@@ -27,6 +32,8 @@ const BaseForm = ({
   busForm,
   selectedAirlineId,
   getAirLines,
+  getAllBus,
+  selectedBusId,
 }) => {
   const [previewImg, setPreviewImg] = useState([]);
   const [images, setImages] = useState([]);
@@ -35,7 +42,7 @@ const BaseForm = ({
   const [form] = Form.useForm();
   useEffect(() => {
     if (editForm) {
-      handleEdit(selectedAirlineId);
+      handleEdit(airlineForm ? selectedAirlineId : selectedBusId);
     }
   }, [editForm]);
   const onCreate = async (values) => {
@@ -49,18 +56,38 @@ const BaseForm = ({
       const snapshot = await fileRef.put(selectedFile);
       downloadURL = await snapshot.ref.getDownloadURL();
     }
-    if (airlineForm && !editForm) {
-      formdata.append("name", values.name);
-      formdata.append("imgUrl", downloadURL);
-      createAirline(formdata);
-    } else {
-      formdata.append("name", values.name);
-      if (downloadURL) {
+    if (airlineForm) {
+      if (!editForm) {
+        formdata.append("name", values.name);
         formdata.append("imgUrl", downloadURL);
+        createAirline(formdata);
       } else {
-        formdata.append("imgUrl", previewImg[0]);
+        formdata.append("name", values.name);
+        if (downloadURL) {
+          formdata.append("imgUrl", downloadURL);
+        } else {
+          formdata.append("imgUrl", previewImg[0]);
+        }
+        updateAirline(selectedAirlineId, formdata);
       }
-      updateAirline(selectedAirlineId, formdata);
+      await getAirLines();
+    }
+
+    if (busForm) {
+      if (busForm && !editForm) {
+        formdata.append("name", values.name);
+        formdata.append("imgUrl", downloadURL);
+        createBusService(formdata);
+      } else {
+        formdata.append("name", values.name);
+        if (downloadURL) {
+          formdata.append("imgUrl", downloadURL);
+        } else {
+          formdata.append("imgUrl", previewImg[0]);
+        }
+        updateBusService(selectedBusId, formdata);
+      }
+      await getAllBus();
     }
 
     setConfirmLoading(false);
@@ -68,7 +95,6 @@ const BaseForm = ({
     setImages([]);
     form.resetFields();
     setOpen(false);
-    await getAirLines();
   };
 
   const handleCancel = () => {
@@ -77,8 +103,13 @@ const BaseForm = ({
     setEditForm(false);
   };
   const handleEdit = async (id) => {
+    let response;
     try {
-      const response = await getAirlineById(id);
+      if (airlineForm) {
+        response = await getAirlineById(id);
+      } else if (busForm) {
+        response = await getBusById(id);
+      }
       const { name, image } = response.data;
       setPreviewImg([image[0].imgUrl]);
       form.setFieldValue("name", name);
