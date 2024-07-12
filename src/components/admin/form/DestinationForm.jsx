@@ -1,42 +1,100 @@
 import {
   Form,
   Input,
+  message,
   Modal,
   Radio,
   Select,
   Space,
   Upload,
-  notification,
 } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaPlus, FaTrashAlt } from "react-icons/fa";
 import firebase from "firebase/compat/app";
 import "firebase/compat/storage";
+import {
+  createDestination,
+  getDestinationById,
+  updateDestination,
+} from "../../../api/destination";
 
-const DestinationForm = ({ open, setOpen, editForm, setEditForm }) => {
+const DestinationForm = ({
+  open,
+  setOpen,
+  editForm,
+  setEditForm,
+  selectedId,
+  getAllDestinationHandler,
+}) => {
   const [previewImg, setPreviewImg] = useState([]);
   const [images, setImages] = useState([]);
   const [savedImages, setSavedImages] = useState([]);
   const [imgCount, setImgCount] = useState(0);
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const [deleteImgIds, setDeleteImgIds] = useState([]);
 
   const [form] = Form.useForm();
 
+  const getOldDestinationHandler = async () => {
+    try {
+      const response = await getDestinationById({ id: selectedId });
+      const { name, country, description, highlight, topPlace } = response.data;
+      form.setFieldValue("name", name);
+      form.setFieldValue("country", country);
+      form.setFieldValue("description", description);
+      form.setFieldValue(
+        "highlight",
+        highlight == "undefined" ? "-" : highlight
+      );
+      form.setFieldValue("topPlace", topPlace == "undefined" ? "-" : topPlace);
+      const oldImages = response.data.image.map((i) => {
+        return i;
+      });
+      setPreviewImg([...oldImages]);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    form.resetFields();
+    setPreviewImg([]);
+    setImages([]);
+    setDeleteImgIds([]);
+    getOldDestinationHandler();
+  }, [editForm, selectedId]);
+
   const onCreate = async (values) => {
     setConfirmLoading(true);
-    for (let i = 0; i < images.length; i++) {
-      const selectedFile = images[i];
-      const storageRef = firebase.storage().ref();
-      const fileRef = storageRef.child(selectedFile.name);
-
-      const snapshot = await fileRef.put(selectedFile);
-      const downloadURL = await snapshot.ref.getDownloadURL();
-      console.log(downloadURL);
+    const imgAry = [];
+    const formData = new FormData();
+    for (const key in values) {
+      formData.append(key, values[key]);
     }
-    await console.log("All image uploaded");
+    if (images && images.length > 0) {
+      for (let i = 0; i < images.length; i++) {
+        const selectedFile = images[i];
+        const storageRef = firebase.storage().ref();
+        const fileRef = storageRef.child(selectedFile.name);
+
+        const snapshot = await fileRef.put(selectedFile);
+        const downloadURL = await snapshot.ref.getDownloadURL();
+        imgAry.push(downloadURL);
+      }
+      formData.append("img_urls", imgAry);
+    }
+    let response;
+    if (editForm) {
+      if (deleteImgIds.length > 0) {
+        formData.append("delete_ids", deleteImgIds);
+      }
+      response = await updateDestination({ id: selectedId, data: formData });
+    } else {
+      response = await createDestination(formData);
+    }
     setConfirmLoading(false);
-    form.resetFields();
     setOpen(false);
+    form.resetFields();
+    setEditForm(false);
+    getAllDestinationHandler();
   };
 
   const handleCancel = () => {
@@ -46,6 +104,8 @@ const DestinationForm = ({ open, setOpen, editForm, setEditForm }) => {
   };
 
   const deleteHandler = (img) => {
+    setDeleteImgIds((prev) => [...prev, img.id]);
+    console.log(img);
     const indexToDelete = previewImg.findIndex((e) => e == img);
     if (indexToDelete != -1) {
       const updatedSelectedImg = [...images];
@@ -66,7 +126,7 @@ const DestinationForm = ({ open, setOpen, editForm, setEditForm }) => {
     setImgCount((prev) => prev + selectedImagesArray.length);
 
     const previewImagesArray = selectedImagesArray.map((img) => {
-      return URL.createObjectURL(img);
+      return { imgUrl: URL.createObjectURL(img) };
     });
     setPreviewImg((prev) => prev.concat(previewImagesArray));
   };
@@ -139,13 +199,13 @@ const DestinationForm = ({ open, setOpen, editForm, setEditForm }) => {
         <Form.Item name="topPlace" label="Top Places">
           <Input />
         </Form.Item>
-        <Form.Item name="img" label="Destination Image">
+        <Form.Item label="Destination Image">
           <div className=" flex gap-2 my-2">
             {previewImg &&
               previewImg.map((img, index) => (
                 <div className=" h-20 relative" key={index}>
                   <img
-                    src={img}
+                    src={img.imgUrl}
                     key={index}
                     className="w-full h-full object-contain rounded-md"
                   />
