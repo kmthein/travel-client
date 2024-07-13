@@ -74,16 +74,17 @@ const Destination = () => {
         </div>
         <div className="flex-1">
           <h2 className="text-2xl font-bold mb-4">All Destinations</h2>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-[20px]">
             {destinations &&
               destinations.length > 0 &&
               destinations.map((destination) => (
                 <DestinationCard
                   img={destination?.image[0]?.imgUrl}
                   name={destination?.name}
-                  hotel={destination?.hotelList.length || "0"}
-                  bus={destination?.busArrivalPlaces.length || "0"}
-                  flight={destination?.flightArrivalPlaces.length || "0"}
+                  description={destination?.description}
+                  hotel={destination?.hotelList?.length || "0"}
+                  bus={destination?.busArriveTo?.length || "0"}
+                  flight={destination?.flightArriveTo?.length || "0"}
                   key={destination?.id}
                   id={destination?.id}
                 />

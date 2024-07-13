@@ -38,3 +38,6 @@
 .img_scroll::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+.card_gap {
+  width: calc(33.3% - 13.4px);
+}

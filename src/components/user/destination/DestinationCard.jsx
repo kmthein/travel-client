@@ -6,13 +6,21 @@ import { MdOutlineFlight } from "react-icons/md";
 
 import { Card } from "antd";
 import { useNavigate } from "react-router-dom";
-const DestinationCard = ({ img, name, hotel, bus, flight, id }) => {
+const DestinationCard = ({
+  img,
+  name,
+  hotel,
+  bus,
+  flight,
+  id,
+  description,
+}) => {
   const navigate = useNavigate();
   return (
     <Card
       onClick={() => navigate(`/destination/${id}`)}
       hoverable
-      className="rounded-lg overflow-hidden p-3 shadow-lg"
+      className="rounded-lg overflow-hidden p-3 shadow-lg card_gap"
       cover={
         <img alt="example" src={img} className="object-cover w-full h-48" />
       }
@@ -55,11 +63,10 @@ const DestinationCard = ({ img, name, hotel, bus, flight, id }) => {
                 </div>
               )}
             </div>
-            <ul className="mt-4 text-sm text-gray-700 list-disc list-inside">
-              <li>Tour combo with return airport transfer</li>
-              <li>City Tour</li>
-              <li>Curious Corner</li>
-            </ul>
+            <p className="mt-4 text-sm text-gray-700 list-disc list-inside">
+              {description.slice(0, 80)}
+              {description.length > 80 && "..."}
+            </p>
           </div>
         }
       />
