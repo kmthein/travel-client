@@ -5,7 +5,7 @@ const DestinationDetail = ({ destination }) => {
   const [selectImgIndex, setSelectImgIndex] = useState(0);
 
   return (
-    <div className="flex items-start gap-8 mb-8">
+    <div className="flex items-start gap-8 min-h-[85vh]">
       <div className="w-[45%]">
         <div className="w-full h-[60vh] mb-2 rounded-md">
           <img
@@ -18,7 +18,7 @@ const DestinationDetail = ({ destination }) => {
             className="object-cover w-full h-full rounded-md"
           />
         </div>
-        <div className="flex items-center gap-3 img_scroll">
+        <div className={`flex items-center gap-3 overflow-x-scroll img_scroll`}>
           {destination?.image &&
             destination.image.length > 0 &&
             destination.image.map((img, i) => (
@@ -27,7 +27,7 @@ const DestinationDetail = ({ destination }) => {
                 key={i}
                 preview={false}
                 onClick={() => setSelectImgIndex(i)}
-                className="w-[25%] h-28 border rounded-md"
+                className="w-[25%] h-28 border rounded-md cursor-pointer"
               />
             ))}
         </div>

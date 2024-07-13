@@ -3,6 +3,7 @@ import MAI from "../../../assets/mai_logo.jpg";
 import { Link } from "react-router-dom";
 
 const Suggestairline = ({ arrive, name }) => {
+  console.log(arrive);
   return (
     <>
       {arrive && arrive.length > 0 && (

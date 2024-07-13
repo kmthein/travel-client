@@ -28,6 +28,9 @@ import BusAndHotelSelectHotel from "./pages/user/BusAndHotelSelectHotel";
 import BusAndHotelSelectRoom from "./pages/user/BusAndHotelSelectRoom";
 import BusAndHotelConfirmation from "./pages/user/BusAndHotelConfirmation";
 import MemberPage from "./pages/admin/MemberPage";
+import 'react-toastify/dist/ReactToastify.css';
+import RoomPage from "./pages/user/RoomPage";
+import ConfirmationPage from "./pages/user/ConfirmationPage";
 
 function App() {
   const {
@@ -52,6 +55,14 @@ function App() {
         {
           path: "/hotels",
           element: <Hotelpage />,
+        },
+        {
+          path: "/rooms",
+          element: <RoomPage />
+        },
+        {
+          path: "/confirmation",
+          element: <ConfirmationPage />
         },
         {
           path: "/destination",

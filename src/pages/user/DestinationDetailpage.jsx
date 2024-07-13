@@ -20,7 +20,7 @@ const DestinationDetailpage = () => {
     const newHighlight = trimHighlight.split(",");
     const trimTopPlace = topPlace.replaceAll(" ", "");
     const newTopPlace = trimTopPlace.split(",");
-    setDestination({
+    await setDestination({
       ...res.data,
       highlight: newHighlight,
       topPlace: newTopPlace,
