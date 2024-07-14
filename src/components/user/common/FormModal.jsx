@@ -14,6 +14,8 @@ import { closeModal, uiState } from "../../../features/ui/UiSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { UploadOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
+import firebase from "firebase/compat/app";
+import "firebase/compat/storage";
 
 const FormModal = () => {
   const { isModal } = useSelector(uiState);
@@ -35,10 +37,24 @@ const FormModal = () => {
     dispatch(closeModal());
   };
 
-  const handleFinish = (values) => {
+  const handleFinish = async (values) => {
     console.log("Form values: ", values);
-    dispatch(closeModal());
-    form.resetFields();
+    const {image: images, dob } = values;
+    const formattedDate = dob.format("YYYY-MM-DD");
+    console.log(formattedDate);
+    const imgAry = [];
+    // for (let i = 0; i < images.length; i++) {
+    //   const selectedFile = images[i].originFileObj;
+    //   const storageRef = firebase.storage().ref();
+    //   const fileRef = storageRef.child(selectedFile.name);
+
+    //   const snapshot = await fileRef.put(selectedFile);
+    //   const downloadURL = await snapshot.ref.getDownloadURL();
+    //   imgAry.push(downloadURL);
+    //   console.log(downloadURL);
+    // }
+    // dispatch(closeModal());
+    // form.resetFields();
   };
 
   return (

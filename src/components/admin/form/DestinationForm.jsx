@@ -51,7 +51,7 @@ const DestinationForm = ({
     setImages([]);
     setDeleteImgIds([]);
     getOldDestinationHandler();
-  }, [editForm, selectedId]);
+  }, [editForm]);
 
   const onCreate = async (values) => {
     setConfirmLoading(true);
@@ -122,6 +122,8 @@ const DestinationForm = ({
     });
     setPreviewImg((prev) => prev.concat(previewImagesArray));
   };
+
+  console.log(images);
 
   return (
     <Modal

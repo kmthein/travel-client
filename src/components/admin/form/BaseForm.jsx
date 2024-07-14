@@ -40,11 +40,13 @@ const BaseForm = ({
   const [imgCount, setImgCount] = useState(0);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [form] = Form.useForm();
+
   useEffect(() => {
     if (editForm) {
       handleEdit(airlineForm ? selectedAirlineId : selectedBusId);
     }
-  }, [editForm]);
+  }, [editForm, open]);
+
   const onCreate = async (values) => {
     setConfirmLoading(true);
     const formdata = new FormData();
@@ -70,7 +72,6 @@ const BaseForm = ({
         }
         updateAirline(selectedAirlineId, formdata);
       }
-      await getAirLines();
     }
 
     if (busForm) {
