@@ -1,7 +1,7 @@
 import { FaHotel, FaPlane } from "react-icons/fa6";
 import { Steps, Button, Image } from "antd";
 import { FaBed, FaCheckCircle } from "react-icons/fa";
-
+import noImg from "../../assets/img/common/no_img.jpg";
 import roomImg from "../../assets/room.jpg";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,6 +15,8 @@ const RoomPage = () => {
   const { roomList } = selectedHotel;
 
   const dispatch = useDispatch();
+
+  console.log(roomList);
 
   return (
     <div className="w-[70%] mx-auto px-4">
@@ -53,7 +55,7 @@ const RoomPage = () => {
               className="my-4 p-4 border border-gray-300 rounded-2xl flex"
             >
               <div className="w-1/3 p-2">
-                <Image src={roomImg} width={300} height={300} />
+                <Image src={room?.image ? room?.image[0].imgUrl : noImg} width={300} height={300} />
               </div>
               <div className="w-2/3 p-2">
                 <div className="flex justify-between">
