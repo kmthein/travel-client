@@ -8,6 +8,7 @@ import {
   Checkbox,
   Image,
   Rate,
+  Form,
 } from "antd";
 import { FaCalendarAlt, FaSearch, FaUser } from "react-icons/fa";
 import beachImg from "../../../assets/img/hotel/beach_hotel_1.jpg";
@@ -16,7 +17,7 @@ import { getAllHotels } from "../../../api/hotel";
 import noImg from "../../../assets/img/common/no_img.jpg";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { saveHotel } from "../../../features/select/SelectSlice";
+import { addPlan, saveHotel } from "../../../features/select/SelectSlice";
 
 function Hotel() {
   const [allHotels, setAllHotels] = useState([]);
@@ -27,11 +28,11 @@ function Hotel() {
   const [notFound, setNotFound] = useState(false);
   const [filteredHotel, setFilteredHotel] = useState([]);
 
+  const [form] = Form.useForm();
+
   const [searchParams] = useSearchParams();
 
   const id = searchParams.get("id");
-
-  console.log(id);
 
   const fetchAllHotels = async () => {
     const res = await getAllHotels();
@@ -39,7 +40,7 @@ function Hotel() {
     if (res.status == 200) {
       if (id) {
         const filteredHotels = res.data.filter((hotel) => hotel.id == id);
-        filteredHotels.map((hotel) => setInput(hotel.name));
+        filteredHotels.map((hotel) => form.setFieldValue("hotel", hotel.name));
         setFilteredHotel(filteredHotels);
         return;
       }
@@ -115,11 +116,8 @@ function Hotel() {
 
   console.log(input);
 
-  const searchHotelHandler = async () => {
-    console.log(input);
-    console.log(checkInDate);
-    console.log(checkOutDate);
-    console.log(numberOfGuest);
+  const searchHotelHandler = async (values) => {
+    console.log(values);
     const res = await getAllHotels();
     let filteredHotels;
     let validHotel;
@@ -142,49 +140,72 @@ function Hotel() {
     setFilteredHotel(validHotel);
   };
 
-  console.log(filteredHotel);
-  console.log(allHotels);
+  const formattedDate = (date) => {
+    date.format("YYYY-MM-DD");
+  };
 
   return (
-    <div className="p-8 w-[70%] mx-auto  rounded-xl">
-      <div className="flex justify-between items-center bg-white p-4 rounded-lg shadow-md mb-8">
-        <Input
-          placeholder="Search Hotels"
-          className="w-96"
-          value={input}
-          prefix={<FaSearch className="text-gray-400" />}
-          onChange={(e) => setInput(e.target.value)}
-        />
-        <DatePicker
-          placeholder="Check in"
-          suffixIcon={<FaCalendarAlt />}
-          className="w-32"
-          onChange={(value) => setCheckInDate(value ? value.toDate() : null)}
-        />
-        <DatePicker
-          placeholder="Check out"
-          suffixIcon={<FaCalendarAlt />}
-          className="w-32"
-          onChange={(value) => setCheckOutDate(value ? value.toDate() : null)}
-        />
-        <Select
-          defaultValue={1}
-          className="w-32"
-          suffixIcon={<FaUser />}
-          onChange={(value) => setNumberOfGuest(value)}
-          options={[
-            { value: 1, label: "1 person" },
-            { value: 2, label: "2 people" },
-            { value: 3, label: "3 people" },
-            { value: 4, label: "4 people" },
-          ]}
-        />
-        <Button
-          onClick={searchHotelHandler}
-          className="bg-blue-500 text-white rounded-lg w-40 hover:bg-blue-600 transition"
-        >
-          Search
-        </Button>
+    <div className="p-8 w-[70%] mx-auto rounded-xl">
+      <div>
+        <Form layout="vertical" form={form} onFinish={searchHotelHandler} className="flex justify-between items-center bg-white p-4 py-0 rounded-lg shadow-md mb-8">
+          <Form.Item
+            name="hotel"
+            label="Hotel"
+            rules={[{ required: true, message: "Please select a hotel!" }]}
+          >
+            <Input
+              placeholder="Search Hotels"
+              className="w-96"
+              prefix={<FaSearch className="text-gray-400" />}
+            />
+          </Form.Item>
+          <Form.Item
+            name="checkin"
+            label="Check In"
+            rules={[{ required: true, message: "Please select a check in date!" }]}
+          >
+          <DatePicker
+            placeholder="Check in"
+            suffixIcon={<FaCalendarAlt />}
+            className="w-32"
+          />
+          </Form.Item>
+          <Form.Item
+            name="checkout"
+            label="Check Out"
+            rules={[{ required: true, message: "Please select a check out date!" }]}
+          >
+          <DatePicker
+            placeholder="Check Out"
+            suffixIcon={<FaCalendarAlt />}
+            className="w-32"
+          />
+          </Form.Item>
+          <Form.Item
+            name="guest"
+            label="Number of Guest"
+            rules={[{ required: true, message: "Please select a check out date!" }]}
+          >
+          <Select
+            defaultValue={1}
+            className="w-32"
+            suffixIcon={<FaUser />}
+            name="guest"
+            options={[
+              { value: 1, label: "1 person" },
+              { value: 2, label: "2 people" },
+              { value: 3, label: "3 people" },
+              { value: 4, label: "4 people" },
+            ]}
+          />
+          </Form.Item>
+          <Button
+            htmlType="submit"
+            className="bg-blue-500 text-white rounded-lg w-40 hover:bg-blue-600 transition"
+          >
+            Search
+          </Button>
+        </Form>
       </div>
       <div className="flex gap-8 mb-10">
         <div className="w-1/5">
@@ -243,6 +264,12 @@ function Hotel() {
                       <Button
                         className="bg-blue-500 text-white p-3"
                         onClick={() => {
+                          dispatch(
+                            addPlan({
+                              checkInDate: checkInDate,
+                              checkOutDate: checkOutDate,
+                            })
+                          );
                           dispatch(saveHotel(hotel));
                           navigate(`/rooms?hotel=${hotel.id}`);
                         }}
@@ -254,7 +281,8 @@ function Hotel() {
                 </div>
               </div>
             ))}
-          {filteredHotel?.length == 0 && allHotels &&
+          {filteredHotel?.length == 0 &&
+            allHotels &&
             allHotels.length > 0 &&
             allHotels.map((hotel, index) => (
               <div
@@ -306,7 +334,7 @@ function Hotel() {
                 </div>
               </div>
             ))}
-            {filteredHotel.length == 0 && <h5>Hotel Not Available</h5>}
+          {filteredHotel.length == 0 && <h5>Hotel Not Available</h5>}
         </div>
       </div>
     </div>
