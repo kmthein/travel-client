@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Checkbox, Collapse, Input } from "antd";
 import { CiSearch } from "react-icons/ci";
 import NgweSaung from "../../../assets/img/destination/ngwesaung.png";
 import InLeLake from "../../../assets/img/destination/inlelake.png";
 import DestinationCard from "./DestinationCard";
+import { getAllDestinations } from "../../../api/destination";
 
 const items = [
   {
@@ -33,6 +34,21 @@ const items = [
 ];
 
 const Destination = () => {
+  const [destinations, setDestinations] = useState([]);
+
+  const getAllDestinationHandler = async () => {
+    const res = await getAllDestinations();
+    if (res.status == 200) {
+      setDestinations(res.data);
+    }
+  };
+
+  console.log(destinations);
+
+  useEffect(() => {
+    getAllDestinationHandler();
+  }, []);
+
   return (
     <>
       <div className="border border-gray-300 rounded-lg p-4 flex items-center gap-4 bg-white shadow">
@@ -59,27 +75,19 @@ const Destination = () => {
         <div className="flex-1">
           <h2 className="text-2xl font-bold mb-4">All Destinations</h2>
           <div className="flex flex-wrap gap-2">
-            <DestinationCard
-              img={InLeLake}
-              name="InLe Lake"
-              hotel={3}
-              bus={2}
-              flight={1}
-            />
-            <DestinationCard
-              img={NgweSaung}
-              name="NgweSaung"
-              hotel={5}
-              bus={6}
-              flight={1}
-            />
-            <DestinationCard
-              img={NgweSaung}
-              name="NgweSaung"
-              hotel={5}
-              bus={6}
-              flight={1}
-            />
+            {destinations &&
+              destinations.length > 0 &&
+              destinations.map((destination) => (
+                <DestinationCard
+                  img={destination?.image[0]?.imgUrl}
+                  name={destination?.name}
+                  hotel={destination?.hotelList.length || "0"}
+                  bus={destination?.busArrivalPlaces.length || "0"}
+                  flight={destination?.flightArrivalPlaces.length || "0"}
+                  key={destination?.id}
+                  id={destination?.id}
+                />
+              ))}
           </div>
         </div>
       </div>

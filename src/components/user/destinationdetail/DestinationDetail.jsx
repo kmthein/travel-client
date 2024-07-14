@@ -1,50 +1,75 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Bagan from "../../../assets/img/destination/bagan.png";
 import { Image } from "antd";
+import { useParams } from "react-router-dom";
+import { getDestinationById } from "../../../api/destination";
 const DestinationDetail = () => {
+  const { id } = useParams();
+
+  const [destination, setDestination] = useState(null);
+
+  const getDestinationDetailsHandler = async () => {
+    const res = await getDestinationById({ id });
+    const { highlight, topPlace } = res.data;
+    const trimHighlight = highlight.replaceAll(" ", "");
+    const newHighlight = trimHighlight.split(",");
+    const trimTopPlace = topPlace.replaceAll(" ", "");
+    const newTopPlace = trimTopPlace.split(",");
+    setDestination({
+      ...res.data,
+      highlight: newHighlight,
+      topPlace: newTopPlace,
+    });
+  };
+
+  console.log(destination);
+
+  useEffect(() => {
+    getDestinationDetailsHandler();
+  }, []);
+
+  const [selectImgIndex, setSelectImgIndex] = useState(0);
+
   return (
-    <div className="flex items-start gap-8 mb-8 overflow-hidden">
-      <div className="flex-shrink-0 w-1/2 h-80 bg-gray-200">
-        <Image
-          src={Bagan}
-          preview={false}
-          className="object-cover w-full h-full overflow-hidden"
-        />
+    <div className="flex items-start gap-8 mb-8">
+      <div className="w-1/2">
+        <div className="w-full h-[400px] mb-2 rounded-md">
+          <img
+            src={destination?.image[selectImgIndex].imgUrl}
+            preview={false}
+            className="object-cover w-full h-full rounded-md"
+          />
+        </div>
+        <div className="flex items-center gap-3 img_scroll">
+          {destination?.image &&
+            destination.image.length > 0 &&
+            destination.image.map((img, key) => (
+              <img
+                src={img.imgUrl}
+                preview={false}
+                onClick={() => setSelectImgIndex(key)}
+                className="w-28 h-28 border rounded-md"
+              />
+            ))}
+        </div>
       </div>
-      <div className="flex-grow">
+      <div className="w-1/2">
         <div>
-          <h2 className="text-2xl font-semibold mb-4">Overview</h2>
-          <p className="text-gray-700 mb-4">
-            Nestled in the heart of Myanmar, Bagan is a mesmerizing ancient city
-            that captivates travelers with its rich history, stunning
-            architecture, and serene landscapes. Known for its vast expanse of
-            temples and pagodas, Bagan offers a unique glimpse into the past and
-            a tranquil escape for modern-day explorers.
-          </p>
-          <p className="text-gray-700 mb-4">
-            Bagan was the capital of the Pagan Kingdom from the 9th to the 13th
-            centuries, during which over 10,000 Buddhist temples, pagodas, and
-            monasteries were constructed. Today, around 2,200 of these
-            structures remain, creating a landscape that is both awe-inspiring
-            and humbling. The city is a testament to the architectural and
-            artistic prowess of the ancient Burmese civilization.
-          </p>
+          <h2 className="text-2xl font-semibold mb-4">{destination?.name}</h2>
+          <p className="text-gray-700 mb-4">{destination?.description}</p>
         </div>
         <div className="mt-8">
           <h2 className="text-2xl font-semibold mb-4">Highlights</h2>
           <ul className="list-disc list-inside text-gray-700 mb-4">
-            <li>Hot Air Balloon Rides</li>
-            <li>Cycling Tours</li>
-            <li>Sunset Viewing</li>
+            {destination?.highlight &&
+              destination.highlight.map((highlight) => <li>{highlight}</li>)}
           </ul>
         </div>
         <div>
           <h2 className="text-2xl font-semibold mb-4">Top Places to Visit</h2>
           <ul className="list-disc list-inside text-gray-700">
-            <li>Ananda Temple</li>
-            <li>Shwezigon Pagoda</li>
-            <li>Dhammayangyi Temple</li>
-            <li>Thatbyinnyu Temple</li>
+            {destination?.topPlace &&
+              destination.topPlace.map((topPlace) => <li>{topPlace}</li>)}
           </ul>
         </div>
       </div>
