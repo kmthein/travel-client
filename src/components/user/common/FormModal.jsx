@@ -14,10 +14,16 @@ import { closeModal, uiState } from "../../../features/ui/UiSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { UploadOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
+import firebase from "firebase/compat/app";
+import "firebase/compat/storage";
+import { login, register } from "../../../api/auth";
+import { toast } from "react-toastify";
+import { loginUser } from "../../../features/user/UserSlice";
 
 const FormModal = () => {
   const { isModal } = useSelector(uiState);
-  const [isSignin, setIsSignIn] = useState(false);
+  const [isSignin, setIsSignIn] = useState(true);
+  const [confirmLoading, setConfirmLoading] = useState(false);
   const [form] = Form.useForm();
   const dispatch = useDispatch();
 
@@ -35,15 +41,79 @@ const FormModal = () => {
     dispatch(closeModal());
   };
 
-  const handleFinish = (values) => {
+  const handleFinish = async (values) => {
+    setConfirmLoading(true);
     console.log("Form values: ", values);
-    dispatch(closeModal());
-    form.resetFields();
+    const {
+      image: images,
+      dob,
+      username,
+      email,
+      password,
+      contactNumber,
+      emailReceive,
+      address,
+    } = values;
+    const imgAry = [];
+    if (images) {
+      for (let i = 0; i < images.length; i++) {
+        const selectedFile = images[i].originFileObj;
+        const storageRef = firebase.storage().ref();
+        const fileRef = storageRef.child(selectedFile.name);
+        const snapshot = await fileRef.put(selectedFile);
+        const downloadURL = await snapshot.ref.getDownloadURL();
+        imgAry.push(downloadURL);
+        console.log(downloadURL);
+      }
+    }
+    const formData = new FormData();
+    let res;
+    if (!isSignin) {
+      const formattedDate = dob.format("YYYY-MM-DD");
+      formData.append("username", username);
+      formData.append("email", email);
+      formData.append("password", password);
+      formData.append("contactNumber", contactNumber);
+      formData.append("emailReceive", emailReceive);
+      formData.append("address", address);
+      formData.append("role", "USER");
+      formData.append("imgUrl", imgAry);
+      formData.append("dob", formattedDate);
+      res = await register(formData);
+      console.log(res);
+      if (res.status == 409) {
+        toast.error("Email already existed !");
+      } else if (res.status == 201) {
+        toast.success("User registration successful !");
+        setIsSignIn(true);
+        form.resetFields();
+        dispatch(closeModal());
+      }
+    } else {
+      formData.append("email", email);
+      formData.append("password", password);
+      res = await login(formData);
+      console.log(res);
+      if (res.data.statusCodeValue == 401) {
+        toast.error(res.data.body);
+        form.setFieldValue("password", "");
+      } else {
+        toast.success("Login successful");
+        const { userDetails, token } = res.data;
+        dispatch(loginUser({ user: userDetails, token }));
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(userDetails));
+        form.resetFields();
+        dispatch(closeModal());
+      }
+    }
+    setConfirmLoading(false);
   };
 
   return (
     <Modal
-      width={800}
+      width={isSignin ? 500 : 800}
+      confirmLoading={confirmLoading}
       title={
         <>
           <h2 className="text-4xl font-extrabold text-center mb-3 text-gray-900">
@@ -109,7 +179,7 @@ const FormModal = () => {
               </Col>
               <Col span={12}>
                 <Form.Item
-                  name="phone"
+                  name="contactNumber"
                   label="Phone Number"
                   rules={[
                     {
@@ -170,7 +240,7 @@ const FormModal = () => {
               </Col>
               <Col span={24}>
                 <Form.Item
-                  name="subscribe"
+                  name="emailReceive"
                   valuePropName="checked"
                   initialValue={false}
                 >
