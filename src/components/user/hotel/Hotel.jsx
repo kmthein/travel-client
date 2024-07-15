@@ -118,6 +118,8 @@ function Hotel() {
 
   const searchHotelHandler = async (values) => {
     console.log(values);
+    setCheckInDate(formattedDate(values.checkin));
+    setCheckOutDate(formattedDate(values.checkout));
     const res = await getAllHotels();
     let filteredHotels;
     let validHotel;
@@ -141,18 +143,19 @@ function Hotel() {
   };
 
   const formattedDate = (date) => {
-    date.format("YYYY-MM-DD");
+    return date.format("YYYY-MM-DD");
   };
 
   return (
     <div className="p-8 w-[70%] mx-auto rounded-xl">
       <div>
-        <Form layout="vertical" form={form} onFinish={searchHotelHandler} className="flex justify-between items-center bg-white p-4 py-0 rounded-lg shadow-md mb-8">
-          <Form.Item
-            name="hotel"
-            label="Hotel"
-            rules={[{ required: true, message: "Please select a hotel!" }]}
-          >
+        <Form
+          layout="vertical"
+          form={form}
+          onFinish={searchHotelHandler}
+          className="flex justify-between items-center bg-white p-4 py-0 rounded-lg shadow-md mb-8"
+        >
+          <Form.Item name="hotel" label="Hotel">
             <Input
               placeholder="Search Hotels"
               className="w-96"
@@ -162,42 +165,42 @@ function Hotel() {
           <Form.Item
             name="checkin"
             label="Check In"
-            rules={[{ required: true, message: "Please select a check in date!" }]}
+            rules={[
+              { required: true, message: "Please select a check in date!" },
+            ]}
           >
-          <DatePicker
-            placeholder="Check in"
-            suffixIcon={<FaCalendarAlt />}
-            className="w-32"
-          />
+            <DatePicker
+              placeholder="Check in"
+              suffixIcon={<FaCalendarAlt />}
+              className="w-32"
+            />
           </Form.Item>
           <Form.Item
             name="checkout"
             label="Check Out"
-            rules={[{ required: true, message: "Please select a check out date!" }]}
-          >
-          <DatePicker
-            placeholder="Check Out"
-            suffixIcon={<FaCalendarAlt />}
-            className="w-32"
-          />
-          </Form.Item>
-          <Form.Item
-            name="guest"
-            label="Number of Guest"
-            rules={[{ required: true, message: "Please select a check out date!" }]}
-          >
-          <Select
-            defaultValue={1}
-            className="w-32"
-            suffixIcon={<FaUser />}
-            name="guest"
-            options={[
-              { value: 1, label: "1 person" },
-              { value: 2, label: "2 people" },
-              { value: 3, label: "3 people" },
-              { value: 4, label: "4 people" },
+            rules={[
+              { required: true, message: "Please select a check out date!" },
             ]}
-          />
+          >
+            <DatePicker
+              placeholder="Check Out"
+              suffixIcon={<FaCalendarAlt />}
+              className="w-32"
+            />
+          </Form.Item>
+          <Form.Item name="guest" label="Number of Guest">
+            <Select
+              defaultValue={1}
+              className="w-32"
+              suffixIcon={<FaUser />}
+              name="guest"
+              options={[
+                { value: 1, label: "1 person" },
+                { value: 2, label: "2 people" },
+                { value: 3, label: "3 people" },
+                { value: 4, label: "4 people" },
+              ]}
+            />
           </Form.Item>
           <Button
             htmlType="submit"
@@ -266,8 +269,8 @@ function Hotel() {
                         onClick={() => {
                           dispatch(
                             addPlan({
-                              checkInDate: checkInDate,
-                              checkOutDate: checkOutDate,
+                              checkInDate,
+                              checkOutDate,
                             })
                           );
                           dispatch(saveHotel(hotel));
@@ -325,7 +328,16 @@ function Hotel() {
                     <div>
                       <Button
                         className="bg-blue-500 text-white p-3"
-                        onClick={() => navigate("/rooms")}
+                        onClick={() => {
+                          dispatch(
+                            addPlan({
+                              checkInDate,
+                              checkOutDate,
+                            })
+                          );
+                          dispatch(saveHotel(hotel));
+                          navigate(`/rooms?hotel=${hotel.id}`);
+                        }}
                       >
                         Select Room
                       </Button>

@@ -78,7 +78,7 @@ const Navbar = () => {
                 <Avatar
                 className="cursor-pointer"
                   icon={
-                    user?.image.length != 0 ? (
+                    user?.image?.length != 0 ? (
                       <img src={user?.image} />
                     ) : (
                       <BiUser />

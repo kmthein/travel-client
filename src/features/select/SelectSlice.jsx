@@ -13,7 +13,7 @@ const SelectSlice = createSlice({
     initialState,
     reducers: {
         addPlan: (state, { payload }) => {
-            state.selectedPlan = {...state.selectedPlan, payload};
+            state.selectedPlan = {...state.selectedPlan, ...payload};
         },
         saveHotel: (state, { payload }) => {
             state.selectedHotel = payload;
