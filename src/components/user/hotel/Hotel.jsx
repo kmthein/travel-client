@@ -65,14 +65,12 @@ function Hotel() {
       key: "2",
       label: <h2 className="font-bold text-lg">Rating</h2>,
       children: (
-        <div>
-          <div>
-            <Checkbox>5 Stars +</Checkbox>
-            <Checkbox>4 Stars +</Checkbox>
-            <Checkbox>3 Stars +</Checkbox>
-            <Checkbox>2 Stars +</Checkbox>
-            <Checkbox>1 Star +</Checkbox>
-          </div>
+        <div className="flex flex-wrap flex-col gap-2">
+          <Checkbox>5 Stars +</Checkbox>
+          <Checkbox>4 Stars +</Checkbox>
+          <Checkbox>3 Stars +</Checkbox>
+          <Checkbox>2 Stars +</Checkbox>
+          <Checkbox>1 Star +</Checkbox>
         </div>
       ),
     },
@@ -229,7 +227,7 @@ function Hotel() {
                 <div className="w-2/3">
                   <div className="flex justify-between items-center mb-2">
                     <p className="text-lg font-bold">{hotel.name}</p>
-                    <p className="text-lg font-bold">USD 72</p>
+                    {/* <p className="text-lg font-bold">USD 72</p> */}
                   </div>
                   <Rate
                     value={hotel.rating}
@@ -293,7 +291,7 @@ function Hotel() {
                 <div className="w-2/3">
                   <div className="flex justify-between items-center mb-2">
                     <p className="text-lg font-bold">{hotel.name}</p>
-                    <p className="text-lg font-bold">USD 72</p>
+                    {/* <p className="text-lg font-bold">USD 72</p> */}
                   </div>
                   <Rate
                     value={hotel.rating}

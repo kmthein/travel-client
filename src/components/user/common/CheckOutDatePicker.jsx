@@ -6,7 +6,6 @@ import moment from "moment";
 
 const CheckOutDatePicker = ({ checkOutDateChange, checkInDate }) => {
   const disableCurrentAndPastDates = (current) => {
-    console.log(current);
     // Can not select current or past dates
     return current && current <= moment(checkInDate).endOf("day");
   };

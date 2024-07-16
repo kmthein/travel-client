@@ -35,9 +35,6 @@ const RoomPage = () => {
     }
   };
 
-  console.log(checkInDate);
-  console.log(checkOutDate);
-
   const [form] = Form.useForm();
   const { selectedPlan, hotelPlusFlight } = useSelector(selectState);
 
