@@ -27,9 +27,9 @@ const Navbar = () => {
   const userItems = [
     {
       label: <span onClick={() => dispatch(logoutUser())}>Logout</span>,
-      key: "1"
-    }
-  ]
+      key: "1",
+    },
+  ];
 
   return (
     <div>
@@ -75,16 +75,16 @@ const Navbar = () => {
             {user ? (
               <li>
                 <Dropdown menu={{ items: userItems }}>
-                <Avatar
-                className="cursor-pointer"
-                  icon={
-                    user?.image?.length != 0 ? (
-                      <img src={user?.image} />
-                    ) : (
-                      <BiUser />
-                    )
-                  }
-                />
+                  <Avatar
+                    className="cursor-pointer"
+                    icon={
+                      user?.image?.length != 0 ? (
+                        <img src={user?.image[0]?.imgUrl} />
+                      ) : (
+                        <BiUser />
+                      )
+                    }
+                  />
                 </Dropdown>
               </li>
             ) : (

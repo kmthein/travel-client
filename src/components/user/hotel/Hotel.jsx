@@ -17,7 +17,7 @@ import { getAllHotels } from "../../../api/hotel";
 import noImg from "../../../assets/img/common/no_img.jpg";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { addPlan, saveHotel } from "../../../features/select/SelectSlice";
+import { addPlan, selectHotel } from "../../../features/select/SelectSlice";
 
 function Hotel() {
   const [allHotels, setAllHotels] = useState([]);
@@ -27,6 +27,7 @@ function Hotel() {
   const [numberOfGuest, setNumberOfGuest] = useState(1);
   const [notFound, setNotFound] = useState(false);
   const [filteredHotel, setFilteredHotel] = useState([]);
+  const [daysBetween, setDaysBetween] = useState(null);
 
   const [form] = Form.useForm();
 
@@ -116,10 +117,29 @@ function Hotel() {
 
   console.log(input);
 
+  const calculateDaysBetween = (checkIn, checkOut) => {
+    const date1 = new Date(checkIn);
+    const date2 = new Date(checkOut);
+
+    if (date1 > date2) {
+      alert("Check-out date must be after check-in date.");
+      return;
+    }
+
+    const timeDifference = date2 - date1;
+    const daysDifference = timeDifference / (1000 * 3600 * 24);
+
+    setDaysBetween(daysDifference);
+  };
+
   const searchHotelHandler = async (values) => {
     console.log(values);
     setCheckInDate(formattedDate(values.checkin));
     setCheckOutDate(formattedDate(values.checkout));
+    calculateDaysBetween(
+      formattedDate(values.checkin),
+      formattedDate(values.checkout)
+    );
     const res = await getAllHotels();
     let filteredHotels;
     let validHotel;
@@ -142,6 +162,8 @@ function Hotel() {
     setFilteredHotel(validHotel);
   };
 
+  console.log(daysBetween);
+
   const formattedDate = (date) => {
     return date.format("YYYY-MM-DD");
   };
@@ -158,40 +180,29 @@ function Hotel() {
           <Form.Item name="hotel" label="Hotel">
             <Input
               placeholder="Search Hotels"
-              className="w-96"
               prefix={<FaSearch className="text-gray-400" />}
             />
           </Form.Item>
           <Form.Item
             name="checkin"
             label="Check In"
-            rules={[
-              { required: true, message: "Please select a check in date!" },
-            ]}
+            rules={[{ required: true, message: "Select check in date!" }]}
           >
-            <DatePicker
-              placeholder="Check in"
-              suffixIcon={<FaCalendarAlt />}
-              className="w-32"
-            />
+            <DatePicker placeholder="Check in" suffixIcon={<FaCalendarAlt />} />
           </Form.Item>
           <Form.Item
             name="checkout"
             label="Check Out"
-            rules={[
-              { required: true, message: "Please select a check out date!" },
-            ]}
+            rules={[{ required: true, message: "Select check out date!" }]}
           >
             <DatePicker
               placeholder="Check Out"
               suffixIcon={<FaCalendarAlt />}
-              className="w-32"
             />
           </Form.Item>
           <Form.Item name="guest" label="Number of Guest">
             <Select
               defaultValue={1}
-              className="w-32"
               suffixIcon={<FaUser />}
               name="guest"
               options={[
@@ -271,9 +282,11 @@ function Hotel() {
                             addPlan({
                               checkInDate,
                               checkOutDate,
+                              hotel,
+                              totalNight: daysBetween,
                             })
                           );
-                          dispatch(saveHotel(hotel));
+                          dispatch(selectHotel());
                           navigate(`/rooms?hotel=${hotel.id}`);
                         }}
                       >
@@ -333,9 +346,11 @@ function Hotel() {
                             addPlan({
                               checkInDate,
                               checkOutDate,
+                              hotel,
+                              totalNight: daysBetween,
                             })
                           );
-                          dispatch(saveHotel(hotel));
+                          dispatch(selectHotel());
                           navigate(`/rooms?hotel=${hotel.id}`);
                         }}
                       >
