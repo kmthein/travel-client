@@ -28,9 +28,10 @@ import BusAndHotelSelectHotel from "./pages/user/BusAndHotelSelectHotel";
 import BusAndHotelSelectRoom from "./pages/user/BusAndHotelSelectRoom";
 import BusAndHotelConfirmation from "./pages/user/BusAndHotelConfirmation";
 import MemberPage from "./pages/admin/MemberPage";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import RoomPage from "./pages/user/RoomPage";
 import ConfirmationPage from "./pages/user/ConfirmationPage";
+import ConfirmProvider from "./providers/ConfirmProvider";
 
 function App() {
   const {
@@ -41,6 +42,7 @@ function App() {
     handleSearch,
     handleReset,
     getColumnSearchProps,
+    selectedPlan,
   } = useSearch();
 
   const router = createBrowserRouter([
@@ -58,11 +60,15 @@ function App() {
         },
         {
           path: "/rooms",
-          element: <RoomPage />
+          element: <RoomPage />,
         },
         {
           path: "/confirmation",
-          element: <ConfirmationPage />
+          element: (
+            <ConfirmProvider>
+              <ConfirmationPage />
+            </ConfirmProvider>
+          ),
         },
         {
           path: "/destination",

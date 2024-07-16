@@ -18,6 +18,11 @@ import noImg from "../../../assets/img/common/no_img.jpg";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addPlan, selectHotel } from "../../../features/select/SelectSlice";
+import {
+  calculateDaysBetween,
+  disablePastDates,
+  formattedDate,
+} from "../../../utils/utils";
 
 function Hotel() {
   const [allHotels, setAllHotels] = useState([]);
@@ -117,29 +122,15 @@ function Hotel() {
 
   console.log(input);
 
-  const calculateDaysBetween = (checkIn, checkOut) => {
-    const date1 = new Date(checkIn);
-    const date2 = new Date(checkOut);
-
-    if (date1 > date2) {
-      alert("Check-out date must be after check-in date.");
-      return;
-    }
-
-    const timeDifference = date2 - date1;
-    const daysDifference = timeDifference / (1000 * 3600 * 24);
-
-    setDaysBetween(daysDifference);
-  };
-
   const searchHotelHandler = async (values) => {
     console.log(values);
     setCheckInDate(formattedDate(values.checkin));
     setCheckOutDate(formattedDate(values.checkout));
-    calculateDaysBetween(
+    const totalNight = calculateDaysBetween(
       formattedDate(values.checkin),
       formattedDate(values.checkout)
     );
+    setDaysBetween(totalNight);
     const res = await getAllHotels();
     let filteredHotels;
     let validHotel;
@@ -164,10 +155,6 @@ function Hotel() {
 
   console.log(daysBetween);
 
-  const formattedDate = (date) => {
-    return date.format("YYYY-MM-DD");
-  };
-
   return (
     <div className="p-8 w-[70%] mx-auto rounded-xl">
       <div>
@@ -188,7 +175,11 @@ function Hotel() {
             label="Check In"
             rules={[{ required: true, message: "Select check in date!" }]}
           >
-            <DatePicker placeholder="Check in" suffixIcon={<FaCalendarAlt />} />
+            <DatePicker
+              placeholder="Check in"
+              disabledDate={disablePastDates}
+              suffixIcon={<FaCalendarAlt />}
+            />
           </Form.Item>
           <Form.Item
             name="checkout"
@@ -197,6 +188,7 @@ function Hotel() {
           >
             <DatePicker
               placeholder="Check Out"
+              disabledDate={disablePastDates}
               suffixIcon={<FaCalendarAlt />}
             />
           </Form.Item>

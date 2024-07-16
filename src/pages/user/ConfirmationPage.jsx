@@ -7,7 +7,7 @@ import {
   FaCheckCircle,
   FaLongArrowAltRight,
 } from "react-icons/fa";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import visaImg from "../../assets/img/icons/visa.jpg";
 import paypalImg from "../../assets/img/icons/paypal.jpg";
@@ -20,16 +20,17 @@ import { useNavigate } from "react-router-dom";
 import SelectStep from "../../components/user/common/SelectStep";
 import { useSelector } from "react-redux";
 import { selectState } from "../../features/select/SelectSlice";
+import { IoReturnUpBack } from "react-icons/io5";
 
 const ConfirmationPage = () => {
   const [paymentMethod, setPaymentMethod] = useState(null);
   const navigate = useNavigate();
-
   const { selectedPlan } = useSelector(selectState);
-  const { hotel, room, flightOnly, hotelPlusFlight } = selectedPlan;
+  const { hotel, room, flightOnly, hotelPlusFlight, totalNight } = selectedPlan;
 
-  console.log(+selectedPlan.checkInDate);
   console.log(+selectedPlan.checkOutDate - +selectedPlan.checkInDate);
+
+  console.log(selectedPlan);
 
   return (
     <>
@@ -98,7 +99,13 @@ const ConfirmationPage = () => {
               width: "60%",
             }}
           >
-            <p className="text-md font-bold m-5">Summary</p>
+            <div className="flex justify-between items-center">
+              <p className="text-md font-bold m-5">Summary</p>
+              <IoReturnUpBack
+                onClick={() => navigate(-1)}
+                className="text-3xl cursor-pointer"
+              />
+            </div>
             {hotel && (
               <>
                 <div>
@@ -111,7 +118,9 @@ const ConfirmationPage = () => {
                     <div className="w-full m-3">
                       <div className="flex justify-between ">
                         <p className="text-md font-bold ">{hotel?.name}</p>
-                        <p className="text-md font-bold ">$168</p>
+                        <p className="text-md font-bold ">
+                          {totalNight * room.roomPrice} ks
+                        </p>
                       </div>
                       <div className="flex items-center text-md m-2">
                         <FaCalendarAlt />
@@ -169,10 +178,6 @@ const ConfirmationPage = () => {
               <div className="flex justify-between text-md font-semibold m-2">
                 <p>Member Discount &#40;20%&#41; </p>
                 <p>-$36</p>
-              </div>
-              <div className="flex justify-between text-md font-semibold m-2">
-                <p>Delivery Fees</p>
-                <p>$5</p>
               </div>
             </div>
             <hr className="my-2 h-px bg-black" />
