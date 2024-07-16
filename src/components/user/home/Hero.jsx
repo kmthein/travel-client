@@ -3,19 +3,16 @@ import MainImg from "../../../assets/img/home/main.png";
 import { CiLocationOn } from "react-icons/ci";
 import { MdFlightTakeoff, MdOutlineHotel } from "react-icons/md";
 import { FaBus } from "react-icons/fa6";
-import FlightTicket from "../common/FlightAndHotelSearch";
-import FlightAndHotel from "../common/FlightAndHotelSearch";
-import BusTicket from "../common/BusTicketSearch";
-import Destinationbox from "../common/Destinationbox";
-import HotelBox from "../common/HotelBox";
-import BusAndHotelSearch from "../common/BusAndHotelSearch";
+// import FlightTicket from "../common/FlightAndHotelSearch";
+// import FlightAndHotel from "../common/FlightAndHotelSearch";
+// import BusTicket from "../common/BusTicketSearch";
+// import Destinationbox from "../common/Destinationbox";
+// import HotelBox from "../common/HotelBox";
+// import BusAndHotelSearch from "../common/BusAndHotelSearch";
 import Navbar from "../common/Navbar";
+import { useNavigate } from "react-router-dom";
 const Hero = () => {
-  const [option, setOption] = useState("destination");
-  const handleOption = (o) => {
-    setOption(o);
-  };
-
+  const navigate = useNavigate();
   return (
     <div
       className="h-screen text-white relative bg-cover bg-center"
@@ -34,11 +31,8 @@ const Hero = () => {
           </p>
           <div className="flex flex-col md:flex-row gap-4 mb-10">
             <div
-              className={`relative flex flex-col items-center gap-2 cursor-pointer ${
-                option === "destination" &&
-                "after:content-[''] after:absolute after:-bottom-1 after:h-[2px] after:bg-yellow-400 after:w-full "
-              }`}
-              onClick={() => handleOption("destination")}
+              className="relative flex flex-col items-center gap-2 cursor-pointer transition-all duration-700 border-b-2 border-transparent hover:border-yellow-400"
+              onClick={() => navigate("destination")}
             >
               <CiLocationOn size={30} />
               <p className="text-lg md:text-xl">Destination</p>
@@ -47,11 +41,8 @@ const Hero = () => {
               </p>
             </div>
             <div
-              className={`relative flex flex-col items-center gap-2 cursor-pointer ${
-                option === "hotel" &&
-                "after:content-[''] after:absolute after:-bottom-1 after:h-[2px] after:bg-yellow-400 after:w-full "
-              }`}
-              onClick={() => handleOption("hotel")}
+              className="relative flex flex-col items-center gap-2 cursor-pointer transition-all duration-700 border-b-2 border-transparent hover:border-yellow-400"
+              onClick={() => navigate("hotel")}
             >
               <MdOutlineHotel size={30} />
               <p className="text-lg md:text-xl">Hotels</p>
@@ -60,11 +51,8 @@ const Hero = () => {
               </p>
             </div>
             <div
-              className={`relative flex flex-col items-center gap-2 cursor-pointer ${
-                option === "flight" &&
-                "after:content-[''] after:absolute after:-bottom-1 after:h-[2px] after:bg-yellow-400 after:w-full "
-              }`}
-              onClick={() => handleOption("flight")}
+              className="relative flex flex-col items-center gap-2 cursor-pointer transition-all duration-700 border-b-2 border-transparent hover:border-yellow-400"
+              onClick={() => navigate("flight")}
             >
               <MdFlightTakeoff size={30} />
               <p className="text-lg md:text-xl">Flight Ticket</p>
@@ -73,11 +61,8 @@ const Hero = () => {
               </p>
             </div>
             <div
-              className={`relative flex flex-col items-center gap-2 cursor-pointer ${
-                option === "flightandhotel" &&
-                "after:content-[''] after:absolute after:-bottom-1 after:h-[2px] after:bg-yellow-400 after:w-full "
-              }`}
-              onClick={() => handleOption("flightandhotel")}
+              className="relative flex flex-col items-center gap-2 cursor-pointer transition-all duration-700 border-b-2 border-transparent hover:border-yellow-400"
+              onClick={() => navigate("flightandhotel")}
             >
               <div className="flex gap-1">
                 <MdFlightTakeoff size={30} />
@@ -89,41 +74,35 @@ const Hero = () => {
               </p>
             </div>
             <div
-              className={`relative flex flex-col items-center gap-2 cursor-pointer ${
-                option === "bus" &&
-                "after:content-[''] after:absolute after:-bottom-1 after:h-[2px] after:bg-yellow-400 after:w-full "
-              }`}
-              onClick={() => handleOption("bus")}
+              className="relative flex flex-col items-center gap-2 cursor-pointer transition-all duration-700 border-b-2 border-transparent hover:border-yellow-400"
+              onClick={() => navigate("bus")}
             >
               <FaBus size={30} />
               <p className="text-lg md:text-xl">Bus Ticket</p>
               <p className="text-sm text-gray-300">Book your bus rides here</p>
             </div>
             <div
-              className={`relative flex flex-col items-center gap-2 cursor-pointer ${
-                option === "busandhotel" &&
-                "after:content-[''] after:absolute after:-bottom-1 after:h-[2px] after:bg-yellow-400 after:w-full "
-              }`}
-              onClick={() => handleOption("busandhotel")}
+              className="relative flex flex-col items-center gap-2 cursor-pointer transition-all duration-700 border-b-2 border-transparent hover:border-yellow-400"
+              onClick={() => navigate("busandhotel")}
             >
               <div className="flex gap-1">
                 <FaBus size={30} />
                 <MdOutlineHotel size={30} />
               </div>
-              <p className="text-lg md:text-xl">Flight + Hotel</p>
+              <p className="text-lg md:text-xl">Bus + Hotel</p>
               <p className="text-sm text-gray-300">
-                Combine flights and hotels for savings
+                Combine buses and hotels for savings
               </p>
             </div>
           </div>
-          <div className="w-full min-h-[200px] rounded-lg">
+          {/* <div className="w-full min-h-[200px] rounded-lg">
             {option === "destination" && <Destinationbox />}
             {option === "hotel" && <HotelBox />}
             {option === "flight" && <FlightTicket />}
             {option === "flightandhotel" && <FlightAndHotel />}
             {option === "bus" && <BusTicket />}
             {option === "busandhotel" && <BusAndHotelSearch />}
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

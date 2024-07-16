@@ -169,7 +169,7 @@ function Hotel() {
   };
 
   return (
-    <div className="p-8 w-[70%] mx-auto rounded-xl">
+    <div className=" w-[70%] mx-auto rounded-xl">
       <div>
         <Form
           layout="vertical"

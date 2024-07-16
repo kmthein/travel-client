@@ -26,6 +26,14 @@ const Navbar = () => {
 
   const userItems = [
     {
+      label: <Link to="/chatroom">Chatroom</Link>,
+      key: "1",
+    },
+    {
+      label: <Link to="/userprofile">UserProfile</Link>,
+      key: "1",
+    },
+    {
       label: <span onClick={() => dispatch(logoutUser())}>Logout</span>,
       key: "1",
     },

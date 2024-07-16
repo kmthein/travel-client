@@ -6,7 +6,6 @@ import { notification } from "antd";
 
 const AdminLayout = () => {
   const [api, contextHolder] = notification.useNotification();
-
   return (
     <>
       <Header />

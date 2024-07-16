@@ -2,13 +2,14 @@ import React from "react";
 import { Collapse } from "antd";
 import "antd/dist/reset.css";
 import { FaQuestionCircle } from "react-icons/fa";
-
+import Journey from "../../../assets/img/home/journey.png";
 const { Panel } = Collapse;
 
 const Faq = () => {
   return (
     <section className="py-20 ">
-      <div className="w-[70%] mx-auto px-6 lg:px-10">
+      <img src={Journey} alt="journey" className="w-full" />
+      <div className="w-[70%] mx-auto px-6 lg:px-10 my-10">
         <div className="text-center mb-14">
           <h2 className="text-5xl font-extrabold text-gray-900 mb-6">
             Frequently Asked Questions

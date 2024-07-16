@@ -2,16 +2,16 @@ import { Avatar, Dropdown, Space } from "antd";
 import React from "react";
 import { BiUser } from "react-icons/bi";
 import { IoIosArrowDown } from "react-icons/io";
+import { useDispatch } from "react-redux";
+import { logoutUser } from "../../../features/user/UserSlice";
 
 const Header = () => {
+  const dispatch = useDispatch();
+
   const items = [
     {
+      label: <span onClick={() => dispatch(logoutUser())}>Logout</span>,
       key: "1",
-      label: (
-        <a target="_blank" rel="noopener noreferrer">
-          Logout
-        </a>
-      ),
     },
   ];
   return (

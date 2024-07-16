@@ -28,9 +28,12 @@ import BusAndHotelSelectHotel from "./pages/user/BusAndHotelSelectHotel";
 import BusAndHotelSelectRoom from "./pages/user/BusAndHotelSelectRoom";
 import BusAndHotelConfirmation from "./pages/user/BusAndHotelConfirmation";
 import MemberPage from "./pages/admin/MemberPage";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import RoomPage from "./pages/user/RoomPage";
 import ConfirmationPage from "./pages/user/ConfirmationPage";
+import ChatRoompage from "./pages/user/ChatRoompage";
+import AdminProvider from "./providers/AdminProvider";
+import UserProfile from "./pages/user/UserProfile";
 
 function App() {
   const {
@@ -58,11 +61,11 @@ function App() {
         },
         {
           path: "/rooms",
-          element: <RoomPage />
+          element: <RoomPage />,
         },
         {
           path: "/confirmation",
-          element: <ConfirmationPage />
+          element: <ConfirmationPage />,
         },
         {
           path: "/destination",
@@ -120,11 +123,19 @@ function App() {
           path: "/busconfirmation",
           element: <BusAndHotelConfirmation />,
         },
+        {
+          path: "/chatroom",
+          element: <ChatRoompage />,
+        },
+        {
+          path: "/userprofile",
+          element: <UserProfile />,
+        },
       ],
     },
     {
       path: "/admin",
-      element: <AdminLayout />,
+      element: <AdminProvider />,
       children: [
         {
           index: true,
