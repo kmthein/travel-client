@@ -5,14 +5,15 @@ import noImg from "../../assets/img/common/no_img.jpg";
 import roomImg from "../../assets/room.jpg";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { saveRoom, selectState } from "../../features/select/SelectSlice";
+import { addPlan, selectState } from "../../features/select/SelectSlice";
+import SelectStep from "../../components/user/common/SelectStep";
 
 const RoomPage = () => {
   const navigate = useNavigate();
 
-  const { selectedHotel } = useSelector(selectState);
+  const { selectedPlan, hotelPlusFlight } = useSelector(selectState);
 
-  const { roomList } = selectedHotel;
+  const { roomList } = selectedPlan.hotel;
 
   const dispatch = useDispatch();
 
@@ -21,26 +22,7 @@ const RoomPage = () => {
   return (
     <div className="w-[70%] mx-auto px-4">
       <div className="w-4/5 my-10 mx-auto">
-        <Steps
-          size="small"
-          items={[
-            {
-              title: "Select Hotel",
-              status: "finish",
-              icon: <FaHotel />,
-            },
-            {
-              title: "Select Room",
-              status: "process",
-              icon: <FaBed />,
-            },
-            {
-              title: "Confirmation",
-              status: "wait",
-              icon: <FaCheckCircle />,
-            },
-          ]}
-        />
+        <SelectStep />
       </div>
       <div className="flex items-center ml-20 text-2xl">
         <FaBed />
@@ -52,10 +34,15 @@ const RoomPage = () => {
           roomList.map((room, index) => (
             <div
               key={index}
-              className="my-4 p-4 border border-gray-300 rounded-2xl flex"
+              className="my-4 p-4 border border-gray-300 rounded-2xl flex gap-4"
             >
               <div className="w-1/3 p-2">
-                <Image src={room?.image ? room?.image[0].imgUrl : noImg} width={300} height={300} />
+                <Image
+                  src={room?.image ? room?.image[0].imgUrl : noImg}
+                  width={"100%"}
+                  height={"100%"}
+                  style={{ objectFit: "cover" }}
+                />
               </div>
               <div className="w-2/3 p-2">
                 <div className="flex justify-between">
@@ -75,7 +62,11 @@ const RoomPage = () => {
                   <Button
                     className="bg-blue-500 text-white p-2"
                     onClick={() => {
-                      dispatch(saveRoom(room));
+                      dispatch(
+                        addPlan({
+                          room,
+                        })
+                      );
                       navigate("/confirmation");
                     }}
                   >
