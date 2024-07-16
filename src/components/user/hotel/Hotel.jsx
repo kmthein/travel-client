@@ -62,23 +62,6 @@ function Hotel() {
 
   const items = [
     {
-      key: "1",
-      label: <h2 className="font-bold text-lg">Property Type</h2>,
-      children: (
-        <div className="flex flex-col gap-2">
-          <div>
-            <Checkbox>Hotel</Checkbox>
-          </div>
-          <div>
-            <Checkbox>Resort</Checkbox>
-          </div>
-          <div>
-            <Checkbox>Guesthouse</Checkbox>
-          </div>
-        </div>
-      ),
-    },
-    {
       key: "2",
       label: <h2 className="font-bold text-lg">Rating</h2>,
       children: (
@@ -93,20 +76,20 @@ function Hotel() {
         </div>
       ),
     },
-    {
-      key: "3",
-      label: <h2 className="font-bold text-lg">Price</h2>,
-      children: (
-        <div className="flex flex-col gap-2">
-          <div>
-            <Checkbox>Maximum Price</Checkbox>
-          </div>
-          <div>
-            <Checkbox>Minimum Price</Checkbox>
-          </div>
-        </div>
-      ),
-    },
+    // {
+    //   key: "3",
+    //   label: <h2 className="font-bold text-lg">Price</h2>,
+    //   children: (
+    //     <div className="flex flex-col gap-2">
+    //       <div>
+    //         <Checkbox>Maximum Price</Checkbox>
+    //       </div>
+    //       <div>
+    //         <Checkbox>Minimum Price</Checkbox>
+    //       </div>
+    //     </div>
+    //   ),
+    // },
   ];
 
   const dispatch = useDispatch();
@@ -353,7 +336,9 @@ function Hotel() {
                 </div>
               </div>
             ))}
-          {filteredHotel.length == 0 && <h5>Hotel Not Available</h5>}
+          {filteredHotel.length == 0 && allHotels.length == 0 && (
+            <h5>Hotel Not Available</h5>
+          )}
         </div>
       </div>
     </div>

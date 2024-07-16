@@ -180,7 +180,7 @@ const ConfirmationPage = () => {
                 <p>-$36</p>
               </div>
             </div>
-            <hr className="my-2 h-px bg-black" />
+            <hr className="my-2 h-[0.5px] bg-black" />
             <div className="flex justify-between text-md font-semibold m-2 p-2">
               <p>Total</p>
               <p>$183</p>
