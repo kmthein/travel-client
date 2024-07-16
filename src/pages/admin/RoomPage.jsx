@@ -1,17 +1,35 @@
 import { Button, Table, Form } from "antd";
 import React, { useState, useEffect } from "react";
 import { IoMdAdd } from "react-icons/io";
-import { Link, useNavigate } from "react-router-dom";
-import HotelForm from "../../components/admin/form/HotelForm";
-import RoomPage from "./RoomPage";
+import { Link, useParams } from "react-router-dom";
+import RoomForm from "../../components/admin/form/RoomForm";
+import {
+  getAllRoomByHotelId,
+  getRoomById,
+  createRoom,
+  updateRoom,
+  deleteRoomById,
+} from "../../api/roomapi";
 import {
   getAllHotel,
+  getHotelById,
   createHotel,
   updateHotel,
   deleteHotelById,
 } from "../../api/hotelapi";
 
-const HotelPage = ({ getColumnSearchProps }) => {
+const RoomPage = ({ getColumnSearchProps }) => {
+  const [data, setData] = useState([]);
+  const [editForm, setEditForm] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [selectedHotelId, setSelectedHotelId] = useState(null);
+  const [selectedRoomId, setSelectedRoomId] = useState(null);
+  const [images, setImages] = useState([]);
+  const [previewImg, setPreviewImg] = useState([]);
+  const [hotelName, setHotelName] = useState("Hotel");
+
+  const [form] = Form.useForm();
+
   const columns = [
     {
       title: "Image",
@@ -23,43 +41,25 @@ const HotelPage = ({ getColumnSearchProps }) => {
       width: "10%",
     },
     {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
+      title: "Room Type",
+      dataIndex: "roomType",
+      key: "roomType",
       width: "20%",
-      ...getColumnSearchProps("name"),
-      render: (text, record) => (
-        <div className="flex gap-4">
-          <Link
-            to={`/admin/room/${record.key}`}
-            // className=" text-red-600"
-            onClick={() => setSelectedHotelId(record.key)}
-          >
-            {record.name}
-          </Link>
-        </div>
-      ),
+      ...getColumnSearchProps("roomType"),
     },
     {
-      title: "Description",
-      dataIndex: "description",
-      key: "description",
+      title: "Valid Room",
+      dataIndex: "validRoom",
+      key: "validRoom",
       width: "40%",
-      ...getColumnSearchProps("description"),
+      ...getColumnSearchProps("validRoom"),
     },
     {
-      title: "Rating",
-      dataIndex: "rating",
-      key: "rating",
+      title: " Room Price",
+      dataIndex: "roomPrice",
+      key: "roomPrice",
       width: "10%",
-      ...getColumnSearchProps("rating"),
-    },
-    {
-      title: "Location",
-      dataIndex: "location",
-      key: "location",
-      width: "30%",
-      ...getColumnSearchProps("location"),
+      ...getColumnSearchProps("roomPrice"),
     },
     {
       title: "Action",
@@ -70,7 +70,7 @@ const HotelPage = ({ getColumnSearchProps }) => {
           <span
             className=" cursor-pointer"
             onClick={() => {
-              setSelectedHotelId(record.key);
+              setSelectedRoomId(record.key);
               setOpen(true);
               setEditForm(true);
             }}
@@ -80,7 +80,7 @@ const HotelPage = ({ getColumnSearchProps }) => {
           <Link
             to={""}
             className=" text-red-600"
-            onClick={() => deleteHotel(record.key)}
+            onClick={() => deleteRoom(record.key)}
           >
             Delete
           </Link>
@@ -89,26 +89,18 @@ const HotelPage = ({ getColumnSearchProps }) => {
     },
   ];
 
-  const [data, setData] = useState([]);
-  const [editForm, setEditForm] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [selectedHotelId, setSelectedHotelId] = useState(null);
-  const [images, setImages] = useState([]);
-  const [previewImg, setPreviewImg] = useState([]);
-
-  const [form] = Form.useForm();
-
   const showModal = () => {
     setOpen(true);
   };
-  const getHotels = async () => {
+  const getRooms = async () => {
     try {
-      let res = await getAllHotel();
+      if (selectedHotelId === null) return;
+      let res = await getAllRoomByHotelId(selectedHotelId);
       const modifiedData = res.data.map((d) => {
         return {
           ...d,
           key: d.id,
-          image: d.imgUrlList[0],
+          image: d.image[0]?.imgUrl,
         };
       });
       setData(modifiedData);
@@ -117,30 +109,38 @@ const HotelPage = ({ getColumnSearchProps }) => {
     }
   };
 
-  const createHotel = async () => {
+  const deleteRoom = async (id) => {
     try {
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const deleteHotel = async (id) => {
-    try {
-      let res = await deleteHotelById(id);
-      getHotels();
+      let res = await deleteRoomById(id);
+      getRooms();
       console.log(res);
       return res;
     } catch (error) {
       console.log(error);
     }
   };
+  const hotelId = useParams().id;
+
   useEffect(() => {
-    getHotels();
-  }, [open]);
+    setSelectedHotelId(hotelId);
+  }, []);
+
+  const getHotel = async () => {
+    if (selectedHotelId !== null) {
+      const res = await getHotelById(selectedHotelId);
+      setHotelName(res.data.name);
+    }
+  };
+
+  useEffect(() => {
+    getHotel();
+    getRooms();
+  }, [selectedHotelId]);
   return (
     <>
       <div>
         <div className="flex justify-between my-4">
-          <h4 className=" font-semibold">All Hotels</h4>
+          <h4 className=" font-semibold">{hotelName}</h4>
           <Button
             type="primary"
             icon={<IoMdAdd />}
@@ -156,13 +156,15 @@ const HotelPage = ({ getColumnSearchProps }) => {
             Add New
           </Button>
         </div>
-        <HotelForm
+        <RoomForm
           open={open}
           setOpen={setOpen}
           editForm={editForm}
           setEditForm={setEditForm}
           selectedHotelId={selectedHotelId}
-          getHotels={getHotels}
+          selectedRoomId={selectedRoomId}
+          setSelectedRoomId={setSelectedRoomId}
+          getRooms={getRooms}
           form={form}
           images={images}
           setImages={setImages}
@@ -175,4 +177,4 @@ const HotelPage = ({ getColumnSearchProps }) => {
   );
 };
 
-export default HotelPage;
+export default RoomPage;

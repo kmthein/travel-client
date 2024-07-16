@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   DatePicker,
   Select,
@@ -8,16 +8,51 @@ import {
   Checkbox,
   Image,
   Rate,
+  Form,
 } from "antd";
 import { FaCalendarAlt, FaSearch, FaUser } from "react-icons/fa";
 import beachImg from "../../../assets/img/hotel/beach_hotel_1.jpg";
 import { FaLocationDot } from "react-icons/fa6";
+import { getAllHotels } from "../../../api/hotel";
+import noImg from "../../../assets/img/common/no_img.jpg";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addPlan, saveHotel } from "../../../features/select/SelectSlice";
 
 function Hotel() {
-  const [search, setSearch] = useState("");
+  const [allHotels, setAllHotels] = useState([]);
+  const [input, setInput] = useState("");
   const [checkInDate, setCheckInDate] = useState(null);
   const [checkOutDate, setCheckOutDate] = useState(null);
   const [numberOfGuest, setNumberOfGuest] = useState(1);
+  const [notFound, setNotFound] = useState(false);
+  const [filteredHotel, setFilteredHotel] = useState([]);
+
+  const [form] = Form.useForm();
+
+  const [searchParams] = useSearchParams();
+
+  const id = searchParams.get("id");
+
+  const fetchAllHotels = async () => {
+    const res = await getAllHotels();
+    console.log(res.data);
+    if (res.status == 200) {
+      if (id) {
+        const filteredHotels = res.data.filter((hotel) => hotel.id == id);
+        filteredHotels.map((hotel) => form.setFieldValue("hotel", hotel.name));
+        setFilteredHotel(filteredHotels);
+        return;
+      }
+      setAllHotels(res.data);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllHotels();
+  }, []);
+
+  const navigate = useNavigate();
 
   const items = [
     {
@@ -68,6 +103,8 @@ function Hotel() {
     },
   ];
 
+  const dispatch = useDispatch();
+
   const disabledCheckInDate = (current) => {
     // Can not select days before today and today
     return current && current < new Date();
@@ -77,51 +114,109 @@ function Hotel() {
     return current && current < new Date();
   };
 
+  console.log(input);
+
+  const searchHotelHandler = async (values) => {
+    console.log(values);
+    const res = await getAllHotels();
+    let filteredHotels;
+    let validHotel;
+    if (id) {
+      filteredHotels = filteredHotel.map((hotel) => ({
+        ...hotel,
+        roomList: hotel.roomList.filter((room) => room.validRoom > 0),
+      }));
+      validHotel = filteredHotels.filter((hotel) => hotel.roomList.length > 0);
+    } else {
+      filteredHotels = allHotels.map((hotel) => ({
+        ...hotel,
+        roomList: hotel.roomList.filter((room) => room.validRoom > 0),
+      }));
+      validHotel = filteredHotels.filter((hotel) => hotel.roomList.length > 0);
+    }
+    if (validHotel.length > 0) {
+      setNotFound(true);
+    }
+    setFilteredHotel(validHotel);
+  };
+
+  const formattedDate = (date) => {
+    date.format("YYYY-MM-DD");
+  };
+
   return (
-    <div className="p-8 w-[70%] mx-auto  rounded-xl">
-      <div className="flex justify-between items-center bg-white p-4 rounded-lg shadow-md mb-8">
-        <Input
-          placeholder="Search Hotels"
-          className="w-96"
-          prefix={<FaSearch className="text-gray-400" />}
-          onChange={(e) => setSearch(e.target.value)}
-          onPressEnter={() => console.log(search)}
-        />
-        <DatePicker
-          placeholder="Check in"
-          suffixIcon={<FaCalendarAlt />}
-          className="w-32"
-          onChange={(value) => setCheckInDate(value ? value.toDate() : null)}
-        />
-        <DatePicker
-          placeholder="Check out"
-          suffixIcon={<FaCalendarAlt />}
-          className="w-32"
-          onChange={(value) => setCheckOutDate(value ? value.toDate() : null)}
-        />
-        <Select
-          defaultValue={1}
-          className="w-32"
-          suffixIcon={<FaUser />}
-          onChange={(value) => setNumberOfGuest(value)}
-          options={[
-            { value: 1, label: "1 passenger" },
-            { value: 2, label: "2 passengers" },
-            { value: 3, label: "3 passengers" },
-            { value: 4, label: "4 passengers" },
-          ]}
-        />
-        <Button
-          onClick={() => {
-            console.log(search);
-            console.log(checkInDate);
-            console.log(checkOutDate);
-            console.log(numberOfGuest);
-          }}
-          className="bg-blue-500 text-white rounded-lg w-40 hover:bg-blue-600 transition"
+    <div className="p-8 w-[70%] mx-auto rounded-xl">
+      <div>
+        <Form
+          layout="vertical"
+          form={form}
+          onFinish={searchHotelHandler}
+          className="flex justify-between items-center bg-white p-4 py-0 rounded-lg shadow-md mb-8"
         >
-          Search
-        </Button>
+          <Form.Item
+            name="hotel"
+            label="Hotel"
+            rules={[{ required: true, message: "Please select a hotel!" }]}
+          >
+            <Input
+              placeholder="Search Hotels"
+              className="w-96"
+              prefix={<FaSearch className="text-gray-400" />}
+            />
+          </Form.Item>
+          <Form.Item
+            name="checkin"
+            label="Check In"
+            rules={[
+              { required: true, message: "Please select a check in date!" },
+            ]}
+          >
+            <DatePicker
+              placeholder="Check in"
+              suffixIcon={<FaCalendarAlt />}
+              className="w-32"
+            />
+          </Form.Item>
+          <Form.Item
+            name="checkout"
+            label="Check Out"
+            rules={[
+              { required: true, message: "Please select a check out date!" },
+            ]}
+          >
+            <DatePicker
+              placeholder="Check Out"
+              suffixIcon={<FaCalendarAlt />}
+              className="w-32"
+            />
+          </Form.Item>
+          <Form.Item
+            name="guest"
+            label="Number of Guest"
+            rules={[
+              { required: true, message: "Please select a check out date!" },
+            ]}
+          >
+            <Select
+              defaultValue={1}
+              className="w-32"
+              suffixIcon={<FaUser />}
+              name="guest"
+              options={[
+                { value: 1, label: "1 person" },
+                { value: 2, label: "2 people" },
+                { value: 3, label: "3 people" },
+                { value: 4, label: "4 people" },
+              ]}
+            />
+          </Form.Item>
+          <Button
+            htmlType="submit"
+            className="bg-blue-500 text-white rounded-lg w-40 hover:bg-blue-600 transition"
+          >
+            Search
+          </Button>
+        </Form>
       </div>
       <div className="flex gap-8 mb-10">
         <div className="w-1/5">
@@ -136,43 +231,121 @@ function Hotel() {
         </div>
         <div className="w-4/5">
           <h2 className="text-2xl font-bold mb-4">All Hotels</h2>
-          {[...Array(3)].map((_, index) => (
-            <div
-              key={index}
-              className="flex gap-4 mb-6 p-4 border border-gray-300 rounded-lg shadow-sm"
-            >
-              <div className="w-1/3">
-                <Image src={beachImg} width="200px" height="200px" />
+          {filteredHotel &&
+            filteredHotel.length > 0 &&
+            filteredHotel.map((hotel, index) => (
+              <div
+                key={index}
+                className="flex gap-4 mb-6 p-4 border border-gray-300 rounded-lg shadow-sm"
+              >
+                <div className="w-1/3">
+                  <Image
+                    src={
+                      hotel?.imgUrlList.length > 0 ? hotel.imgUrlList[0] : noImg
+                    }
+                    width="200px"
+                    height="200px"
+                    className="object-cover"
+                  />
+                </div>
+                <div className="w-2/3">
+                  <div className="flex justify-between items-center mb-2">
+                    <p className="text-lg font-bold">{hotel.name}</p>
+                    <p className="text-lg font-bold">USD 72</p>
+                  </div>
+                  <Rate
+                    value={hotel.rating}
+                    disabled
+                    className="text-sm mb-2"
+                  />
+                  <div className="flex items-center mb-4">
+                    <FaLocationDot className="text-blue-400 mr-2" />
+                    <p className="text-base font-semibold text-blue-400">
+                      {hotel?.destination?.name}
+                    </p>
+                  </div>
+                  <p className="mb-4">This property offers:</p>
+                  <div className="flex justify-between">
+                    <div className="flex gap-2">
+                      <Button className="rounded-lg">Breakfast</Button>
+                      <Button className="rounded-lg">Sea View</Button>
+                      <Button className="rounded-lg">Free Wifi</Button>
+                    </div>
+                    <div>
+                      <Button
+                        className="bg-blue-500 text-white p-3"
+                        onClick={() => {
+                          dispatch(
+                            addPlan({
+                              checkInDate: checkInDate,
+                              checkOutDate: checkOutDate,
+                            })
+                          );
+                          dispatch(saveHotel(hotel));
+                          navigate(`/rooms?hotel=${hotel.id}`);
+                        }}
+                      >
+                        Select Room
+                      </Button>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="w-2/3">
-                <div className="flex justify-between items-center mb-2">
-                  <p className="text-lg font-bold">
-                    Ngwe Saung Yacht Club and Resort
-                  </p>
-                  <p className="text-lg font-bold">USD 72</p>
+            ))}
+          {filteredHotel?.length == 0 &&
+            allHotels &&
+            allHotels.length > 0 &&
+            allHotels.map((hotel, index) => (
+              <div
+                key={index}
+                className="flex gap-4 mb-6 p-4 border border-gray-300 rounded-lg shadow-sm"
+              >
+                <div className="w-1/3">
+                  <Image
+                    src={
+                      hotel?.imgUrlList.length > 0 ? hotel.imgUrlList[0] : noImg
+                    }
+                    width="200px"
+                    height="200px"
+                    className="object-cover"
+                  />
                 </div>
-                <Rate value={5} className="text-sm mb-2" />
-                <div className="flex items-center mb-4">
-                  <FaLocationDot className="text-blue-400 mr-2" />
-                  <p className="text-base font-semibold text-blue-400">
-                    Beach front, Ngwe Saung Beach
-                  </p>
-                </div>
-                <p className="mb-4">This property offers:</p>
-                <div className="flex gap-2">
-                  <Button className="bg-green-500 text-white rounded-lg">
-                    Breakfast
-                  </Button>
-                  <Button className="bg-green-500 text-white rounded-lg">
-                    Sea View
-                  </Button>
-                  <Button className="bg-green-500 text-white rounded-lg">
-                    Free Wifi
-                  </Button>
+                <div className="w-2/3">
+                  <div className="flex justify-between items-center mb-2">
+                    <p className="text-lg font-bold">{hotel.name}</p>
+                    <p className="text-lg font-bold">USD 72</p>
+                  </div>
+                  <Rate
+                    value={hotel.rating}
+                    disabled
+                    className="text-sm mb-2"
+                  />
+                  <div className="flex items-center mb-4">
+                    <FaLocationDot className="text-blue-400 mr-2" />
+                    <p className="text-base font-semibold text-blue-400">
+                      {hotel?.destination?.name}
+                    </p>
+                  </div>
+                  <p className="mb-4">This property offers:</p>
+                  <div className="flex justify-between">
+                    <div className="flex gap-2">
+                      <Button className="rounded-lg">Breakfast</Button>
+                      <Button className="rounded-lg">Sea View</Button>
+                      <Button className="rounded-lg">Free Wifi</Button>
+                    </div>
+                    <div>
+                      <Button
+                        className="bg-blue-500 text-white p-3"
+                        onClick={() => navigate("/rooms")}
+                      >
+                        Select Room
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          {filteredHotel.length == 0 && <h5>Hotel Not Available</h5>}
         </div>
       </div>
     </div>
