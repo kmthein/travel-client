@@ -1,26 +1,49 @@
 import { Button, Select, DatePicker } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaCalendarAlt, FaPlane } from "react-icons/fa";
 import { FaLocationDot, FaUser } from "react-icons/fa6";
+import { getAllDestinations } from "../../../api/destination";
 
 const FlightTicketSearch = () => {
   const [ticketOption, setTicketOption] = useState("Round Trip");
-  const [from, setFrom] = useState("");
+  const [departurePlace, setDeparturePlace] = useState(null);
   const [destination, setDestination] = useState("");
   const [departureDate, setDepartureDate] = useState(null);
   const [returnDate, setReturnDate] = useState(null);
   const [numberOfPassenger, setNumberOfPassenger] = useState(1);
+  const [places, setPlaces] = useState([]);
 
   const disabledDepartureDate = (current) => {
-    // Can not select days before today and today
     return current && current < new Date();
   };
   const disabledReturnDate = (current) => {
-    // Can not select days before today and today
-
     return current && current < new Date();
   };
+  useEffect(() => {
+    getAllPlaces();
+  }, []);
 
+  const getAllPlaces = async () => {
+    try {
+      let placesRes = await getAllDestinations();
+      setPlaces(
+        placesRes.data.map((res) => {
+          return {
+            value: res.id,
+            label: res.name,
+          };
+        })
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+  const handleDepartureChange = (value) => {
+    setDeparturePlace(value);
+  };
+  const filteredArrivalPlaces = departurePlace
+    ? places.filter((place) => place.value !== departurePlace)
+    : places;
   return (
     <div
       style={{
@@ -63,25 +86,8 @@ const FlightTicketSearch = () => {
         variant="filled"
         showSearch={true}
         suffixIcon={<FaPlane />}
-        onChange={(value) => setFrom(value)}
-        options={[
-          {
-            value: "Yangon",
-            label: "Yangon",
-          },
-          {
-            value: "Mandalay",
-            label: "Mandalay",
-          },
-          {
-            value: "Taung Gyi",
-            label: "Taung Gyi",
-          },
-          {
-            value: "Naw Pyi Taw",
-            label: "Naw Pyi Taw",
-          },
-        ]}
+        onChange={(value) => handleDepartureChange(value)}
+        options={places}
       />
       <Select
         placeholder="Destination"
@@ -92,24 +98,7 @@ const FlightTicketSearch = () => {
         showSearch={true}
         suffixIcon={<FaLocationDot />}
         onChange={(value) => setDestination(value)}
-        options={[
-          {
-            value: "Yangon",
-            label: "Yangon",
-          },
-          {
-            value: "Mandalay",
-            label: "Mandalay",
-          },
-          {
-            value: "Taung Gyi",
-            label: "Taung Gyi",
-          },
-          {
-            value: "Naw Pyi Taw",
-            label: "Naw Pyi Taw",
-          },
-        ]}
+        options={filteredArrivalPlaces}
       />
       <DatePicker
         placeholder="Departure"
@@ -163,7 +152,7 @@ const FlightTicketSearch = () => {
       <Button
         onClick={() => {
           console.log(ticketOption);
-          console.log(from);
+          console.log(departurePlace);
           console.log(destination);
           console.log(departureDate);
           console.log(returnDate);

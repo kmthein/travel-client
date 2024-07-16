@@ -21,6 +21,14 @@ export const getAllFlightSchedule = async () => {
     return error.response;
   }
 };
+export const getAllAvailableFlight = async () => {
+  try {
+    const res = await api.get("/api/flight-schedule/available-flight");
+    return res;
+  } catch (err) {
+    return err.response;
+  }
+};
 
 export const getFlightScheduleById = async (id) => {
   try {

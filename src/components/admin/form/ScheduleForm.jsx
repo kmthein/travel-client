@@ -28,7 +28,6 @@ const ScheduleForm = ({
   selectedBusSchedule,
 }) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
-  console.log(selectedBusSchedule);
   const [form] = Form.useForm();
   useEffect(() => {
     handleEdit(isFlight ? selectedFlightSchedule : selectedBusSchedule);

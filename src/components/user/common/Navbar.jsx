@@ -26,10 +26,18 @@ const Navbar = () => {
 
   const userItems = [
     {
+      label: <Link to="/chatroom">Chatroom</Link>,
+      key: "1",
+    },
+    {
+      label: <Link to="/userprofile">UserProfile</Link>,
+      key: "1",
+    },
+    {
       label: <span onClick={() => dispatch(logoutUser())}>Logout</span>,
-      key: "1"
-    }
-  ]
+      key: "2",
+    },
+  ];
 
   return (
     <div>
@@ -75,16 +83,16 @@ const Navbar = () => {
             {user ? (
               <li>
                 <Dropdown menu={{ items: userItems }}>
-                <Avatar
-                className="cursor-pointer"
-                  icon={
-                    user?.image.length != 0 ? (
-                      <img src={user?.image} />
-                    ) : (
-                      <BiUser />
-                    )
-                  }
-                />
+                  <Avatar
+                    className="cursor-pointer"
+                    icon={
+                      user?.image.length != 0 ? (
+                        <img src={user?.image} />
+                      ) : (
+                        <BiUser />
+                      )
+                    }
+                  />
                 </Dropdown>
               </li>
             ) : (

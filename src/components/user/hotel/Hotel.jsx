@@ -145,9 +145,14 @@ function Hotel() {
   };
 
   return (
-    <div className="p-8 w-[70%] mx-auto rounded-xl">
+    <div className=" w-[70%] mx-auto rounded-xl">
       <div>
-        <Form layout="vertical" form={form} onFinish={searchHotelHandler} className="flex justify-between items-center bg-white p-4 py-0 rounded-lg shadow-md mb-8">
+        <Form
+          layout="vertical"
+          form={form}
+          onFinish={searchHotelHandler}
+          className="flex justify-between items-center bg-white p-4 py-0 rounded-lg shadow-md mb-8"
+        >
           <Form.Item
             name="hotel"
             label="Hotel"
@@ -162,42 +167,48 @@ function Hotel() {
           <Form.Item
             name="checkin"
             label="Check In"
-            rules={[{ required: true, message: "Please select a check in date!" }]}
+            rules={[
+              { required: true, message: "Please select a check in date!" },
+            ]}
           >
-          <DatePicker
-            placeholder="Check in"
-            suffixIcon={<FaCalendarAlt />}
-            className="w-32"
-          />
+            <DatePicker
+              placeholder="Check in"
+              suffixIcon={<FaCalendarAlt />}
+              className="w-32"
+            />
           </Form.Item>
           <Form.Item
             name="checkout"
             label="Check Out"
-            rules={[{ required: true, message: "Please select a check out date!" }]}
+            rules={[
+              { required: true, message: "Please select a check out date!" },
+            ]}
           >
-          <DatePicker
-            placeholder="Check Out"
-            suffixIcon={<FaCalendarAlt />}
-            className="w-32"
-          />
+            <DatePicker
+              placeholder="Check Out"
+              suffixIcon={<FaCalendarAlt />}
+              className="w-32"
+            />
           </Form.Item>
           <Form.Item
             name="guest"
             label="Number of Guest"
-            rules={[{ required: true, message: "Please select a check out date!" }]}
-          >
-          <Select
-            defaultValue={1}
-            className="w-32"
-            suffixIcon={<FaUser />}
-            name="guest"
-            options={[
-              { value: 1, label: "1 person" },
-              { value: 2, label: "2 people" },
-              { value: 3, label: "3 people" },
-              { value: 4, label: "4 people" },
+            rules={[
+              { required: true, message: "Please select a check out date!" },
             ]}
-          />
+          >
+            <Select
+              defaultValue={1}
+              className="w-32"
+              suffixIcon={<FaUser />}
+              name="guest"
+              options={[
+                { value: 1, label: "1 person" },
+                { value: 2, label: "2 people" },
+                { value: 3, label: "3 people" },
+                { value: 4, label: "4 people" },
+              ]}
+            />
           </Form.Item>
           <Button
             htmlType="submit"

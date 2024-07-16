@@ -8,8 +8,8 @@ import About from "../../components/user/home/About";
 const HomePage = () => (
   <>
     <Hero />
-    <About />
     <PopularPlace />
+    <About />
     <OurService />
     <Faq />
   </>

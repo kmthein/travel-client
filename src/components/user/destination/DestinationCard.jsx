@@ -27,12 +27,8 @@ const DestinationCard = ({
     >
       <Meta
         title={
-          <div className="flex justify-between items-center">
-            <h3 className="text-lg font-semibold">{name}</h3>
-            <div className="flex items-center">
-              <IoIosStar className="text-yellow-500" />
-              <span className="ml-1 text-gray-600">4.7</span>
-            </div>
+          <div className="">
+            <h3 className="text-lg font-semibold text-center">{name}</h3>
           </div>
         }
         description={
