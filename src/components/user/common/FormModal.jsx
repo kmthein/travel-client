@@ -94,10 +94,10 @@ const FormModal = () => {
       formData.append("password", password);
       res = await login(formData);
       console.log(res);
-      if (res.data.statusCodeValue == 401) {
-        toast.error(res.data.body);
+      if (res.data.statusCodeValue == 401 || res.status == 403) {
+        toast.error("Incorrect email or password");
         form.setFieldValue("password", "");
-      } else {
+      } else if (res.status == 200) { 
         toast.success("Login successful");
         const { userDetails, token } = res.data;
         dispatch(loginUser({ user: userDetails, token }));

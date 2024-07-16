@@ -17,7 +17,7 @@ import { getAllHotels } from "../../../api/hotel";
 import noImg from "../../../assets/img/common/no_img.jpg";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { addPlan, saveHotel } from "../../../features/select/SelectSlice";
+import { addPlan, selectHotel } from "../../../features/select/SelectSlice";
 
 function Hotel() {
   const [allHotels, setAllHotels] = useState([]);
@@ -27,6 +27,7 @@ function Hotel() {
   const [numberOfGuest, setNumberOfGuest] = useState(1);
   const [notFound, setNotFound] = useState(false);
   const [filteredHotel, setFilteredHotel] = useState([]);
+  const [daysBetween, setDaysBetween] = useState(null);
 
   const [form] = Form.useForm();
 
@@ -116,8 +117,29 @@ function Hotel() {
 
   console.log(input);
 
+  const calculateDaysBetween = (checkIn, checkOut) => {
+    const date1 = new Date(checkIn);
+    const date2 = new Date(checkOut);
+
+    if (date1 > date2) {
+      alert("Check-out date must be after check-in date.");
+      return;
+    }
+
+    const timeDifference = date2 - date1;
+    const daysDifference = timeDifference / (1000 * 3600 * 24);
+
+    setDaysBetween(daysDifference);
+  };
+
   const searchHotelHandler = async (values) => {
     console.log(values);
+    setCheckInDate(formattedDate(values.checkin));
+    setCheckOutDate(formattedDate(values.checkout));
+    calculateDaysBetween(
+      formattedDate(values.checkin),
+      formattedDate(values.checkout)
+    );
     const res = await getAllHotels();
     let filteredHotels;
     let validHotel;
@@ -140,8 +162,10 @@ function Hotel() {
     setFilteredHotel(validHotel);
   };
 
+  console.log(daysBetween);
+
   const formattedDate = (date) => {
-    date.format("YYYY-MM-DD");
+    return date.format("YYYY-MM-DD");
   };
 
   return (
@@ -153,20 +177,24 @@ function Hotel() {
           onFinish={searchHotelHandler}
           className="flex justify-between items-center bg-white p-4 py-0 rounded-lg shadow-md mb-8"
         >
+<<<<<<< HEAD
           <Form.Item
             name="hotel"
             label="Hotel"
             rules={[{ required: true, message: "Please select a hotel!" }]}
           >
+=======
+          <Form.Item name="hotel" label="Hotel">
+>>>>>>> 730d99900d861bc02ed7151fe9e331fa73509871
             <Input
               placeholder="Search Hotels"
-              className="w-96"
               prefix={<FaSearch className="text-gray-400" />}
             />
           </Form.Item>
           <Form.Item
             name="checkin"
             label="Check In"
+<<<<<<< HEAD
             rules={[
               { required: true, message: "Please select a check in date!" },
             ]}
@@ -176,17 +204,27 @@ function Hotel() {
               suffixIcon={<FaCalendarAlt />}
               className="w-32"
             />
+=======
+            rules={[{ required: true, message: "Select check in date!" }]}
+          >
+            <DatePicker placeholder="Check in" suffixIcon={<FaCalendarAlt />} />
+>>>>>>> 730d99900d861bc02ed7151fe9e331fa73509871
           </Form.Item>
           <Form.Item
             name="checkout"
             label="Check Out"
+<<<<<<< HEAD
             rules={[
               { required: true, message: "Please select a check out date!" },
             ]}
+=======
+            rules={[{ required: true, message: "Select check out date!" }]}
+>>>>>>> 730d99900d861bc02ed7151fe9e331fa73509871
           >
             <DatePicker
               placeholder="Check Out"
               suffixIcon={<FaCalendarAlt />}
+<<<<<<< HEAD
               className="w-32"
             />
           </Form.Item>
@@ -200,6 +238,13 @@ function Hotel() {
             <Select
               defaultValue={1}
               className="w-32"
+=======
+            />
+          </Form.Item>
+          <Form.Item name="guest" label="Number of Guest">
+            <Select
+              defaultValue={1}
+>>>>>>> 730d99900d861bc02ed7151fe9e331fa73509871
               suffixIcon={<FaUser />}
               name="guest"
               options={[
@@ -277,11 +322,13 @@ function Hotel() {
                         onClick={() => {
                           dispatch(
                             addPlan({
-                              checkInDate: checkInDate,
-                              checkOutDate: checkOutDate,
+                              checkInDate,
+                              checkOutDate,
+                              hotel,
+                              totalNight: daysBetween,
                             })
                           );
-                          dispatch(saveHotel(hotel));
+                          dispatch(selectHotel());
                           navigate(`/rooms?hotel=${hotel.id}`);
                         }}
                       >
@@ -336,7 +383,18 @@ function Hotel() {
                     <div>
                       <Button
                         className="bg-blue-500 text-white p-3"
-                        onClick={() => navigate("/rooms")}
+                        onClick={() => {
+                          dispatch(
+                            addPlan({
+                              checkInDate,
+                              checkOutDate,
+                              hotel,
+                              totalNight: daysBetween,
+                            })
+                          );
+                          dispatch(selectHotel());
+                          navigate(`/rooms?hotel=${hotel.id}`);
+                        }}
                       >
                         Select Room
                       </Button>

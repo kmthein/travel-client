@@ -35,7 +35,11 @@ const Navbar = () => {
     },
     {
       label: <span onClick={() => dispatch(logoutUser())}>Logout</span>,
+<<<<<<< HEAD
       key: "2",
+=======
+      key: "1",
+>>>>>>> 730d99900d861bc02ed7151fe9e331fa73509871
     },
   ];
 
@@ -86,8 +90,13 @@ const Navbar = () => {
                   <Avatar
                     className="cursor-pointer"
                     icon={
+<<<<<<< HEAD
                       user?.image.length != 0 ? (
                         <img src={user?.image} />
+=======
+                      user?.image?.length != 0 ? (
+                        <img src={user?.image[0]?.imgUrl} />
+>>>>>>> 730d99900d861bc02ed7151fe9e331fa73509871
                       ) : (
                         <BiUser />
                       )

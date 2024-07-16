@@ -1,30 +1,46 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    selectedPlan: {},
-    selectedHotel: null,
-    selectedRoom: null,
-    selectedBus: null,
-    selectedFlight: null
-}
+  selectedPlan: {},
+  hotelOnly: false,
+  flightOnly: false,
+  busOnly: false,
+  hotelPlusFlight: false,
+  hotelPlusBus: false,
+};
 
 const SelectSlice = createSlice({
-    name: "select",
-    initialState,
-    reducers: {
-        addPlan: (state, { payload }) => {
-            state.selectedPlan = {...state.selectedPlan, payload};
-        },
-        saveHotel: (state, { payload }) => {
-            state.selectedHotel = payload;
-        },
-        saveRoom: (state, { payload }) => {
-            state.selectedRoom = payload;
-        },
-        
-    }
-})
+  name: "select",
+  initialState,
+  reducers: {
+    addPlan: (state, { payload }) => {
+      state.selectedPlan = { ...state.selectedPlan, ...payload };
+    },
+    selectHotel: (state) => {
+      state.hotelOnly = true;
+    },
+    selectFlight: (state) => {
+      state.flightOnly = true;
+    },
+    selectBus: (state) => {
+      state.BusOnly = true;
+    },
+    selectHotelPlusFlight: (state) => {
+      state.hotelPlusFlight = true;
+    },
+    selectHotelPlusBus: (state) => {
+      state.hotelPlusBus = true;
+    },
+  },
+});
 
-export const { addPlan, saveHotel, saveRoom } = SelectSlice.actions;
+export const {
+  addPlan,
+  selectHotel,
+  selectHotelPlusFlight,
+  selectHotelPlusBus,
+  selectFlight,
+  selectBus,
+} = SelectSlice.actions;
 export const selectState = (state) => state.select;
 export default SelectSlice.reducer;
