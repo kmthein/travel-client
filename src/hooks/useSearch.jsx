@@ -2,8 +2,12 @@ import React, { useRef, useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import Highlighter from "react-highlight-words";
 import { Button, DatePicker, Input, Space } from "antd";
+import { useSelector } from "react-redux";
+import { selectState } from "../features/select/SelectSlice";
 
 const useSearch = () => {
+  const { selectedPlan } = useSelector(selectState);
+
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
@@ -127,6 +131,7 @@ const useSearch = () => {
     handleSearch,
     handleReset,
     getColumnSearchProps,
+    selectedPlan,
   };
 };
 

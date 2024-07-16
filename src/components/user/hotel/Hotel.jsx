@@ -18,6 +18,11 @@ import noImg from "../../../assets/img/common/no_img.jpg";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addPlan, selectHotel } from "../../../features/select/SelectSlice";
+import {
+  calculateDaysBetween,
+  disablePastDates,
+  formattedDate,
+} from "../../../utils/utils";
 
 function Hotel() {
   const [allHotels, setAllHotels] = useState([]);
@@ -57,51 +62,32 @@ function Hotel() {
 
   const items = [
     {
-      key: "1",
-      label: <h2 className="font-bold text-lg">Property Type</h2>,
-      children: (
-        <div className="flex flex-col gap-2">
-          <div>
-            <Checkbox>Hotel</Checkbox>
-          </div>
-          <div>
-            <Checkbox>Resort</Checkbox>
-          </div>
-          <div>
-            <Checkbox>Guesthouse</Checkbox>
-          </div>
-        </div>
-      ),
-    },
-    {
       key: "2",
       label: <h2 className="font-bold text-lg">Rating</h2>,
       children: (
-        <div>
-          <div>
-            <Checkbox>5 Stars +</Checkbox>
-            <Checkbox>4 Stars +</Checkbox>
-            <Checkbox>3 Stars +</Checkbox>
-            <Checkbox>2 Stars +</Checkbox>
-            <Checkbox>1 Star +</Checkbox>
-          </div>
+        <div className="flex flex-wrap flex-col gap-2">
+          <Checkbox>5 Stars +</Checkbox>
+          <Checkbox>4 Stars +</Checkbox>
+          <Checkbox>3 Stars +</Checkbox>
+          <Checkbox>2 Stars +</Checkbox>
+          <Checkbox>1 Star +</Checkbox>
         </div>
       ),
     },
-    {
-      key: "3",
-      label: <h2 className="font-bold text-lg">Price</h2>,
-      children: (
-        <div className="flex flex-col gap-2">
-          <div>
-            <Checkbox>Maximum Price</Checkbox>
-          </div>
-          <div>
-            <Checkbox>Minimum Price</Checkbox>
-          </div>
-        </div>
-      ),
-    },
+    // {
+    //   key: "3",
+    //   label: <h2 className="font-bold text-lg">Price</h2>,
+    //   children: (
+    //     <div className="flex flex-col gap-2">
+    //       <div>
+    //         <Checkbox>Maximum Price</Checkbox>
+    //       </div>
+    //       <div>
+    //         <Checkbox>Minimum Price</Checkbox>
+    //       </div>
+    //     </div>
+    //   ),
+    // },
   ];
 
   const dispatch = useDispatch();
@@ -117,29 +103,15 @@ function Hotel() {
 
   console.log(input);
 
-  const calculateDaysBetween = (checkIn, checkOut) => {
-    const date1 = new Date(checkIn);
-    const date2 = new Date(checkOut);
-
-    if (date1 > date2) {
-      alert("Check-out date must be after check-in date.");
-      return;
-    }
-
-    const timeDifference = date2 - date1;
-    const daysDifference = timeDifference / (1000 * 3600 * 24);
-
-    setDaysBetween(daysDifference);
-  };
-
   const searchHotelHandler = async (values) => {
     console.log(values);
     setCheckInDate(formattedDate(values.checkin));
     setCheckOutDate(formattedDate(values.checkout));
-    calculateDaysBetween(
+    const totalNight = calculateDaysBetween(
       formattedDate(values.checkin),
       formattedDate(values.checkout)
     );
+    setDaysBetween(totalNight);
     const res = await getAllHotels();
     let filteredHotels;
     let validHotel;
@@ -164,10 +136,6 @@ function Hotel() {
 
   console.log(daysBetween);
 
-  const formattedDate = (date) => {
-    return date.format("YYYY-MM-DD");
-  };
-
   return (
     <div className=" w-[70%] mx-auto rounded-xl">
       <div>
@@ -188,7 +156,11 @@ function Hotel() {
             label="Check In"
             rules={[{ required: true, message: "Select check in date!" }]}
           >
-            <DatePicker placeholder="Check in" suffixIcon={<FaCalendarAlt />} />
+            <DatePicker
+              placeholder="Check in"
+              disabledDate={disablePastDates}
+              suffixIcon={<FaCalendarAlt />}
+            />
           </Form.Item>
           <Form.Item
             name="checkout"
@@ -197,6 +169,7 @@ function Hotel() {
           >
             <DatePicker
               placeholder="Check Out"
+              disabledDate={disablePastDates}
               suffixIcon={<FaCalendarAlt />}
             />
           </Form.Item>
@@ -254,7 +227,7 @@ function Hotel() {
                 <div className="w-2/3">
                   <div className="flex justify-between items-center mb-2">
                     <p className="text-lg font-bold">{hotel.name}</p>
-                    <p className="text-lg font-bold">USD 72</p>
+                    {/* <p className="text-lg font-bold">USD 72</p> */}
                   </div>
                   <Rate
                     value={hotel.rating}
@@ -318,7 +291,7 @@ function Hotel() {
                 <div className="w-2/3">
                   <div className="flex justify-between items-center mb-2">
                     <p className="text-lg font-bold">{hotel.name}</p>
-                    <p className="text-lg font-bold">USD 72</p>
+                    {/* <p className="text-lg font-bold">USD 72</p> */}
                   </div>
                   <Rate
                     value={hotel.rating}
@@ -361,7 +334,9 @@ function Hotel() {
                 </div>
               </div>
             ))}
-          {filteredHotel.length == 0 && <h5>Hotel Not Available</h5>}
+          {filteredHotel.length == 0 && allHotels.length == 0 && (
+            <h5>Hotel Not Available</h5>
+          )}
         </div>
       </div>
     </div>

@@ -34,6 +34,7 @@ import ConfirmationPage from "./pages/user/ConfirmationPage";
 import ChatRoompage from "./pages/user/ChatRoompage";
 import AdminProvider from "./providers/AdminProvider";
 import UserProfile from "./pages/user/UserProfile";
+import ConfirmProvider from "./providers/ConfirmProvider";
 
 function App() {
   const {
@@ -44,6 +45,7 @@ function App() {
     handleSearch,
     handleReset,
     getColumnSearchProps,
+    selectedPlan,
   } = useSearch();
 
   const router = createBrowserRouter([
@@ -65,7 +67,11 @@ function App() {
         },
         {
           path: "/confirmation",
-          element: <ConfirmationPage />,
+          element: (
+            <ConfirmProvider>
+              <ConfirmationPage />
+            </ConfirmProvider>
+          ),
         },
         {
           path: "/destination",
