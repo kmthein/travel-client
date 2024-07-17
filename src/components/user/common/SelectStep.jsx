@@ -12,23 +12,38 @@ const SelectStep = () => {
   const location = useLocation();
   const { pathname } = location;
 
-  console.log(pathname);
-
   const items = [];
 
   if (hotelOnly || hotelPlusBus || hotelPlusFlight) {
     items.push({
       title: "Select Hotel",
-      status: "finish",
+      status: pathname == "/hotels" ? "process" : "finish",
       icon: <FaHotel />,
     });
     items.push({
       title: "Select Room",
-      status: pathname == "/rooms" ? "process" : "finish",
+      status:
+        pathname == "/rooms"
+          ? "process"
+          : pathname == "/confirmation"
+          ? "finish"
+          : "wait",
       icon: <FaBed />,
     });
+    if (!hotelOnly) {
+      items.push({
+        title: "Select Flight",
+        status:
+          pathname == "/flights"
+            ? "process"
+            : pathname == "/confirmation"
+            ? "finish"
+            : "wait",
+        icon: <FaPlane />,
+      });
+    }
   }
-  if (flightOnly || hotelPlusFlight) {
+  if (flightOnly) {
     items.push({
       title: "Select Flight",
       status: "finish",

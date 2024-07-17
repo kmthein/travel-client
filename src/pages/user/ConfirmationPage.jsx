@@ -25,12 +25,13 @@ import { IoReturnUpBack } from "react-icons/io5";
 const ConfirmationPage = () => {
   const [paymentMethod, setPaymentMethod] = useState(null);
   const navigate = useNavigate();
-  const { selectedPlan } = useSelector(selectState);
-  const { hotel, room, flightOnly, hotelPlusFlight, totalNight } = selectedPlan;
+  const { selectedPlan, flightOnly, hotelPlusFlight } =
+    useSelector(selectState);
+  const { hotel, room, totalNight } = selectedPlan;
 
   console.log(+selectedPlan.checkOutDate - +selectedPlan.checkInDate);
 
-  console.log(selectedPlan);
+  console.log(selectState);
 
   return (
     <>
@@ -137,7 +138,7 @@ const ConfirmationPage = () => {
                     </div>
                   </div>
                 </div>
-                <hr className="my-2 h-px bg-black" />
+                <hr className="my-2 h-[0.5px] bg-black" />
               </>
             )}
             {flightOnly ||

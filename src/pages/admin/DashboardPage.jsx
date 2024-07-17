@@ -46,7 +46,7 @@ const DashboardPage = () => {
           <PieChart />
         </div>
       </div>
-      <div className="flex mt-6 gap-5">
+      <div className="flex my-6 gap-5">
         <div className=" w-[50%] bg-white rounded-lg pt-6 px-4">
           <LineChart />
         </div>
