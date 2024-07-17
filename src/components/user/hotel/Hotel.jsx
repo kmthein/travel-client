@@ -170,11 +170,6 @@ function Hotel() {
 
   return (
     <div className="p-8 w-[70%] mx-auto rounded-xl">
-      {hotelPlusFlight && (
-        <div className="mb-10">
-          <SelectStep />
-        </div>
-      )}
       <div>
         <Form
           layout="vertical"

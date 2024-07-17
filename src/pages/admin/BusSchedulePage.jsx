@@ -1,8 +1,9 @@
 import { Button, Table } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import { Link } from "react-router-dom";
 import ScheduleForm from "../../components/admin/form/ScheduleForm";
+import { getAllBusSchedule } from "../../api/busschedule";
 
 const BusSchedulePage = ({ getColumnSearchProps }) => {
   const dataSource = [
@@ -87,7 +88,7 @@ const BusSchedulePage = ({ getColumnSearchProps }) => {
           <span
             className=" cursor-pointer"
             onClick={() => {
-              setSelectedBookId(record.key);
+              setSelectedBusSchedule(record.key);
               setOpen(true);
               setEditForm(true);
             }}
@@ -105,8 +106,28 @@ const BusSchedulePage = ({ getColumnSearchProps }) => {
   const [data, setData] = useState([]);
   const [editForm, setEditForm] = useState(false);
   const [open, setOpen] = useState(false);
+  const [selectedBusSchedule, setSelectedBusSchedule] = useState(null);
   const showModal = () => {
     setOpen(true);
+  };
+  useEffect(() => {
+    getBusSchedule();
+  }, [open]);
+  const getBusSchedule = async () => {
+    let res = await getAllBusSchedule();
+    let modifiedData = res.data.map((item) => {
+      return {
+        key: item.id,
+        bus: item.busService.name,
+        departTime: item.departureTime,
+        arriveTime: item.arrivalTime,
+        date: item.date,
+        from: item.departurePlace.name,
+        to: item.arrivalPlace.name,
+        distance: item.distance,
+      };
+    });
+    setData(modifiedData);
   };
   return (
     <>
@@ -131,9 +152,10 @@ const BusSchedulePage = ({ getColumnSearchProps }) => {
           editForm={editForm}
           setEditForm={setEditForm}
           isFlight={false}
+          selectedBusSchedule={selectedBusSchedule}
         />
       </div>
-      <Table dataSource={dataSource} columns={columns} />
+      <Table dataSource={data} columns={columns} />
     </>
   );
 };

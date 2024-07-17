@@ -31,6 +31,9 @@ import MemberPage from "./pages/admin/MemberPage";
 import "react-toastify/dist/ReactToastify.css";
 import RoomPage from "./pages/user/RoomPage";
 import ConfirmationPage from "./pages/user/ConfirmationPage";
+import ChatRoompage from "./pages/user/ChatRoompage";
+import AdminProvider from "./providers/AdminProvider";
+import UserProfile from "./pages/user/UserProfile";
 import ConfirmProvider from "./providers/ConfirmProvider";
 
 function App() {
@@ -126,11 +129,19 @@ function App() {
           path: "/busconfirmation",
           element: <BusAndHotelConfirmation />,
         },
+        {
+          path: "/chatroom",
+          element: <ChatRoompage />,
+        },
+        {
+          path: "/userprofile",
+          element: <UserProfile />,
+        },
       ],
     },
     {
       path: "/admin",
-      element: <AdminLayout />,
+      element: <AdminProvider />,
       children: [
         {
           index: true,

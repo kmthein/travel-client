@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Button, Checkbox, Collapse, Input, Radio } from "antd";
 import { CiSearch } from "react-icons/ci";
-import NgweSaung from "../../../assets/img/destination/ngwesaung.png";
-import InLeLake from "../../../assets/img/destination/inlelake.png";
 import DestinationCard from "./DestinationCard";
-import { getAllDestinations, searchDestinationByKeyword } from "../../../api/destination";
+import {
+  getAllDestinations,
+  searchDestinationByKeyword,
+} from "../../../api/destination";
 import { toast } from "react-toastify";
 import { CgClose } from "react-icons/cg";
 
@@ -12,11 +13,11 @@ export const getUniqueCountries = (destinations) => {
   const countryAry = [];
   destinations.forEach((d) => {
     if (!countryAry.includes(d.country)) {
-       countryAry.push(d.country);
+      countryAry.push(d.country);
     }
-  })
+  });
   return countryAry;
-}
+};
 
 const Destination = () => {
   const [destinations, setDestinations] = useState([]);
@@ -25,7 +26,7 @@ const Destination = () => {
 
   const [countries, setCountries] = useState([]);
 
-  const [selectCountry, setSelectCountry] = useState(null);
+  const [selectCountry, setSelectCountry] = useState("All");
 
   const handleFilterCountry = (e) => {
     if (e.target.value == "All") {
@@ -34,9 +35,11 @@ const Destination = () => {
       return;
     }
     setSelectCountry(e.target.value);
-    const filterByCountry = destinations.filter((d) => d.country == e.target.value);
+    const filterByCountry = destinations.filter(
+      (d) => d.country == e.target.value
+    );
     setFilteredDestinations(filterByCountry);
-  }
+  };
 
   console.log(destinations);
 
@@ -46,30 +49,32 @@ const Destination = () => {
       label: <h2 className="font-bold text-lg">Country</h2>,
       children: (
         <Radio.Group onChange={handleFilterCountry} value={selectCountry}>
-        <div className="flex flex-col mb-1">
-          <Radio value={"All"}>{"All"}</Radio>
-        </div>
-        {countries && countries.length > 0 && countries.map((country) => (
           <div className="flex flex-col mb-1">
-          <Radio value={country}>{country}</Radio>
-        </div>
-        ))}
+            <Radio value={"All"}>{"All"}</Radio>
+          </div>
+          {countries &&
+            countries.length > 0 &&
+            countries.map((country) => (
+              <div className="flex flex-col mb-1">
+                <Radio value={country}>{country}</Radio>
+              </div>
+            ))}
         </Radio.Group>
       ),
     },
-    {
-      key: "2",
-      label: <h2 className="font-bold text-lg">Rating</h2>,
-      children: (
-        <div className="flex flex-wrap flex-col gap-2">
-          <Checkbox>5 Stars +</Checkbox>
-          <Checkbox>4 Stars +</Checkbox>
-          <Checkbox>3 Stars +</Checkbox>
-          <Checkbox>2 Stars +</Checkbox>
-          <Checkbox>1 Star +</Checkbox>
-        </div>
-      ),
-    },
+    // {
+    //   key: "2",
+    //   label: <h2 className="font-bold text-lg">Rating</h2>,
+    //   children: (
+    //     <div className="flex flex-wrap flex-col gap-2">
+    //       <Checkbox>5 Stars +</Checkbox>
+    //       <Checkbox>4 Stars +</Checkbox>
+    //       <Checkbox>3 Stars +</Checkbox>
+    //       <Checkbox>2 Stars +</Checkbox>
+    //       <Checkbox>1 Star +</Checkbox>
+    //     </div>
+    //   ),
+    // },
   ];
 
   const getAllDestinationHandler = async () => {
@@ -85,10 +90,9 @@ const Destination = () => {
     getAllDestinationHandler();
   }, []);
 
-
   const [keyword, setKeyword] = useState("");
 
-  const searchSubmit = async () => {    
+  const searchSubmit = async () => {
     if (keyword.length > 0 || keyword != "") {
       const res = await searchDestinationByKeyword({ keyword });
       console.log(res);
@@ -100,7 +104,7 @@ const Destination = () => {
     } else {
       toast.error("Please input a keyword !");
     }
-  }
+  };
 
   return (
     <>
@@ -109,12 +113,21 @@ const Destination = () => {
         <Input
           className="border-none focus:ring-0 flex-1"
           placeholder="Search By Destination"
-          value={keyword} onChange={(e) => setKeyword(e.target.value)}
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
         />
-        {keyword != "" && <p className="text-sm flex items-center text-[#d43b3b] gap-[2px] cursor-pointer" onClick={() => {
-          setKeyword("");
-          getAllDestinationHandler()
-          }}><CgClose /><span>Reset</span></p>}
+        {keyword != "" && (
+          <p
+            className="text-sm flex items-center text-[#d43b3b] gap-[2px] cursor-pointer"
+            onClick={() => {
+              setKeyword("");
+              getAllDestinationHandler();
+            }}
+          >
+            <CgClose />
+            <span>Reset</span>
+          </p>
+        )}
         <Button type="primary" onClick={searchSubmit} className="rounded-lg">
           Search
         </Button>
@@ -131,9 +144,10 @@ const Destination = () => {
           />
         </div>
         <div className="flex-1">
-          <h2 className="text-2xl font-bold mb-4">All Destinations</h2>
+          <h2 className="text-2xl font-bold mb-4">All Places</h2>
           <div className="flex flex-wrap gap-[20px]">
-            {!filteredDestinations && destinations &&
+            {!filteredDestinations &&
+              destinations &&
               destinations.length > 0 &&
               destinations.map((destination) => (
                 <DestinationCard
@@ -147,7 +161,7 @@ const Destination = () => {
                   id={destination?.id}
                 />
               ))}
-              {filteredDestinations &&
+            {filteredDestinations &&
               filteredDestinations.length > 0 &&
               filteredDestinations.map((destination) => (
                 <DestinationCard

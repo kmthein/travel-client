@@ -1,33 +1,12 @@
 import { Button, Table } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import { Link } from "react-router-dom";
 import ScheduleForm from "../../components/admin/form/ScheduleForm";
+import { getAllAirline } from "../../api/airlineapi";
+import { getAllFlightSchedule } from "../../api/flightschedule";
 
 const FlightSchedulePage = ({ getColumnSearchProps }) => {
-  const dataSource = [
-    {
-      key: "1",
-      airline: "Myanmar Airways International",
-      departTime: "12:00",
-      arriveTime: "2:00",
-      date: "2024-08-12",
-      from: "Yangon",
-      to: "Bagan",
-      distance: "335",
-    },
-    {
-      key: "2",
-      airline: "Myanmar Airways International",
-      departTime: "6:00",
-      arriveTime: "7:00",
-      date: "2024-08-12",
-      from: "Yangon",
-      to: "Mandalay",
-      distance: "425",
-    },
-  ];
-
   const columns = [
     {
       title: "Airline",
@@ -87,7 +66,7 @@ const FlightSchedulePage = ({ getColumnSearchProps }) => {
           <span
             className=" cursor-pointer"
             onClick={() => {
-              setSelectedBookId(record.key);
+              setSelectedFlightSchedule(record.key);
               setOpen(true);
               setEditForm(true);
             }}
@@ -105,8 +84,29 @@ const FlightSchedulePage = ({ getColumnSearchProps }) => {
   const [data, setData] = useState([]);
   const [editForm, setEditForm] = useState(false);
   const [open, setOpen] = useState(false);
+  const [selectedFlightSchedule, setSelectedFlightSchedule] = useState(null);
   const showModal = () => {
     setOpen(true);
+  };
+  useEffect(() => {
+    getFlightSchedule();
+  }, [open]);
+  const getFlightSchedule = async () => {
+    let res = await getAllFlightSchedule();
+    console.log(res.data);
+    let modifiedData = res.data.map((item) => {
+      return {
+        key: item.id,
+        airline: item.airLine.name,
+        departTime: item.departureTime,
+        arriveTime: item.arrivalTime,
+        date: item.date,
+        from: item.departurePlace.name,
+        to: item.arrivalPlace.name,
+        distance: item.distance,
+      };
+    });
+    setData(modifiedData);
   };
   return (
     <>
@@ -131,9 +131,10 @@ const FlightSchedulePage = ({ getColumnSearchProps }) => {
           editForm={editForm}
           setEditForm={setEditForm}
           isFlight={true}
+          selectedFlightSchedule={selectedFlightSchedule}
         />
       </div>
-      <Table dataSource={dataSource} columns={columns} />
+      <Table dataSource={data} columns={columns} />
     </>
   );
 };
