@@ -13,8 +13,6 @@ const SelectStep = () => {
   const location = useLocation();
   const { pathname, search } = location;
 
-  console.log(location);
-
   const items = [];
 
   if (hotelOnly || hotelPlusBus || hotelPlusFlight) {
@@ -31,6 +29,8 @@ const SelectStep = () => {
           : pathname == "/confirmation"
           ? "finish"
           : pathname == `/flights/${id}/class`
+          ? "finish"
+          : pathname == "/flights"
           ? "finish"
           : "wait",
       icon: <FaBed />,
@@ -55,6 +55,8 @@ const SelectStep = () => {
         pathname === `/flights/${id}/class`
           ? "process"
           : pathname === "/rooms"
+          ? "wait"
+          : pathname === "/hotels" || pathname === "/flights"
           ? "wait"
           : "finish",
       icon: <MdOutlineFlightClass />,

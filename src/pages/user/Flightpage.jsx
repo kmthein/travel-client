@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { selectFlight } from "../../features/select/SelectSlice";
 import ScheduleItem from "../../components/user/common/ScheduleItem";
 import { addFlight } from "../../features/flight/FlightTicketSlice";
+import SelectStep from "../../components/user/common/SelectStep";
 
 const Flightpage = () => {
   const dispatch = useDispatch();
@@ -18,6 +19,7 @@ const Flightpage = () => {
   const flightSchedule = async () => {
     try {
       const res = await getAllAvailableFlight();
+      console.log(res);
       let data = res.data;
       let modifiedData = data.map((item) => {
         return {
@@ -35,6 +37,7 @@ const Flightpage = () => {
     dispatch(selectFlight());
     navigate(`/flights/${id}/class`);
   };
+
   const handleSelected = (data) => {
     dispatch(addFlight(data));
   };
@@ -48,6 +51,9 @@ const Flightpage = () => {
   // };
   return (
     <div className="w-[70%] mx-auto">
+      <div className="my-10">
+        <SelectStep />
+      </div>
       <FlightTicketSearch />
       <ScheduleItem data={allFlight} goto={goto} />
     </div>

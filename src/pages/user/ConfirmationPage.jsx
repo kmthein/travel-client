@@ -14,40 +14,49 @@ import { useDispatch, useSelector } from "react-redux";
 import { resetSelect, selectState } from "../../features/select/SelectSlice";
 import { IoReturnUpBack } from "react-icons/io5";
 import { reset, ticketState } from "../../features/flight/FlightTicketSlice";
+import { saveAccommodation } from "../../api/accommodation";
+import { userState } from "../../features/user/UserSlice";
+import { saveTravelPlan } from "../../api/travelplan";
 
 const ConfirmationPage = () => {
   const [paymentMethod, setPaymentMethod] = useState("Visa");
   const [initialTotal, setInitialTotal] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [totalFlightCost, setTotalFlightCost] = useState(0);
   const [serviceFee, setServiceFee] = useState(0);
   const navigate = useNavigate();
+  const { user } = useSelector(userState);
   const { selectedPlan, flightOnly, hotelPlusFlight } =
     useSelector(selectState);
 
-  console.log(hotelPlusFlight);
   const [plan, setPlan] = useState({
     hotel: null,
     room: null,
     totalNight: null,
   });
 
-  const { hotel, room, totalNight } = plan;
+  const { hotel, room, totalNight, totalPerson, checkInDate, checkOutDate } =
+    plan;
   const { economy, business, firstclass, flight } = useSelector(ticketState);
 
   useEffect(() => {
     if (selectedPlan != null) {
       const totalHotelCost =
         selectedPlan.totalNight * selectedPlan.room.roomPrice;
-      const totalFlightCost =
+      const initialFlightCost =
         (economy?.amount || 0) +
         (business?.amount || 0) +
         (firstclass?.amount || 0);
-      const newInitialTotal = totalHotelCost + totalFlightCost;
+      const newInitialTotal = totalHotelCost + initialFlightCost;
+      setTotalFlightCost(initialFlightCost);
       setPlan({
         ...plan,
         hotel: selectedPlan.hotel,
         room: selectedPlan.room,
         totalNight: selectedPlan.totalNight,
+        totalPerson: selectedPlan.totalPerson,
+        checkInDate: selectedPlan.checkInDate,
+        checkOutDate: selectedPlan.checkOutDate,
       });
       setInitialTotal(newInitialTotal);
     }
@@ -60,6 +69,30 @@ const ConfirmationPage = () => {
   }, [initialTotal]);
 
   const dispatch = useDispatch();
+
+  const confirmPlanSubmit = async () => {
+    console.log(room);
+    const hotelformData = new FormData();
+    const formData = new FormData();
+    hotelformData.append("totalPrice", totalAmount);
+    let accommodationId;
+    if (hotel) {
+      hotelformData.append("checkIn", checkInDate);
+      hotelformData.append("checkOut", checkOutDate);
+      hotelformData.append("totalPerson", totalPerson);
+      hotelformData.append("roomId", room?.id);
+      const saveHotelRes = await saveAccommodation(hotelformData);
+      console.log(saveHotelRes);
+      formData.append("accommodationId", saveHotelRes.data.id);
+    }
+    formData.append("startDate", checkInDate);
+    formData.append("totalPrice", totalAmount);
+    formData.append("userId", user?.id);
+    const res = await saveTravelPlan(formData);
+    console.log(res);
+    // dispatch(resetSelect());
+    // navigate("/travelreceipt");
+  };
 
   return (
     <>
@@ -140,7 +173,9 @@ const ConfirmationPage = () => {
                 <div>
                   <p className="text-md m-5">Hotel</p>
                   <div className="flex ">
-                    <Image
+                    <img
+                      width="150px"
+                      height="120px"
                       src={hotel?.imgUrlList[0]}
                       className="p-3 object-cover"
                     />
@@ -161,7 +196,7 @@ const ConfirmationPage = () => {
                       </div>
                       <div className="flex items-center text-md m-2">
                         <FaBed />
-                        <p className="ml-2">1 x Deluxe Room</p>
+                        <p className="ml-2">1 x {room?.roomType}</p>
                       </div>
                     </div>
                   </div>
@@ -171,37 +206,40 @@ const ConfirmationPage = () => {
             )}
             {(hotelPlusFlight || flightOnly) && (
               <>
-                <div className="bg-white rounded-lg shadow-lg p-6">
-                  <Text className="text-lg font-semibold m-5 block">
-                    Flight
-                  </Text>
-                  <div className="flex justify-between items-center">
-                    <Image
+                <div>
+                  <p className="text-md m-5">Flight</p>
+                  <div className="flex justify-between items-center p-3">
+                    <img
                       src={flight.ariLineImg}
-                      width="200px"
-                      height="150px"
-                      className="p-3 object-cover rounded-lg shadow-md"
+                      width="100px"
+                      height="100px"
+                      className="p-3 object-contain rounded-lg shadow-md"
                     />
-                    <div className="w-full m-3">
+                    <div className="w-full m-3 ml-6">
                       <div className="flex justify-between items-center">
-                        <div className="flex items-center space-x-5">
-                          <div>
-                            <Text className="text-lg font-bold block">
-                              {flight.departurePlace}
-                            </Text>
-                            <Text className="text-md text-gray-500">
-                              {flight.departureTime}
-                            </Text>
+                        <div className="flex justify-between w-full">
+                          <div className="flex items-center space-x-5">
+                            <div>
+                              <p className="text-md font-bold block">
+                                {flight.departurePlace}
+                              </p>
+                              <Text className="text-md text-gray-500">
+                                {flight.departureTime}
+                              </Text>
+                            </div>
+                            <FaLongArrowAltRight className="text-2xl text-gray-500" />
+                            <div>
+                              <p className="text-md font-bold block">
+                                {flight.arrivalPlace}
+                              </p>
+                              <Text className="text-md text-gray-500">
+                                {flight.arrivalTime}
+                              </Text>
+                            </div>
                           </div>
-                          <FaLongArrowAltRight className="text-2xl text-gray-500" />
-                          <div>
-                            <Text className="text-lg font-bold block">
-                              {flight.arrivalPlace}
-                            </Text>
-                            <Text className="text-md text-gray-500">
-                              {flight.arrivalTime}
-                            </Text>
-                          </div>
+                          <p className="text-md font-bold block">
+                            {totalFlightCost} ks
+                          </p>
                         </div>
                       </div>
                       <Text className="text-lg mt-3 block">{flight.name}</Text>
@@ -235,7 +273,7 @@ const ConfirmationPage = () => {
                   <Text>{initialTotal} ks</Text>
                 </div>
                 <div className="flex justify-between text-md font-semibold m-2">
-                  <Text>Service Fee</Text>
+                  <Text>Service Fee (5%)</Text>
                   <Text>+ {serviceFee} ks</Text>
                 </div>
               </div>
@@ -257,10 +295,7 @@ const ConfirmationPage = () => {
               </Button>
               <Button
                 className=" m-4 w-32 bg-blue-500  text-white"
-                onClick={() => {
-                  dispatch(resetSelect());
-                  navigate("/travelreceipt");
-                }}
+                onClick={confirmPlanSubmit}
               >
                 Confirm
               </Button>

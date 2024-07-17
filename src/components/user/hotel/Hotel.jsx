@@ -109,10 +109,13 @@ function Hotel() {
     return current && current < new Date();
   };
 
-  console.log(input);
-
   const searchHotelHandler = async (values) => {
     console.log(values);
+    let totalPerson = values.guest;
+    if (!values.guest) {
+      totalPerson = 1;
+    }
+    dispatch(addPlan({ totalPerson }));
     setCheckInDate(formattedDate(values.checkin));
     setCheckOutDate(formattedDate(values.checkout));
     const totalNight = calculateDaysBetween(
@@ -129,10 +132,6 @@ function Hotel() {
     setDisabled(false);
   };
 
-  console.log(filteredHotel);
-
-  console.log(daysBetween);
-
   const { hotelPlusFlight } = useSelector(selectState);
 
   const { search } = useLocation();
@@ -144,6 +143,9 @@ function Hotel() {
 
   return (
     <div className="p-8 w-[70%] mx-auto rounded-xl">
+      <h2 className="text-lg font-semibold mb-10">
+        Please choose check in and check out time to search available hotel
+      </h2>
       {hotelPlusFlight && (
         <div className="mb-10">
           <SelectStep />
@@ -262,6 +264,7 @@ function Hotel() {
                     <div>
                       <Button
                         className="bg-blue-500 text-white p-3"
+                        disabled={disabled}
                         onClick={() => {
                           dispatch(
                             addPlan({

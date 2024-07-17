@@ -56,7 +56,6 @@ const RoomPage = () => {
   const location = useLocation();
   const { search } = location;
 
-  console.log(roomList);
   return (
     <div className="w-[70%] mx-auto px-4">
       <div className="my-10 mx-auto">
