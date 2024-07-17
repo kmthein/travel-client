@@ -32,6 +32,7 @@ import RoomPage from "./pages/user/RoomPage";
 import ConfirmationPage from "./pages/user/ConfirmationPage";
 import AdminProvider from "./providers/AdminProvider";
 import UserProfile from "./pages/user/UserProfile";
+import ConfirmProvider from "./providers/ConfirmProvider";
 import SelectFlightClass from "./components/user/flight/SelectFlightClass";
 import SelectBusClass from "./components/user/bus/SelectBusClass";
 
@@ -44,6 +45,7 @@ function App() {
     handleSearch,
     handleReset,
     getColumnSearchProps,
+    selectedPlan,
   } = useSearch();
 
   const router = createBrowserRouter([
@@ -65,7 +67,11 @@ function App() {
         },
         {
           path: "/confirmation",
-          element: <ConfirmationPage />,
+          element: (
+            <ConfirmProvider>
+              <ConfirmationPage />
+            </ConfirmProvider>
+          ),
         },
         {
           path: "/destination",

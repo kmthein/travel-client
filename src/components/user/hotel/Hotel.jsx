@@ -13,11 +13,23 @@ import {
 import { FaCalendarAlt, FaSearch, FaUser } from "react-icons/fa";
 import beachImg from "../../../assets/img/hotel/beach_hotel_1.jpg";
 import { FaLocationDot } from "react-icons/fa6";
-import { getAllHotels } from "../../../api/hotel";
+import { getAllHotels, getAvailableHotels } from "../../../api/hotel";
 import noImg from "../../../assets/img/common/no_img.jpg";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { addPlan, selectHotel } from "../../../features/select/SelectSlice";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addPlan,
+  selectHotel,
+  selectState,
+} from "../../../features/select/SelectSlice";
+import {
+  calculateDaysBetween,
+  disablePastDates,
+  formattedDate,
+} from "../../../utils/utils";
+import SelectStep from "../common/SelectStep";
+import moment from "moment";
+import { toast } from "react-toastify";
 
 function Hotel() {
   const [allHotels, setAllHotels] = useState([]);
@@ -28,6 +40,36 @@ function Hotel() {
   const [notFound, setNotFound] = useState(false);
   const [filteredHotel, setFilteredHotel] = useState([]);
   const [daysBetween, setDaysBetween] = useState(null);
+
+  const items = [
+    {
+      key: "2",
+      label: <h2 className="font-bold text-lg">Rating</h2>,
+      children: (
+        <div className="flex flex-wrap flex-col gap-2">
+          <Checkbox>5 Stars +</Checkbox>
+          <Checkbox>4 Stars +</Checkbox>
+          <Checkbox>3 Stars +</Checkbox>
+          <Checkbox>2 Stars +</Checkbox>
+          <Checkbox>1 Star +</Checkbox>
+        </div>
+      ),
+    },
+    // {
+    //   key: "3",
+    //   label: <h2 className="font-bold text-lg">Price</h2>,
+    //   children: (
+    //     <div className="flex flex-col gap-2">
+    //       <div>
+    //         <Checkbox>Maximum Price</Checkbox>
+    //       </div>
+    //       <div>
+    //         <Checkbox>Minimum Price</Checkbox>
+    //       </div>
+    //     </div>
+    //   ),
+    // },
+  ];
 
   const [form] = Form.useForm();
 
@@ -55,55 +97,6 @@ function Hotel() {
 
   const navigate = useNavigate();
 
-  const items = [
-    {
-      key: "1",
-      label: <h2 className="font-bold text-lg">Property Type</h2>,
-      children: (
-        <div className="flex flex-col gap-2">
-          <div>
-            <Checkbox>Hotel</Checkbox>
-          </div>
-          <div>
-            <Checkbox>Resort</Checkbox>
-          </div>
-          <div>
-            <Checkbox>Guesthouse</Checkbox>
-          </div>
-        </div>
-      ),
-    },
-    {
-      key: "2",
-      label: <h2 className="font-bold text-lg">Rating</h2>,
-      children: (
-        <div>
-          <div>
-            <Checkbox>5 Stars +</Checkbox>
-            <Checkbox>4 Stars +</Checkbox>
-            <Checkbox>3 Stars +</Checkbox>
-            <Checkbox>2 Stars +</Checkbox>
-            <Checkbox>1 Star +</Checkbox>
-          </div>
-        </div>
-      ),
-    },
-    {
-      key: "3",
-      label: <h2 className="font-bold text-lg">Price</h2>,
-      children: (
-        <div className="flex flex-col gap-2">
-          <div>
-            <Checkbox>Maximum Price</Checkbox>
-          </div>
-          <div>
-            <Checkbox>Minimum Price</Checkbox>
-          </div>
-        </div>
-      ),
-    },
-  ];
-
   const dispatch = useDispatch();
 
   const disabledCheckInDate = (current) => {
@@ -117,59 +110,62 @@ function Hotel() {
 
   console.log(input);
 
-  const calculateDaysBetween = (checkIn, checkOut) => {
-    const date1 = new Date(checkIn);
-    const date2 = new Date(checkOut);
-
-    if (date1 > date2) {
-      alert("Check-out date must be after check-in date.");
-      return;
-    }
-
-    const timeDifference = date2 - date1;
-    const daysDifference = timeDifference / (1000 * 3600 * 24);
-
-    setDaysBetween(daysDifference);
-  };
-
   const searchHotelHandler = async (values) => {
     console.log(values);
     setCheckInDate(formattedDate(values.checkin));
     setCheckOutDate(formattedDate(values.checkout));
-    calculateDaysBetween(
+    const totalNight = calculateDaysBetween(
       formattedDate(values.checkin),
       formattedDate(values.checkout)
     );
-    const res = await getAllHotels();
-    let filteredHotels;
-    let validHotel;
-    if (id) {
-      filteredHotels = filteredHotel.map((hotel) => ({
-        ...hotel,
-        roomList: hotel.roomList.filter((room) => room.validRoom > 0),
-      }));
-      validHotel = filteredHotels.filter((hotel) => hotel.roomList.length > 0);
-    } else {
-      filteredHotels = allHotels.map((hotel) => ({
-        ...hotel,
-        roomList: hotel.roomList.filter((room) => room.validRoom > 0),
-      }));
-      validHotel = filteredHotels.filter((hotel) => hotel.roomList.length > 0);
+    setDaysBetween(totalNight);
+    const formData = new FormData();
+    formData.append("checkInDate", formattedDate(values.checkin));
+    const res = await getAvailableHotels(formData);
+    if (res.data.length > 0) {
+      setFilteredHotel(res.data);
     }
-    if (validHotel.length > 0) {
-      setNotFound(true);
-    }
-    setFilteredHotel(validHotel);
+    // let filteredHotels;
+    // let validHotel;
+    // if (id) {
+    //   filteredHotels = filteredHotel.map((hotel) => ({
+    //     ...hotel,
+    //     roomList: hotel.roomList.filter((room) => room.validRoom > 0),
+    //   }));
+    //   validHotel = filteredHotels.filter((hotel) => hotel.roomList.length > 0);
+    // } else {
+    //   filteredHotels = allHotels.map((hotel) => ({
+    //     ...hotel,
+    //     roomList: hotel.roomList.filter((room) => room.validRoom > 0),
+    //   }));
+    //   validHotel = filteredHotels.filter((hotel) => hotel.roomList.length > 0);
+    // }
+    // if (validHotel.length > 0) {
+    //   setNotFound(true);
+    // }
+    // setFilteredHotel(validHotel);
   };
+
+  console.log(filteredHotel);
 
   console.log(daysBetween);
 
-  const formattedDate = (date) => {
-    return date.format("YYYY-MM-DD");
+  const { hotelPlusFlight } = useSelector(selectState);
+
+  const { search } = useLocation();
+
+  const disableCurrentAndPastDates = (current) => {
+    // Can not select current or past dates
+    return current && current <= moment(checkInDate).endOf("day");
   };
 
   return (
-    <div className=" w-[70%] mx-auto rounded-xl">
+    <div className="p-8 w-[70%] mx-auto rounded-xl">
+      {hotelPlusFlight && (
+        <div className="mb-10">
+          <SelectStep />
+        </div>
+      )}
       <div>
         <Form
           layout="vertical"
@@ -188,7 +184,12 @@ function Hotel() {
             label="Check In"
             rules={[{ required: true, message: "Select check in date!" }]}
           >
-            <DatePicker placeholder="Check in" suffixIcon={<FaCalendarAlt />} />
+            <DatePicker
+              placeholder="Check in"
+              disabledDate={disablePastDates}
+              onChange={(value) => setCheckInDate(formattedDate(value))}
+              suffixIcon={<FaCalendarAlt />}
+            />
           </Form.Item>
           <Form.Item
             name="checkout"
@@ -197,6 +198,7 @@ function Hotel() {
           >
             <DatePicker
               placeholder="Check Out"
+              disabledDate={disableCurrentAndPastDates}
               suffixIcon={<FaCalendarAlt />}
             />
           </Form.Item>
@@ -254,7 +256,7 @@ function Hotel() {
                 <div className="w-2/3">
                   <div className="flex justify-between items-center mb-2">
                     <p className="text-lg font-bold">{hotel.name}</p>
-                    <p className="text-lg font-bold">USD 72</p>
+                    {/* <p className="text-lg font-bold">USD 72</p> */}
                   </div>
                   <Rate
                     value={hotel.rating}
@@ -286,8 +288,12 @@ function Hotel() {
                               totalNight: daysBetween,
                             })
                           );
-                          dispatch(selectHotel());
-                          navigate(`/rooms?hotel=${hotel.id}`);
+                          if (search == "?flightpackage") {
+                            navigate(`/rooms?flightpackage`);
+                          } else {
+                            navigate(`/rooms?hotel=${hotel.id}`);
+                            dispatch(selectHotel());
+                          }
                         }}
                       >
                         Select Room
@@ -318,7 +324,7 @@ function Hotel() {
                 <div className="w-2/3">
                   <div className="flex justify-between items-center mb-2">
                     <p className="text-lg font-bold">{hotel.name}</p>
-                    <p className="text-lg font-bold">USD 72</p>
+                    {/* <p className="text-lg font-bold">USD 72</p> */}
                   </div>
                   <Rate
                     value={hotel.rating}
@@ -342,6 +348,14 @@ function Hotel() {
                       <Button
                         className="bg-blue-500 text-white p-3"
                         onClick={() => {
+                          if (!checkInDate) {
+                            toast.error("Check In Date can't be empty");
+                            return;
+                          }
+                          if (!checkOutDate) {
+                            toast.error("Check Out Date can't be empty");
+                            return;
+                          }
                           dispatch(
                             addPlan({
                               checkInDate,
@@ -350,8 +364,12 @@ function Hotel() {
                               totalNight: daysBetween,
                             })
                           );
-                          dispatch(selectHotel());
-                          navigate(`/rooms?hotel=${hotel.id}`);
+                          if (search == "?flightpackage") {
+                            navigate(`/rooms?flightpackage`);
+                          } else {
+                            navigate(`/rooms?hotel=${hotel.id}`);
+                            dispatch(selectHotel());
+                          }
                         }}
                       >
                         Select Room
@@ -361,7 +379,9 @@ function Hotel() {
                 </div>
               </div>
             ))}
-          {filteredHotel.length == 0 && <h5>Hotel Not Available</h5>}
+          {filteredHotel.length == 0 && allHotels.length == 0 && (
+            <h5>Hotel Not Available</h5>
+          )}
         </div>
       </div>
     </div>

@@ -2,18 +2,34 @@ import { Avatar, Dropdown, Space } from "antd";
 import React from "react";
 import { BiUser } from "react-icons/bi";
 import { IoIosArrowDown } from "react-icons/io";
-import { useDispatch } from "react-redux";
-import { logoutUser } from "../../../features/user/UserSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUser, userState } from "../../../features/user/UserSlice";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const items = [
     {
-      label: <span onClick={() => dispatch(logoutUser())}>Logout</span>,
       key: "1",
+      label: (
+        <span
+          onClick={() => {
+            dispatch(logoutUser());
+            navigate("/");
+          }}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Logout
+        </span>
+      ),
     },
   ];
+
+  const { user } = useSelector(userState);
+
+  console.log(user);
   return (
     <div className=" py-6 px-6 flex justify-between bg-[#1f326d] text-white">
       <div className="ml-10">
@@ -30,12 +46,12 @@ const Header = () => {
           <a onClick={(e) => e.preventDefault()}>
             <div className="flex gap-2">
               <Avatar
-                src="https://www.shutterstock.com/image-photo/portrait-serious-confident-businessman-entrepreneur-260nw-2022462281.jpg"
+                src={user?.image[0]?.imgUrl}
                 size={44}
                 icon={<BiUser />}
               ></Avatar>
               <div>
-                <h5 className="text-sm font-medium mb-1">Admin Name</h5>
+                <h5 className="text-sm font-medium mb-1">{user?.username}</h5>
                 <p className="text-xs text-[#cecece]">Admin</p>
               </div>
               <IoIosArrowDown className="mt-1 ml-2" />

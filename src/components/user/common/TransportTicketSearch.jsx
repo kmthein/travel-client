@@ -4,7 +4,7 @@ import { FaBus, FaCalendarAlt, FaPlane } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { getAllDestinations } from "../../../api/destination";
 
-const TransportTicketSearch = ({ handleFilter, isFlight }) => {
+const TransportTicketSearch = ({ choice, isFlight }) => {
   const [ticketOption, setTicketOption] = useState("One Way");
   const [departurePlace, setDeparturePlace] = useState(null);
   const [destination, setDestination] = useState("");
@@ -104,11 +104,7 @@ const TransportTicketSearch = ({ handleFilter, isFlight }) => {
       />
       <Button
         onClick={() => {
-          console.log(ticketOption);
-          console.log(departurePlace);
-          console.log(destination);
-
-          console.log(departureDate);
+          choice(departurePlace, destination, departureDate);
         }}
         style={{
           width: "150px",

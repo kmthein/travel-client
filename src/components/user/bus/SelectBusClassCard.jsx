@@ -1,7 +1,7 @@
 import { Button, Card } from "antd";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectFlight } from "../../../features/select/SelectSlice";
+import { selectBus, selectFlight } from "../../../features/select/SelectSlice";
 import { useNavigate } from "react-router-dom";
 import {
   addBusiness,
@@ -13,12 +13,12 @@ import {
   transportState,
 } from "../../../features/transport/TransportSlice";
 
-const SelectBusClassCard = ({ busClass }) => {
+const SelectBusClassCard = ({ busClassDTOList, busServiceName, busImg }) => {
   const { economy, business, firstclass } = useSelector(transportState);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const goto = () => {
-    dispatch(selectFlight);
+    dispatch(selectBus());
     navigate("/confirmation");
   };
   const handleTicket = (type, action, validseat, amount) => {
@@ -43,25 +43,25 @@ const SelectBusClassCard = ({ busClass }) => {
 
   return (
     <div className="my-10">
-      {busClass.map((item) => (
-        <Card key={item.id} className="shadow-lg rounded-lg mb-6">
+      {busClassDTOList.map((item) => (
+        <Card key={item.busClassId} className="shadow-lg rounded-lg mb-6">
           <div className="flex justify-between items-center p-4">
             <img
-              src={item.img}
+              src={busImg}
               alt=""
               className="w-24 h-24 object-cover rounded-full"
             />
             <div className="flex flex-col items-center text-center mx-2">
               <h2 className="text-lg font-semibold">Airline Name</h2>
-              <p className="text-gray-600">{item.name}</p>
+              <p className="text-gray-600">{busServiceName}</p>
             </div>
             <div className="flex flex-col items-center text-center mx-2">
               <h2 className="text-lg font-semibold">Class</h2>
-              <p className="text-gray-600">{item.class}</p>
+              <p className="text-gray-600">{item.busClassName}</p>
             </div>
             <div className="flex flex-col items-center text-center mx-2">
               <h2 className="text-lg font-semibold">Valid Seat</h2>
-              <p className="text-gray-600">{item.validSeat}</p>
+              <p className="text-gray-600">{item.availableSeat}</p>
             </div>
             <div className="flex flex-col items-center text-center mx-2">
               <h2 className="text-lg font-semibold">Price</h2>
@@ -71,20 +71,33 @@ const SelectBusClassCard = ({ busClass }) => {
               <Button
                 className="mx-1 bg-gray-200 rounded-full hover:bg-gray-300"
                 onClick={() =>
-                  handleTicket(item.class, "reduce", item.validSeat, item.price)
+                  handleTicket(
+                    item.busClassName,
+                    "reduce",
+                    item.availableSeat,
+                    item.price
+                  )
                 }
               >
                 -
               </Button>
               <Button className="mx-1 bg-white rounded-full">
-                {item.class.toLowerCase() === "economy" && economy.ticket}
-                {item.class.toLowerCase() === "business" && business.ticket}
-                {item.class.toLowerCase() === "firstclass" && firstclass.ticket}
+                {item.busClassName.toLowerCase() === "economy" &&
+                  economy.ticket}
+                {item.busClassName.toLowerCase() === "business" &&
+                  business.ticket}
+                {item.busClassName.toLowerCase() === "firstclass" &&
+                  firstclass.ticket}
               </Button>
               <Button
                 className="mx-1 bg-gray-200 rounded-full hover:bg-gray-300"
                 onClick={() =>
-                  handleTicket(item.class, "add", item.validSeat, item.price)
+                  handleTicket(
+                    item.busClassName,
+                    "add",
+                    item.availableSeat,
+                    item.price
+                  )
                 }
               >
                 +

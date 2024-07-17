@@ -51,3 +51,5 @@ export const updateFlightSchedule = async (id, payload) => {
     return error.response;
   }
 };
+
+export const getUserFlight = () => {};

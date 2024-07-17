@@ -1,7 +1,6 @@
-import { IoReturnUpBack } from "react-icons/io5";
 import { Radio, Image, Button, Divider, Typography } from "antd";
 import { FaBed, FaCalendarAlt, FaLongArrowAltRight } from "react-icons/fa";
-
+import { useEffect, useState } from "react";
 const { Text } = Typography;
 
 import visaImg from "../../assets/img/icons/visa.jpg";
@@ -11,16 +10,34 @@ import ayapayImg from "../../assets/img/icons/ayapay.jpg";
 import wavepayImg from "../../assets/img/icons/wavepay.jpg";
 import { useNavigate } from "react-router-dom";
 import SelectStep from "../../components/user/common/SelectStep";
-import { useSelector } from "react-redux";
-import { selectState } from "../../features/select/SelectSlice";
-import { useState } from "react";
-import { transportState } from "../../features/transport/TransportSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { resetSelect, selectState } from "../../features/select/SelectSlice";
+import { IoReturnUpBack } from "react-icons/io5";
 
 const ConfirmationPage = () => {
   const [paymentMethod, setPaymentMethod] = useState("Visa");
   const navigate = useNavigate();
   const { selectedPlan, flightOnly } = useSelector(selectState);
-  const { hotel, room } = selectedPlan;
+  const [plan, setPlan] = useState({
+    hotel: null,
+    room: null,
+    totalNight: null,
+  });
+
+  const { hotel, room, totalNight } = plan;
+
+  useEffect(() => {
+    if (selectedPlan != null) {
+      setPlan({
+        ...plan,
+        hotel: selectedPlan.hotel,
+        room: selectedPlan.room,
+        totalNight: selectedPlan.totalNight,
+      });
+    }
+  }, []);
+
+  const dispatch = useDispatch();
 
   const { economy, business, firstclass, transport } =
     useSelector(transportState);
@@ -112,7 +129,9 @@ const ConfirmationPage = () => {
                     <div className="w-full m-3">
                       <div className="flex justify-between ">
                         <p className="text-md font-bold ">{hotel?.name}</p>
-                        <p className="text-md font-bold ">$168</p>
+                        <p className="text-md font-bold ">
+                          {totalNight * room.roomPrice} ks
+                        </p>
                       </div>
                       <div className="flex items-center text-md m-2">
                         <FaCalendarAlt />
@@ -129,7 +148,7 @@ const ConfirmationPage = () => {
                     </div>
                   </div>
                 </div>
-                <hr className="my-2 h-px bg-black" />
+                <hr className="my-2 h-[0.5px] bg-black" />
               </>
             )}
             {flightOnly && (
@@ -210,35 +229,22 @@ const ConfirmationPage = () => {
                 </div>
               </>
             )}
-            <div name="subtotal" className="p-2">
-              <div className="flex justify-between text-md font-semibold m-2">
-                <p>Subtotal</p>
-                <p>$214</p>
-              </div>
-              <div className="flex justify-between text-md font-semibold m-2">
-                <p>Member Discount &#40;20%&#41; </p>
-                <p>-$36</p>
-              </div>
-              <div className="flex justify-between text-md font-semibold m-2">
-                <p>Delivery Fees</p>
-                <p>$5</p>
-              </div>
-            </div>
-            <hr className="my-2 h-px bg-black" />
-            <div className="flex justify-between text-md font-semibold m-2 p-2">
-              <p>Total</p>
-              <p>$183</p>
-            </div>
             <div className="flex justify-end ">
               <Button
                 className=" m-4 w-32 text-white bg-red-500"
-                onClick={() => navigate("/")}
+                onClick={() => {
+                  dispatch(resetSelect());
+                  navigate("/");
+                }}
               >
                 Cancel
               </Button>
               <Button
                 className=" m-4 w-32 bg-blue-500  text-white"
-                onClick={() => navigate("/travelreceipt")}
+                onClick={() => {
+                  dispatch(resetSelect());
+                  navigate("/travelreceipt");
+                }}
               >
                 Confirm
               </Button>

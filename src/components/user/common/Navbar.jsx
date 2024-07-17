@@ -1,32 +1,42 @@
 import React from "react";
 import { IoMdArrowDropdown, IoMdPerson } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { openModal } from "../../../features/ui/UiSlice";
 import { Avatar, Dropdown, Space } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import { logoutUser, userState } from "../../../features/user/UserSlice";
 import { BiUser } from "react-icons/bi";
-
-const items = [
-  {
-    label: <Link to="/flightandhotel">Flight And Hotel</Link>,
-    key: "1",
-  },
-  {
-    label: <Link to="/busandhotel">Bus and Hotel</Link>,
-    key: "2",
-  },
-];
+import { selectHotelPlusFlight } from "../../../features/select/SelectSlice";
 
 const Navbar = () => {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const { user } = useSelector(userState);
+
+  const items = [
+    {
+      label: (
+        <span
+          onClick={() => {
+            dispatch(selectHotelPlusFlight());
+            navigate("/hotels?flightpackage");
+          }}
+        >
+          Flight And Hotel
+        </span>
+      ),
+      key: "1",
+    },
+    {
+      label: <Link to="/busandhotel">Bus and Hotel</Link>,
+      key: "2",
+    },
+  ];
 
   const userItems = [
     user.role === "ADMIN" && {
-      label: <Link to="/admin">Admin Dashborad</Link>,
+      label: <Link to="/admin">Admin Dashboard</Link>,
       key: "1",
     },
     {

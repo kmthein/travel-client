@@ -1,38 +1,24 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { IoReturnUpBack } from "react-icons/io5";
 import SelectStep from "../common/SelectStep";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { reset } from "../../../features/transport/TransportSlice";
 import { getAllBusClassBybus } from "../../../api/busclass";
 import SelectBusClassCard from "./SelectBusClassCard";
+import { selectState } from "../../../features/select/SelectSlice";
 
 const SelectBusClass = () => {
-  const [busClass, setBusClass] = useState([]);
+  const location = useLocation();
+  const { busClassDTOList, busServiceName, busImg } = location.state || {};
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { id } = useParams();
-  useEffect(() => {
-    getBusClass(id);
-  }, []);
-  const getBusClass = async (id) => {
-    let res = await getAllBusClassBybus(id);
-    let modifiedData = res.data.map((item) => {
-      return {
-        id: item.id,
-        class: item.name,
-        validSeat: item.validSeat,
-        name: item.busService.name,
-        img: item.busService.image[0].imgUrl,
-        price: item.price,
-      };
-    });
-    setBusClass(modifiedData);
-  };
+
   const handleBack = () => {
     navigate(-1);
     dispatch(reset());
   };
+  console.log(busClassDTOList);
   return (
     <div className="w-[70%] mx-auto">
       <SelectStep />
@@ -42,7 +28,11 @@ const SelectBusClass = () => {
           className="text-3xl cursor-pointer"
         />
       </div>
-      <SelectBusClassCard busClass={busClass} />
+      <SelectBusClassCard
+        busClassDTOList={busClassDTOList}
+        busServiceName={busServiceName}
+        busImg={busImg}
+      />
     </div>
   );
 };

@@ -52,3 +52,12 @@ export const updateBusSchedule = async (id, payload) => {
     return error.response;
   }
 };
+
+export const getUserBusSchedule = async (payload) => {
+  try {
+    const response = await api.post(`/api/bus-schedule/findBus`, payload);
+    return response;
+  } catch (error) {
+    return error.response;
+  }
+};

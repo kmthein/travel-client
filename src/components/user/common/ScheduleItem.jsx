@@ -1,7 +1,7 @@
 import { Button, Card } from "antd";
 import React from "react";
 
-const ScheduleItem = ({ data, goto }) => {
+const ScheduleItem = ({ data }) => {
   return (
     <div className="my-10">
       {data.map((item) => (
@@ -34,12 +34,6 @@ const ScheduleItem = ({ data, goto }) => {
                   <p className="text-md text-gray-600">{item.arrivalPlace}</p>
                 </div>
               </div>
-              <Button
-                className="bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                onClick={() => goto(item.transportId, item)}
-              >
-                Select
-              </Button>
             </div>
           </Card>
         </div>
