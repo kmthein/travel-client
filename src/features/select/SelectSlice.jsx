@@ -31,6 +31,7 @@ const SelectSlice = createSlice({
     selectHotelPlusBus: (state) => {
       state.hotelPlusBus = true;
     },
+    resetSelect: () => initialState,
   },
 });
 
@@ -41,6 +42,7 @@ export const {
   selectHotelPlusBus,
   selectFlight,
   selectBus,
+  resetSelect,
 } = SelectSlice.actions;
 
 export const selectState = (state) => state.select;

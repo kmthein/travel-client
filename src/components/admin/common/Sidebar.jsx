@@ -43,7 +43,7 @@ const customMenuStyle = css`
 
   .ant-menu-item:hover,
   .ant-menu-submenu-title:hover {
-    background: #2c4180 !important;
+    background: #233363 !important;
   }
 
   .ant-menu-item > span,

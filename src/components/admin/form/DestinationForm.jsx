@@ -8,6 +8,7 @@ import {
   getDestinationById,
   updateDestination,
 } from "../../../api/destination";
+import TextArea from "antd/es/input/TextArea";
 
 const DestinationForm = ({
   open,
@@ -185,7 +186,7 @@ const DestinationForm = ({
             },
           ]}
         >
-          <Input />
+          <TextArea rows={4} />
         </Form.Item>
         <Form.Item name="highlight" label="Highlight">
           <Input />

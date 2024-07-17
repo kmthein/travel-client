@@ -3,7 +3,7 @@ import { Steps, Button, Image, Form, DatePicker } from "antd";
 import { FaBed, FaCalendarAlt, FaCheckCircle } from "react-icons/fa";
 import noImg from "../../assets/img/common/no_img.jpg";
 import roomImg from "../../assets/room.jpg";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addPlan, selectState } from "../../features/select/SelectSlice";
 import SelectStep from "../../components/user/common/SelectStep";
@@ -16,10 +16,6 @@ import CheckOutDatePicker from "../../components/user/common/CheckOutDatePicker"
 
 const RoomPage = () => {
   const navigate = useNavigate();
-
-  const [checkInDate, setCheckInDate] = useState(null);
-  const [checkOutDate, setCheckOutDate] = useState(null);
-  const [disabled, setDisabled] = useState(true);
 
   const checkInDateChange = (value) => {
     setCheckInDate(formattedDate(value));
@@ -38,15 +34,18 @@ const RoomPage = () => {
   const [form] = Form.useForm();
   const { selectedPlan, hotelPlusFlight } = useSelector(selectState);
 
-  const { roomList } = selectedPlan.hotel;
+  const { availableRoomList } = selectedPlan.hotel;
 
   const dispatch = useDispatch();
 
-  console.log(roomList);
+  console.log(availableRoomList);
+
+  const location = useLocation();
+  const { search } = location;
 
   return (
     <div className="w-[70%] mx-auto px-4">
-      <div className="w-4/5 my-10 mx-auto">
+      <div className="my-10 mx-auto">
         <SelectStep />
       </div>
       <div className="flex items-center text-xl">
@@ -60,16 +59,16 @@ const RoomPage = () => {
         </div>
       </div>
       <div className="my-10 mx-auto">
-        {roomList &&
-          roomList.length > 0 &&
-          roomList.map((room, index) => (
+        {availableRoomList &&
+          availableRoomList.length > 0 &&
+          availableRoomList.map((room, index) => (
             <div
               key={index}
               className="my-4 p-4 border border-gray-300 rounded-2xl flex gap-4"
             >
               <div className="w-1/3 p-2">
                 <Image
-                  src={room?.image ? room?.image[0].imgUrl : noImg}
+                  src={room?.imgUrlList ? room?.imgUrlList[0] : noImg}
                   width={"100%"}
                   height={"100%"}
                   style={{ objectFit: "cover" }}
@@ -89,8 +88,8 @@ const RoomPage = () => {
                   <li>Non-smoking</li>
                   <li>Shower</li>
                 </ul>
-                <div className="flex items-center justify-between mt-2">
-                  <Form layout="vertical" className="flex gap-3" form={form}>
+                <div className="flex items-center justify-end mt-2">
+                  {/* <Form layout="vertical" className="flex gap-3" form={form}>
                     <Form.Item
                       name="checkin"
                       label="Check In"
@@ -114,28 +113,21 @@ const RoomPage = () => {
                         checkInDate={checkInDate}
                       />
                     </Form.Item>
-                  </Form>
+                  </Form> */}
                   <div className="">
                     <Button
-                      disabled={disabled}
                       className="bg-blue-500 text-white p-2"
                       onClick={() => {
-                        if (checkInDate > checkOutDate) {
-                          alert("Error");
-                          return;
-                        }
                         dispatch(
                           addPlan({
                             room,
-                            checkInDate,
-                            checkOutDate,
-                            totalNight: calculateDaysBetween(
-                              checkInDate,
-                              checkOutDate
-                            ),
                           })
                         );
-                        navigate("/confirmation");
+                        if (search == "?flightpackage") {
+                          navigate("/flights?package");
+                        } else {
+                          navigate("/confirmation");
+                        }
                       }}
                     >
                       Book Room

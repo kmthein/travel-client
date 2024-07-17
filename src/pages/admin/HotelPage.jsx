@@ -9,38 +9,20 @@ import {
   updateHotel,
   deleteHotelById,
 } from "../../api/hotelapi";
+import noImg from "../../assets/img/common/no_img.jpg";
 
 const HotelPage = ({ getColumnSearchProps }) => {
-  // const dataSource = [
-  //   {
-  //     key: "1",
-  //     image:
-  //       "https://firebasestorage.googleapis.com/v0/b/travel-3b0bf.appspot.com/o/ngwesaung1.png?alt=media&token=53cc4e2e-b1a3-4856-b71f-f651e0130942",
-  //     name: "Ngwe Saung Yacht Club & Resort",
-  //     description:
-  //       "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus ut eos quasi, corrupti nostrum vitae voluptate quaerat quibusdam...",
-  //     location: "Ngwe Saung",
-  //     rating: 4.0,
-  //   },
-  //   {
-  //     key: "2",
-  //     image:
-  //       "https://firebasestorage.googleapis.com/v0/b/travel-3b0bf.appspot.com/o/ngwesaung2.png?alt=media&token=94433001-e67c-40f4-8909-0ab108086406",
-  //     name: "Eskala Hotels & Resorts",
-  //     description:
-  //       "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus ut eos quasi, corrupti nostrum vitae voluptate quaerat quibusdam...",
-  //     location: "Ngwe Saung",
-  //     rating: 4.5,
-  //   },
-  // ];
-
   const columns = [
     {
       title: "Image",
       dataIndex: "image",
       key: "image",
       render: (text, record) => (
-        <img src={record.image} alt="image" style={{ width: "100%" }} />
+        <img
+          src={record.image ? record.image : noImg}
+          alt="image"
+          style={{ width: "100%" }}
+        />
       ),
       width: "10%",
     },
@@ -119,6 +101,9 @@ const HotelPage = ({ getColumnSearchProps }) => {
         return {
           ...d,
           key: d.id,
+          description: `${d.description.slice(0, 200)}${
+            d.description.length > 200 && "..."
+          }`,
           image: d.imgUrlList[0],
         };
       });

@@ -13,6 +13,8 @@ import { FaPlus, FaTrashAlt } from "react-icons/fa";
 import firebase from "firebase/compat/app";
 import "firebase/compat/storage";
 import { createHotel, updateHotel, getHotelById } from "../../../api/hotelapi";
+import TextArea from "antd/es/input/TextArea";
+import { getAllDestinations } from "../../../api/destination";
 
 const HotelForm = ({
   open,
@@ -31,7 +33,23 @@ const HotelForm = ({
   const [imgCount, setImgCount] = useState(0);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [deleteImgIds, setDeleteImgIds] = useState([]);
+  const [destinations, setDestinations] = useState([]);
 
+  const getAllDestinationHandler = async () => {
+    try {
+      const response = await getAllDestinations();
+      const modifiedData = response.data.map((d) => {
+        return {
+          value: d.id,
+          label: d.name
+        }
+      })
+      setDestinations(modifiedData);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+ 
   const getOldHotelHandler = async () => {
     try {
       const response = await getHotelById(selectedHotelId);
@@ -55,7 +73,10 @@ const HotelForm = ({
     setPreviewImg([]);
     setImages([]);
     // setDeleteImgIds([]);
-    getOldHotelHandler();
+    getAllDestinationHandler();
+    if (editForm) {
+      getOldHotelHandler();
+    }
   }, [editForm, selectedHotelId]);
 
   const onCreate = async (values) => {
@@ -179,7 +200,7 @@ const HotelForm = ({
           rules={[
             {
               required: true,
-              message: "Please input the name of destination!",
+              message: "Please input the name of hotel!",
             },
           ]}
         >
@@ -191,11 +212,11 @@ const HotelForm = ({
           rules={[
             {
               required: true,
-              message: "Please select the description of destination!",
+              message: "Please input the description of hotel!",
             },
           ]}
         >
-          <Input />
+          <TextArea rows={4} />
         </Form.Item>
         <div className="flex gap-2">
           <Form.Item
@@ -205,7 +226,7 @@ const HotelForm = ({
             rules={[
               {
                 required: true,
-                message: "Please input the rating of destination!",
+                message: "Please input the rating of hotel!",
               },
             ]}
           >
@@ -218,21 +239,13 @@ const HotelForm = ({
             rules={[
               {
                 required: true,
-                message: "Please select the location of book!",
+                message: "Please select the location of hotel!",
               },
             ]}
           >
             <Select
-              options={[
-                {
-                  value: 1,
-                  label: "Yangon",
-                },
-                {
-                  value: 2,
-                  label: "Bagan",
-                },
-              ]}
+              defaultValue={"Select One"}
+              options={destinations}
             />
           </Form.Item>
         </div>
