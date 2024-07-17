@@ -68,7 +68,7 @@ const RoomPage = () => {
             >
               <div className="w-1/3 p-2">
                 <Image
-                  src={room?.image ? room?.image[0].imgUrl : noImg}
+                  src={room?.imgUrlList ? room?.imgUrlList[0] : noImg}
                   width={"100%"}
                   height={"100%"}
                   style={{ objectFit: "cover" }}
@@ -121,10 +121,6 @@ const RoomPage = () => {
                         dispatch(
                           addPlan({
                             room,
-                            totalNight: calculateDaysBetween(
-                              checkInDate,
-                              checkOutDate
-                            ),
                           })
                         );
                         if (search == "?flightpackage") {

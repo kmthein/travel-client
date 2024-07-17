@@ -28,8 +28,8 @@ import {
   formattedDate,
 } from "../../../utils/utils";
 import SelectStep from "../common/SelectStep";
-import CheckInDatePicker from "../common/CheckInDatePicker";
-import CheckOutDatePicker from "../common/CheckOutDatePicker";
+import moment from "moment";
+import { toast } from "react-toastify";
 
 function Hotel() {
   const [allHotels, setAllHotels] = useState([]);
@@ -154,22 +154,18 @@ function Hotel() {
 
   const { search } = useLocation();
 
-  const checkInDateChange = (value) => {
-    setCheckInDate(formattedDate(value));
-    if (checkOutDate) {
-      setDisabled(false);
-    }
-  };
-
-  const checkOutDateChange = (value) => {
-    setCheckOutDate(formattedDate(value));
-    if (checkInDate) {
-      setDisabled(false);
-    }
+  const disableCurrentAndPastDates = (current) => {
+    // Can not select current or past dates
+    return current && current <= moment(checkInDate).endOf("day");
   };
 
   return (
     <div className="p-8 w-[70%] mx-auto rounded-xl">
+      {hotelPlusFlight && (
+        <div className="mb-10">
+          <SelectStep />
+        </div>
+      )}
       <div>
         <Form
           layout="vertical"
@@ -188,16 +184,22 @@ function Hotel() {
             label="Check In"
             rules={[{ required: true, message: "Select check in date!" }]}
           >
-            <CheckInDatePicker checkInDateChange={checkInDateChange} />
+            <DatePicker
+              placeholder="Check in"
+              disabledDate={disablePastDates}
+              onChange={(value) => setCheckInDate(formattedDate(value))}
+              suffixIcon={<FaCalendarAlt />}
+            />
           </Form.Item>
           <Form.Item
             name="checkout"
             label="Check Out"
             rules={[{ required: true, message: "Select check out date!" }]}
           >
-            <CheckOutDatePicker
-              checkOutDateChange={checkOutDateChange}
-              checkInDate={checkInDate}
+            <DatePicker
+              placeholder="Check Out"
+              disabledDate={disableCurrentAndPastDates}
+              suffixIcon={<FaCalendarAlt />}
             />
           </Form.Item>
           <Form.Item name="guest" label="Number of Guest">
@@ -275,29 +277,27 @@ function Hotel() {
                       <Button className="rounded-lg">Free Wifi</Button>
                     </div>
                     <div>
-                      {checkInDate && checkOutDate && (
-                        <Button
-                          className="bg-blue-500 text-white p-3"
-                          onClick={() => {
-                            dispatch(
-                              addPlan({
-                                checkInDate,
-                                checkOutDate,
-                                hotel,
-                                totalNight: daysBetween,
-                              })
-                            );
-                            if (search == "?flightpackage") {
-                              navigate(`/rooms?flightpackage`);
-                            } else {
-                              navigate(`/rooms?hotel=${hotel.id}`);
-                              dispatch(selectHotel());
-                            }
-                          }}
-                        >
-                          Select Room
-                        </Button>
-                      )}
+                      <Button
+                        className="bg-blue-500 text-white p-3"
+                        onClick={() => {
+                          dispatch(
+                            addPlan({
+                              checkInDate,
+                              checkOutDate,
+                              hotel,
+                              totalNight: daysBetween,
+                            })
+                          );
+                          if (search == "?flightpackage") {
+                            navigate(`/rooms?flightpackage`);
+                          } else {
+                            navigate(`/rooms?hotel=${hotel.id}`);
+                            dispatch(selectHotel());
+                          }
+                        }}
+                      >
+                        Select Room
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -345,29 +345,35 @@ function Hotel() {
                       <Button className="rounded-lg">Free Wifi</Button>
                     </div>
                     <div>
-                      {checkInDate && checkOutDate && (
-                        <Button
-                          className="bg-blue-500 text-white p-3"
-                          onClick={() => {
-                            dispatch(
-                              addPlan({
-                                checkInDate,
-                                checkOutDate,
-                                hotel,
-                                totalNight: daysBetween,
-                              })
-                            );
-                            if (search == "?flightpackage") {
-                              navigate(`/rooms?flightpackage`);
-                            } else {
-                              navigate(`/rooms?hotel=${hotel.id}`);
-                              dispatch(selectHotel());
-                            }
-                          }}
-                        >
-                          Select Room
-                        </Button>
-                      )}
+                      <Button
+                        className="bg-blue-500 text-white p-3"
+                        onClick={() => {
+                          if (!checkInDate) {
+                            toast.error("Check In Date can't be empty");
+                            return;
+                          }
+                          if (!checkOutDate) {
+                            toast.error("Check Out Date can't be empty");
+                            return;
+                          }
+                          dispatch(
+                            addPlan({
+                              checkInDate,
+                              checkOutDate,
+                              hotel,
+                              totalNight: daysBetween,
+                            })
+                          );
+                          if (search == "?flightpackage") {
+                            navigate(`/rooms?flightpackage`);
+                          } else {
+                            navigate(`/rooms?hotel=${hotel.id}`);
+                            dispatch(selectHotel());
+                          }
+                        }}
+                      >
+                        Select Room
+                      </Button>
                     </div>
                   </div>
                 </div>

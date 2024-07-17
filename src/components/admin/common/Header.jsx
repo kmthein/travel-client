@@ -11,7 +11,6 @@ const Header = () => {
   const navigate = useNavigate();
   const items = [
     {
-      label: <span onClick={() => dispatch(logoutUser())}>Logout</span>,
       key: "1",
       label: (
         <span
