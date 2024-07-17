@@ -22,6 +22,15 @@ export const getAllBusSchedule = async () => {
   }
 };
 
+export const getAllAvailableBus = async () => {
+  try {
+    const res = await api.get("/api/bus-schedule/available-bus");
+    return res;
+  } catch (err) {
+    return err.response;
+  }
+};
+
 export const getBusScheduleById = async (id) => {
   try {
     const response = await api.get(`/api/bus-schedule/${id}`);

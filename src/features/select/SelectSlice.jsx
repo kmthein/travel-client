@@ -23,7 +23,7 @@ const SelectSlice = createSlice({
       state.flightOnly = true;
     },
     selectBus: (state) => {
-      state.BusOnly = true;
+      state.busOnly = true;
     },
     selectHotelPlusFlight: (state) => {
       state.hotelPlusFlight = true;
@@ -42,5 +42,6 @@ export const {
   selectFlight,
   selectBus,
 } = SelectSlice.actions;
+
 export const selectState = (state) => state.select;
 export default SelectSlice.reducer;

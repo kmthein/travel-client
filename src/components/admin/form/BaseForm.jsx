@@ -72,6 +72,7 @@ const BaseForm = ({
         }
         updateAirline(selectedAirlineId, formdata);
       }
+      await getAirLines();
     }
 
     if (busForm) {

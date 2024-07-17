@@ -4,21 +4,17 @@ import { FaCalendarAlt, FaPlane } from "react-icons/fa";
 import { FaLocationDot, FaUser } from "react-icons/fa6";
 import { getAllDestinations } from "../../../api/destination";
 
-const FlightTicketSearch = () => {
-  const [ticketOption, setTicketOption] = useState("Round Trip");
+const FlightTicketSearch = ({ handleFilter }) => {
+  const [ticketOption, setTicketOption] = useState("One Way");
   const [departurePlace, setDeparturePlace] = useState(null);
   const [destination, setDestination] = useState("");
   const [departureDate, setDepartureDate] = useState(null);
-  const [returnDate, setReturnDate] = useState(null);
-  const [numberOfPassenger, setNumberOfPassenger] = useState(1);
   const [places, setPlaces] = useState([]);
 
   const disabledDepartureDate = (current) => {
     return current && current < new Date();
   };
-  const disabledReturnDate = (current) => {
-    return current && current < new Date();
-  };
+
   useEffect(() => {
     getAllPlaces();
   }, []);
@@ -58,7 +54,7 @@ const FlightTicketSearch = () => {
       }}
     >
       <Select
-        defaultValue="Round Trip"
+        defaultValue="One Way"
         style={{
           width: "130px",
         }}
@@ -71,10 +67,6 @@ const FlightTicketSearch = () => {
           {
             value: "One Way",
             label: "One Way",
-          },
-          {
-            value: "Round Trip",
-            label: "Round Trip",
           },
         ]}
       />
@@ -110,53 +102,13 @@ const FlightTicketSearch = () => {
         disabledDate={disabledDepartureDate}
         onChange={(value) => setDepartureDate(value.$d)}
       />
-      {ticketOption === "Round Trip" && (
-        <DatePicker
-          placeholder="Return"
-          suffixIcon={<FaCalendarAlt />}
-          style={{
-            width: "130px",
-          }}
-          variant="filled"
-          disabledDate={disabledReturnDate}
-          onChange={(value) => setReturnDate(value.$d)}
-        />
-      )}
-      <Select
-        defaultValue={1}
-        style={{
-          width: "130px",
-        }}
-        variant="filled"
-        suffixIcon={<FaUser />}
-        onChange={(value) => setNumberOfPassenger(value)}
-        options={[
-          {
-            value: 1,
-            label: "1 passenger",
-          },
-          {
-            value: 2,
-            label: "2 passengers",
-          },
-          {
-            value: 3,
-            label: "3 passengers",
-          },
-          {
-            value: 4,
-            label: "4 passengers",
-          },
-        ]}
-      />
       <Button
         onClick={() => {
           console.log(ticketOption);
           console.log(departurePlace);
           console.log(destination);
+
           console.log(departureDate);
-          console.log(returnDate);
-          console.log(numberOfPassenger);
         }}
         style={{
           width: "150px",
