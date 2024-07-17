@@ -40,6 +40,7 @@ function Hotel() {
   const [notFound, setNotFound] = useState(false);
   const [filteredHotel, setFilteredHotel] = useState([]);
   const [daysBetween, setDaysBetween] = useState(null);
+  const [disabled, setDisabled] = useState(true);
 
   const items = [
     {
@@ -108,10 +109,13 @@ function Hotel() {
     return current && current < new Date();
   };
 
-  console.log(input);
-
   const searchHotelHandler = async (values) => {
     console.log(values);
+    let totalPerson = values.guest;
+    if (!values.guest) {
+      totalPerson = 1;
+    }
+    dispatch(addPlan({ totalPerson }));
     setCheckInDate(formattedDate(values.checkin));
     setCheckOutDate(formattedDate(values.checkout));
     const totalNight = calculateDaysBetween(
@@ -125,30 +129,8 @@ function Hotel() {
     if (res.data.length > 0) {
       setFilteredHotel(res.data);
     }
-    // let filteredHotels;
-    // let validHotel;
-    // if (id) {
-    //   filteredHotels = filteredHotel.map((hotel) => ({
-    //     ...hotel,
-    //     roomList: hotel.roomList.filter((room) => room.validRoom > 0),
-    //   }));
-    //   validHotel = filteredHotels.filter((hotel) => hotel.roomList.length > 0);
-    // } else {
-    //   filteredHotels = allHotels.map((hotel) => ({
-    //     ...hotel,
-    //     roomList: hotel.roomList.filter((room) => room.validRoom > 0),
-    //   }));
-    //   validHotel = filteredHotels.filter((hotel) => hotel.roomList.length > 0);
-    // }
-    // if (validHotel.length > 0) {
-    //   setNotFound(true);
-    // }
-    // setFilteredHotel(validHotel);
+    setDisabled(false);
   };
-
-  console.log(filteredHotel);
-
-  console.log(daysBetween);
 
   const { hotelPlusFlight } = useSelector(selectState);
 
@@ -161,6 +143,9 @@ function Hotel() {
 
   return (
     <div className="p-8 w-[70%] mx-auto rounded-xl">
+      <h2 className="text-lg font-semibold mb-10">
+        Please choose check in and check out time to search available hotel
+      </h2>
       {hotelPlusFlight && (
         <div className="mb-10">
           <SelectStep />
@@ -263,12 +248,12 @@ function Hotel() {
                     disabled
                     className="text-sm mb-2"
                   />
-                  <div className="flex items-center mb-4">
+                  {/* <div className="flex items-center mb-4">
                     <FaLocationDot className="text-blue-400 mr-2" />
                     <p className="text-base font-semibold text-blue-400">
                       {hotel?.destination?.name}
                     </p>
-                  </div>
+                  </div> */}
                   <p className="mb-4">This property offers:</p>
                   <div className="flex justify-between">
                     <div className="flex gap-2">
@@ -279,6 +264,7 @@ function Hotel() {
                     <div>
                       <Button
                         className="bg-blue-500 text-white p-3"
+                        disabled={disabled}
                         onClick={() => {
                           dispatch(
                             addPlan({
@@ -331,12 +317,12 @@ function Hotel() {
                     disabled
                     className="text-sm mb-2"
                   />
-                  <div className="flex items-center mb-4">
+                  {/* <div className="flex items-center mb-4">
                     <FaLocationDot className="text-blue-400 mr-2" />
                     <p className="text-base font-semibold text-blue-400">
                       {hotel?.destination?.name}
                     </p>
-                  </div>
+                  </div> */}
                   <p className="mb-4">This property offers:</p>
                   <div className="flex justify-between">
                     <div className="flex gap-2">
@@ -347,6 +333,7 @@ function Hotel() {
                     <div>
                       <Button
                         className="bg-blue-500 text-white p-3"
+                        disabled={disabled}
                         onClick={() => {
                           if (!checkInDate) {
                             toast.error("Check In Date can't be empty");

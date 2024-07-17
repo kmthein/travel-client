@@ -35,12 +35,12 @@ const Navbar = () => {
   ];
 
   const userItems = [
-    user.role === "ADMIN" && {
+    user?.role === "ADMIN" && {
       label: <Link to="/admin">Admin Dashboard</Link>,
       key: "1",
     },
     {
-      label: <Link to="/userprofile">UserProfile</Link>,
+      label: <Link to="/user-profile">My Profile</Link>,
       key: "2",
     },
     {

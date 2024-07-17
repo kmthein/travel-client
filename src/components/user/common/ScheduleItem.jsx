@@ -1,9 +1,19 @@
 import { Button, Card } from "antd";
 import React from "react";
+import SelectStep from "./SelectStep";
+import { IoReturnUpBack } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 
 const ScheduleItem = ({ data, goto }) => {
+  const navigate = useNavigate();
   return (
     <div className="my-10">
+      <div className="flex justify-end mb-8">
+        <IoReturnUpBack
+          onClick={() => navigate(-1)}
+          className="text-3xl cursor-pointer"
+        />
+      </div>
       {data.map((item) => (
         <div key={item.id}>
           <Card className="shadow-lg rounded-lg mb-6 px-5">
