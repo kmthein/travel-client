@@ -10,7 +10,7 @@ const ScheduleItem = ({ data, goto }) => {
             <div className="flex items-center justify-between p-4">
               <div className="flex flex-col items-center justify-center">
                 <img
-                  src={item.ariLineImg}
+                  src={item.img}
                   alt="airline logo"
                   className="w-[100px] h-[100px] object-contain rounded-full"
                 />
@@ -36,7 +36,7 @@ const ScheduleItem = ({ data, goto }) => {
               </div>
               <Button
                 className="bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                onClick={() => goto(item.airlineId, item)}
+                onClick={() => goto(item.transportId, item)}
               >
                 Select
               </Button>

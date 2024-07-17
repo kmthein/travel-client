@@ -13,8 +13,8 @@ import { useNavigate } from "react-router-dom";
 import SelectStep from "../../components/user/common/SelectStep";
 import { useSelector } from "react-redux";
 import { selectState } from "../../features/select/SelectSlice";
-import { ticketState } from "../../features/flight/FlightTicketSlice";
 import { useState } from "react";
+import { transportState } from "../../features/transport/TransportSlice";
 
 const ConfirmationPage = () => {
   const [paymentMethod, setPaymentMethod] = useState("Visa");
@@ -22,7 +22,8 @@ const ConfirmationPage = () => {
   const { selectedPlan, flightOnly } = useSelector(selectState);
   const { hotel, room } = selectedPlan;
 
-  const { economy, business, firstclass, flight } = useSelector(ticketState);
+  const { economy, business, firstclass, transport } =
+    useSelector(transportState);
   let totalAmount = economy.amount + business.amount + firstclass.amount;
   let serviceFee = totalAmount * 0.05;
   return (
@@ -139,7 +140,7 @@ const ConfirmationPage = () => {
                   </Text>
                   <div className="flex justify-between items-center">
                     <Image
-                      src={flight.ariLineImg}
+                      src={transport.img}
                       width="200px"
                       height="150px"
                       className="p-3 object-cover rounded-lg shadow-md"
@@ -149,24 +150,26 @@ const ConfirmationPage = () => {
                         <div className="flex items-center space-x-5">
                           <div>
                             <Text className="text-lg font-bold block">
-                              {flight.departurePlace}
+                              {transport.departurePlace}
                             </Text>
                             <Text className="text-md text-gray-500">
-                              {flight.departureTime}
+                              {transport.departureTime}
                             </Text>
                           </div>
                           <FaLongArrowAltRight className="text-2xl text-gray-500" />
                           <div>
                             <Text className="text-lg font-bold block">
-                              {flight.arrivalPlace}
+                              {transport.arrivalPlace}
                             </Text>
                             <Text className="text-md text-gray-500">
-                              {flight.arrivalTime}
+                              {transport.arrivalTime}
                             </Text>
                           </div>
                         </div>
                       </div>
-                      <Text className="text-lg mt-3 block">{flight.name}</Text>
+                      <Text className="text-lg mt-3 block">
+                        {transport.name}
+                      </Text>
                       <div>
                         {economy.ticket > 0 && (
                           <Text className="block">

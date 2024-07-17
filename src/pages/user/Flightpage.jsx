@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import FlightTicketSearch from "../../components/user/common/FlightTicketSearch";
 import { getAllAvailableFlight } from "../../api/flightschedule";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { selectFlight } from "../../features/select/SelectSlice";
 import ScheduleItem from "../../components/user/common/ScheduleItem";
-import { addFlight } from "../../features/flight/FlightTicketSlice";
+import TransportTicketSearch from "../../components/user/common/TransportTicketSearch";
+import { addTransport } from "../../features/transport/TransportSlice";
 
 const Flightpage = () => {
   const dispatch = useDispatch();
@@ -22,7 +22,7 @@ const Flightpage = () => {
       let modifiedData = data.map((item) => {
         return {
           ...item,
-          ariLineImg: item.ariLineImg[0].imgUrl,
+          img: item.img[0].imgUrl,
         };
       });
       setAllFlight(modifiedData);
@@ -36,7 +36,7 @@ const Flightpage = () => {
     navigate(`/flights/${id}/class`);
   };
   const handleSelected = (data) => {
-    dispatch(addFlight(data));
+    dispatch(addTransport(data));
   };
 
   // const dateFormat = (s) => {
@@ -48,7 +48,7 @@ const Flightpage = () => {
   // };
   return (
     <div className="w-[70%] mx-auto">
-      <FlightTicketSearch />
+      <TransportTicketSearch isFlight={true} />
       <ScheduleItem data={allFlight} goto={goto} />
     </div>
   );

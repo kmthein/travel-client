@@ -13,7 +13,7 @@ import {
   transportState,
 } from "../../../features/transport/TransportSlice";
 
-const SelectFlightClassCard = ({ airlineClass }) => {
+const SelectBusClassCard = ({ busClass }) => {
   const { economy, business, firstclass } = useSelector(transportState);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -43,7 +43,7 @@ const SelectFlightClassCard = ({ airlineClass }) => {
 
   return (
     <div className="my-10">
-      {airlineClass.map((item) => (
+      {busClass.map((item) => (
         <Card key={item.id} className="shadow-lg rounded-lg mb-6">
           <div className="flex justify-between items-center p-4">
             <img
@@ -107,4 +107,4 @@ const SelectFlightClassCard = ({ airlineClass }) => {
   );
 };
 
-export default SelectFlightClassCard;
+export default SelectBusClassCard;

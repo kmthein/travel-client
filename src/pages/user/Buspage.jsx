@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import BusTicketSearch from "../../components/user/common/BusTicketSearch";
 import { selectBus } from "../../features/select/SelectSlice";
 import { getAllAvailableBus } from "../../api/busschedule";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ScheduleItem from "../../components/user/common/ScheduleItem";
+import TransportTicketSearch from "../../components/user/common/TransportTicketSearch";
+import { addTransport } from "../../features/transport/TransportSlice";
 
 const Buspage = () => {
   const dispatch = useDispatch();
@@ -21,7 +22,7 @@ const Buspage = () => {
       let modifiedData = data.map((item) => {
         return {
           ...item,
-          ariLineImg: item.ariLineImg[0].imgUrl,
+          img: item.img[0].imgUrl,
         };
       });
       setAllBus(modifiedData);
@@ -29,14 +30,19 @@ const Buspage = () => {
       console.log(error.message);
     }
   };
-  const goto = (id) => {
+  const goto = (id, data) => {
     dispatch(selectBus());
-    navigate(`/bus/${id}/class`);
+    handleSelected(data);
+    navigate(`/buses/${id}/class`);
+  };
+
+  const handleSelected = (data) => {
+    dispatch(addTransport(data));
   };
   return (
     <div className="w-[70%] mx-auto">
-      <BusTicketSearch />
-      <ScheduleItem data={allbus} goto={goto} />
+      <TransportTicketSearch isFlight={false} />
+      <ScheduleItem data={allbus} goto={goto} isFlight={false} />
     </div>
   );
 };

@@ -1,10 +1,10 @@
 import { Button, Select, DatePicker } from "antd";
 import { useEffect, useState } from "react";
-import { FaCalendarAlt, FaPlane } from "react-icons/fa";
-import { FaLocationDot, FaUser } from "react-icons/fa6";
+import { FaBus, FaCalendarAlt, FaPlane } from "react-icons/fa";
+import { FaLocationDot } from "react-icons/fa6";
 import { getAllDestinations } from "../../../api/destination";
 
-const FlightTicketSearch = ({ handleFilter }) => {
+const TransportTicketSearch = ({ handleFilter, isFlight }) => {
   const [ticketOption, setTicketOption] = useState("One Way");
   const [departurePlace, setDeparturePlace] = useState(null);
   const [destination, setDestination] = useState("");
@@ -77,7 +77,7 @@ const FlightTicketSearch = ({ handleFilter }) => {
         }}
         variant="filled"
         showSearch={true}
-        suffixIcon={<FaPlane />}
+        suffixIcon={isFlight ? <FaPlane /> : <FaBus />}
         onChange={(value) => handleDepartureChange(value)}
         options={places}
       />
@@ -124,4 +124,4 @@ const FlightTicketSearch = ({ handleFilter }) => {
   );
 };
 
-export default FlightTicketSearch;
+export default TransportTicketSearch;

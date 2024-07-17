@@ -33,6 +33,7 @@ import ConfirmationPage from "./pages/user/ConfirmationPage";
 import AdminProvider from "./providers/AdminProvider";
 import UserProfile from "./pages/user/UserProfile";
 import SelectFlightClass from "./components/user/flight/SelectFlightClass";
+import SelectBusClass from "./components/user/bus/SelectBusClass";
 
 function App() {
   const {
@@ -89,6 +90,10 @@ function App() {
         {
           path: "/buses",
           element: <Buspage />,
+        },
+        {
+          path: "/buses/:id/class",
+          element: <SelectBusClass />,
         },
         {
           path: "/flightandhotel",
