@@ -1,36 +1,30 @@
-import { FaHotel, FaPlane } from "react-icons/fa6";
+import { IoReturnUpBack } from "react-icons/io5";
+import { Radio, Image, Button, Divider, Typography } from "antd";
+import { FaBed, FaCalendarAlt, FaLongArrowAltRight } from "react-icons/fa";
 
-import { Steps, Radio, Image, Button } from "antd";
-import {
-  FaBed,
-  FaCalendarAlt,
-  FaCheckCircle,
-  FaLongArrowAltRight,
-} from "react-icons/fa";
-import { useState } from "react";
+const { Text } = Typography;
 
 import visaImg from "../../assets/img/icons/visa.jpg";
 import paypalImg from "../../assets/img/icons/paypal.jpg";
 import kbzImg from "../../assets/img/icons/kbzpay.jpg";
 import ayapayImg from "../../assets/img/icons/ayapay.jpg";
 import wavepayImg from "../../assets/img/icons/wavepay.jpg";
-import beachImg from "../../assets/img/hotel/beach_hotel_1.jpg";
-import maiLogo from "../../assets/mai_logo.jpg";
 import { useNavigate } from "react-router-dom";
 import SelectStep from "../../components/user/common/SelectStep";
 import { useSelector } from "react-redux";
 import { selectState } from "../../features/select/SelectSlice";
+import { ticketState } from "../../features/flight/FlightTicketSlice";
+import { useState } from "react";
 
 const ConfirmationPage = () => {
-  const [paymentMethod, setPaymentMethod] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState("Visa");
   const navigate = useNavigate();
+  const { selectedPlan, flightOnly } = useSelector(selectState);
+  const { hotel, room } = selectedPlan;
 
-  const { selectedPlan } = useSelector(selectState);
-  const { hotel, room, flightOnly, hotelPlusFlight } = selectedPlan;
-
-  console.log(+selectedPlan.checkInDate);
-  console.log(+selectedPlan.checkOutDate - +selectedPlan.checkInDate);
-
+  const { economy, business, firstclass, flight } = useSelector(ticketState);
+  let totalAmount = economy.amount + business.amount + firstclass.amount;
+  let serviceFee = totalAmount * 0.05;
   return (
     <>
       <div
@@ -98,7 +92,13 @@ const ConfirmationPage = () => {
               width: "60%",
             }}
           >
-            <p className="text-md font-bold m-5">Summary</p>
+            <div className="flex justify-between items-center">
+              <p className="text-md font-bold m-5">Summary</p>
+              <IoReturnUpBack
+                onClick={() => navigate(-1)}
+                className="text-3xl cursor-pointer"
+              />
+            </div>
             {hotel && (
               <>
                 <div>
@@ -131,36 +131,82 @@ const ConfirmationPage = () => {
                 <hr className="my-2 h-px bg-black" />
               </>
             )}
-            {flightOnly ||
-              (hotelPlusFlight && (
-                <>
-                  <div>
-                    <p className="text-md  m-5">Flight</p>
-                    <div className="flex ">
-                      <Image
-                        src={maiLogo}
-                        width="200px"
-                        height="150px"
-                        className="p-3 object-cover"
-                      />
-                      <div className="w-full m-3">
-                        <div className="flex justify-between ">
-                          <div className="flex justify-evenly items-center ">
-                            <p className="text-md font-bold mr-5 ">YGN 6:00 </p>
-                            <FaLongArrowAltRight className="size-8 inline mr-5" />
-                            <p className="text-md font-bold mr-5">BGN 7:00</p>
+            {flightOnly && (
+              <>
+                <div className="bg-white rounded-lg shadow-lg p-6">
+                  <Text className="text-lg font-semibold m-5 block">
+                    Flight
+                  </Text>
+                  <div className="flex justify-between items-center">
+                    <Image
+                      src={flight.ariLineImg}
+                      width="200px"
+                      height="150px"
+                      className="p-3 object-cover rounded-lg shadow-md"
+                    />
+                    <div className="w-full m-3">
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center space-x-5">
+                          <div>
+                            <Text className="text-lg font-bold block">
+                              {flight.departurePlace}
+                            </Text>
+                            <Text className="text-md text-gray-500">
+                              {flight.departureTime}
+                            </Text>
                           </div>
-                          <p className="text-md font-bold ">$45</p>
+                          <FaLongArrowAltRight className="text-2xl text-gray-500" />
+                          <div>
+                            <Text className="text-lg font-bold block">
+                              {flight.arrivalPlace}
+                            </Text>
+                            <Text className="text-md text-gray-500">
+                              {flight.arrivalTime}
+                            </Text>
+                          </div>
                         </div>
-                        <p className="text-md m-2">
-                          Myanmar Airline International
-                        </p>
+                      </div>
+                      <Text className="text-lg mt-3 block">{flight.name}</Text>
+                      <div>
+                        {economy.ticket > 0 && (
+                          <Text className="block">
+                            Economy Ticket x{economy.ticket}
+                          </Text>
+                        )}
+                        {business.ticket > 0 && (
+                          <Text className="block">
+                            Business Ticket x{business.ticket}
+                          </Text>
+                        )}
+                        {firstclass.ticket > 0 && (
+                          <Text className="block">
+                            First Class Ticket x{firstclass.ticket}
+                          </Text>
+                        )}
                       </div>
                     </div>
                   </div>
-                  <hr className="my-2 h-px bg-black" />
-                </>
-              ))}
+                </div>
+                <Divider className="my-4 bg-gray-200" />
+                <div className="p-4 bg-gray-50 rounded-lg shadow-inner">
+                  <div name="subtotal" className="p-2">
+                    <div className="flex justify-between text-md font-semibold m-2">
+                      <Text>Cost</Text>
+                      <Text>{totalAmount}</Text>
+                    </div>
+                    <div className="flex justify-between text-md font-semibold m-2">
+                      <Text>Service Fee</Text>
+                      <Text>{serviceFee}</Text>
+                    </div>
+                  </div>
+                  <Divider className="my-2 bg-gray-200" />
+                  <div className="flex justify-between text-md font-semibold m-2 p-2">
+                    <Text>Total</Text>
+                    <Text>{totalAmount + serviceFee}</Text>
+                  </div>
+                </div>
+              </>
+            )}
             <div name="subtotal" className="p-2">
               <div className="flex justify-between text-md font-semibold m-2">
                 <p>Subtotal</p>

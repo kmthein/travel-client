@@ -43,3 +43,12 @@ export const updateAirlineClass = async (id, payload) => {
     return error.response;
   }
 };
+
+export const getAllFlightClassByAirline = async (airlineId) => {
+  try {
+    const response = await api.get(`/api/flight-class/${airlineId}/class`);
+    return response;
+  } catch (error) {
+    return error.response;
+  }
+};

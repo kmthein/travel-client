@@ -177,15 +177,7 @@ function Hotel() {
           onFinish={searchHotelHandler}
           className="flex justify-between items-center bg-white p-4 py-0 rounded-lg shadow-md mb-8"
         >
-<<<<<<< HEAD
-          <Form.Item
-            name="hotel"
-            label="Hotel"
-            rules={[{ required: true, message: "Please select a hotel!" }]}
-          >
-=======
           <Form.Item name="hotel" label="Hotel">
->>>>>>> 730d99900d861bc02ed7151fe9e331fa73509871
             <Input
               placeholder="Search Hotels"
               prefix={<FaSearch className="text-gray-400" />}
@@ -194,57 +186,23 @@ function Hotel() {
           <Form.Item
             name="checkin"
             label="Check In"
-<<<<<<< HEAD
-            rules={[
-              { required: true, message: "Please select a check in date!" },
-            ]}
-          >
-            <DatePicker
-              placeholder="Check in"
-              suffixIcon={<FaCalendarAlt />}
-              className="w-32"
-            />
-=======
             rules={[{ required: true, message: "Select check in date!" }]}
           >
             <DatePicker placeholder="Check in" suffixIcon={<FaCalendarAlt />} />
->>>>>>> 730d99900d861bc02ed7151fe9e331fa73509871
           </Form.Item>
           <Form.Item
             name="checkout"
             label="Check Out"
-<<<<<<< HEAD
-            rules={[
-              { required: true, message: "Please select a check out date!" },
-            ]}
-=======
             rules={[{ required: true, message: "Select check out date!" }]}
->>>>>>> 730d99900d861bc02ed7151fe9e331fa73509871
           >
             <DatePicker
               placeholder="Check Out"
               suffixIcon={<FaCalendarAlt />}
-<<<<<<< HEAD
-              className="w-32"
-            />
-          </Form.Item>
-          <Form.Item
-            name="guest"
-            label="Number of Guest"
-            rules={[
-              { required: true, message: "Please select a check out date!" },
-            ]}
-          >
-            <Select
-              defaultValue={1}
-              className="w-32"
-=======
             />
           </Form.Item>
           <Form.Item name="guest" label="Number of Guest">
             <Select
               defaultValue={1}
->>>>>>> 730d99900d861bc02ed7151fe9e331fa73509871
               suffixIcon={<FaUser />}
               name="guest"
               options={[

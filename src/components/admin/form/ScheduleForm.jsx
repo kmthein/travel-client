@@ -30,7 +30,9 @@ const ScheduleForm = ({
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [form] = Form.useForm();
   useEffect(() => {
-    handleEdit(isFlight ? selectedFlightSchedule : selectedBusSchedule);
+    if (editForm) {
+      handleEdit(isFlight ? selectedFlightSchedule : selectedBusSchedule);
+    }
   }, [editForm]);
   const onCreate = async (values) => {
     const formData = new FormData();
@@ -50,6 +52,7 @@ const ScheduleForm = ({
       if (!editForm) {
         createFlightSchedule(formData);
       } else {
+        console.log("work");
         updateFlightSchedule(selectedFlightSchedule, formData);
       }
     }
@@ -67,7 +70,7 @@ const ScheduleForm = ({
   };
   const handleEdit = async (id) => {
     try {
-      if (isFlight) {
+      if (isFlight && editForm) {
         let res = await getFlightScheduleById(id);
         const {
           airLine,
@@ -87,7 +90,7 @@ const ScheduleForm = ({
           date: moment(date, "YYYY-MM-DD"),
           distance: distance,
         });
-      } else {
+      } else if (!isFlight && editForm) {
         let res = await getBusScheduleById(id);
         const {
           busService,

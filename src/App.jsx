@@ -2,7 +2,6 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Homepage from "./pages/user/Homepage";
 import Userlayout from "./layouts/Userlayout";
 import TravelReceipt from "./pages/user/TravelReceipt";
-import AdminLayout from "./layouts/AdminLayout";
 import DashboardPage from "./pages/admin/DashboardPage";
 import AirlinePage from "./pages/admin/AirlinePage";
 import BusServicePage from "./pages/admin/BusServicePage";
@@ -31,9 +30,9 @@ import MemberPage from "./pages/admin/MemberPage";
 import "react-toastify/dist/ReactToastify.css";
 import RoomPage from "./pages/user/RoomPage";
 import ConfirmationPage from "./pages/user/ConfirmationPage";
-import ChatRoompage from "./pages/user/ChatRoompage";
 import AdminProvider from "./providers/AdminProvider";
 import UserProfile from "./pages/user/UserProfile";
+import SelectFlightClass from "./components/user/flight/SelectFlightClass";
 
 function App() {
   const {
@@ -84,6 +83,10 @@ function App() {
           element: <Flightpage />,
         },
         {
+          path: "/flights/:id/class",
+          element: <SelectFlightClass />,
+        },
+        {
           path: "/buses",
           element: <Buspage />,
         },
@@ -99,6 +102,7 @@ function App() {
           path: "/flight",
           element: <FlightAndHotelSelectFlight />,
         },
+
         {
           path: "/flightconfirmation",
           element: <FlightAndHotelConfirmation />,
@@ -122,10 +126,6 @@ function App() {
         {
           path: "/busconfirmation",
           element: <BusAndHotelConfirmation />,
-        },
-        {
-          path: "/chatroom",
-          element: <ChatRoompage />,
         },
         {
           path: "/userprofile",
