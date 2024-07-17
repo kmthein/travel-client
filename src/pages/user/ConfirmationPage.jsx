@@ -17,8 +17,14 @@ import { reset, ticketState } from "../../features/flight/FlightTicketSlice";
 
 const ConfirmationPage = () => {
   const [paymentMethod, setPaymentMethod] = useState("Visa");
+  const [initialTotal, setInitialTotal] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [serviceFee, setServiceFee] = useState(0);
   const navigate = useNavigate();
-  const { selectedPlan, flightOnly } = useSelector(selectState);
+  const { selectedPlan, flightOnly, hotelPlusFlight } =
+    useSelector(selectState);
+
+  console.log(hotelPlusFlight);
   const [plan, setPlan] = useState({
     hotel: null,
     room: null,
@@ -26,23 +32,35 @@ const ConfirmationPage = () => {
   });
 
   const { hotel, room, totalNight } = plan;
+  const { economy, business, firstclass, flight } = useSelector(ticketState);
 
   useEffect(() => {
     if (selectedPlan != null) {
+      const totalHotelCost =
+        selectedPlan.totalNight * selectedPlan.room.roomPrice;
+      const totalFlightCost =
+        (economy?.amount || 0) +
+        (business?.amount || 0) +
+        (firstclass?.amount || 0);
+      const newInitialTotal = totalHotelCost + totalFlightCost;
       setPlan({
         ...plan,
         hotel: selectedPlan.hotel,
         room: selectedPlan.room,
         totalNight: selectedPlan.totalNight,
       });
+      setInitialTotal(newInitialTotal);
     }
-  }, []);
+  }, [selectedPlan, economy, business, firstclass]);
+
+  useEffect(() => {
+    const serviceFee = initialTotal * 0.05;
+    setServiceFee(serviceFee);
+    setTotalAmount(initialTotal + serviceFee);
+  }, [initialTotal]);
 
   const dispatch = useDispatch();
 
-  const { economy, business, firstclass, flight } = useSelector(ticketState);
-  let totalAmount = economy.amount + business.amount + firstclass.amount;
-  let serviceFee = totalAmount * 0.05;
   return (
     <>
       <div
@@ -148,10 +166,10 @@ const ConfirmationPage = () => {
                     </div>
                   </div>
                 </div>
-                <hr className="my-2 h-[0.5px] bg-black" />
+                <Divider className="my-4 bg-gray-200" />
               </>
             )}
-            {flightOnly && (
+            {(hotelPlusFlight || flightOnly) && (
               <>
                 <div className="bg-white rounded-lg shadow-lg p-6">
                   <Text className="text-lg font-semibold m-5 block">
@@ -208,25 +226,25 @@ const ConfirmationPage = () => {
                   </div>
                 </div>
                 <Divider className="my-4 bg-gray-200" />
-                <div className="p-4 bg-gray-50 rounded-lg shadow-inner">
-                  <div name="subtotal" className="p-2">
-                    <div className="flex justify-between text-md font-semibold m-2">
-                      <Text>Cost</Text>
-                      <Text>{totalAmount}</Text>
-                    </div>
-                    <div className="flex justify-between text-md font-semibold m-2">
-                      <Text>Service Fee</Text>
-                      <Text>{serviceFee}</Text>
-                    </div>
-                  </div>
-                  <Divider className="my-2 bg-gray-200" />
-                  <div className="flex justify-between text-md font-semibold m-2 p-2">
-                    <Text>Total</Text>
-                    <Text>{totalAmount + serviceFee}</Text>
-                  </div>
-                </div>
               </>
             )}
+            <div className="p-4 bg-gray-50 rounded-lg shadow-inner">
+              <div name="subtotal" className="p-2">
+                <div className="flex justify-between text-md font-semibold m-2">
+                  <Text>Cost</Text>
+                  <Text>{initialTotal} ks</Text>
+                </div>
+                <div className="flex justify-between text-md font-semibold m-2">
+                  <Text>Service Fee</Text>
+                  <Text>+ {serviceFee} ks</Text>
+                </div>
+              </div>
+              <Divider className="my-2 bg-gray-200" />
+              <div className="flex justify-between text-md font-semibold m-2 p-2">
+                <Text>Total</Text>
+                <Text>{totalAmount} ks</Text>
+              </div>
+            </div>
             <div className="flex justify-end ">
               <Button
                 className=" m-4 w-32 text-white bg-red-500"

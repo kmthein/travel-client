@@ -31,9 +31,9 @@ import "react-toastify/dist/ReactToastify.css";
 import RoomPage from "./pages/user/RoomPage";
 import ConfirmationPage from "./pages/user/ConfirmationPage";
 import AdminProvider from "./providers/AdminProvider";
-import UserProfile from "./pages/user/UserProfile";
 import ConfirmProvider from "./providers/ConfirmProvider";
 import SelectFlightClass from "./components/user/flight/SelectFlightClass";
+import UserProfilePage from "./pages/user/UserProfilePage";
 
 function App() {
   const {
@@ -134,8 +134,8 @@ function App() {
           element: <BusAndHotelConfirmation />,
         },
         {
-          path: "/userprofile",
-          element: <UserProfile />,
+          path: "/user-profile",
+          element: <UserProfilePage />,
         },
       ],
     },

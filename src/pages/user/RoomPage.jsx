@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addPlan, selectState } from "../../features/select/SelectSlice";
 import SelectStep from "../../components/user/common/SelectStep";
 import { IoReturnUpBack } from "react-icons/io5";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { calculateDaysBetween, formattedDate } from "../../utils/utils";
 import moment from "moment";
 import CheckInDatePicker from "../../components/user/common/CheckInDatePicker";
@@ -36,13 +36,27 @@ const RoomPage = () => {
 
   const { availableRoomList } = selectedPlan.hotel;
 
-  const dispatch = useDispatch();
+  const [roomList, setRoomList] = useState([]);
 
-  console.log(availableRoomList);
+  useEffect(() => {
+    const roomAry = [];
+    const idSet = new Set();
+
+    availableRoomList.forEach((room) => {
+      if (!idSet.has(room.id)) {
+        idSet.add(room.id);
+        roomAry.push(room);
+      }
+    });
+    setRoomList(roomAry);
+  }, [availableRoomList]);
+
+  const dispatch = useDispatch();
 
   const location = useLocation();
   const { search } = location;
 
+  console.log(roomList);
   return (
     <div className="w-[70%] mx-auto px-4">
       <div className="my-10 mx-auto">
@@ -59,9 +73,9 @@ const RoomPage = () => {
         </div>
       </div>
       <div className="my-10 mx-auto">
-        {availableRoomList &&
-          availableRoomList.length > 0 &&
-          availableRoomList.map((room, index) => (
+        {roomList &&
+          roomList.length > 0 &&
+          roomList.map((room, index) => (
             <div
               key={index}
               className="my-4 p-4 border border-gray-300 rounded-2xl flex gap-4"

@@ -11,7 +11,9 @@ const SelectStep = () => {
     useSelector(selectState);
   const { id } = useParams();
   const location = useLocation();
-  const { pathname } = location;
+  const { pathname, search } = location;
+
+  console.log(location);
 
   const items = [];
 
@@ -28,6 +30,8 @@ const SelectStep = () => {
           ? "process"
           : pathname == "/confirmation"
           ? "finish"
+          : pathname == `/flights/${id}/class`
+          ? "finish"
           : "wait",
       icon: <FaBed />,
     });
@@ -37,24 +41,22 @@ const SelectStep = () => {
         status:
           pathname == "/flights"
             ? "process"
-            : pathname == "/confirmation"
+            : pathname == "/confirmation" || pathname == `/flights/${id}/class`
             ? "finish"
             : "wait",
         icon: <FaPlane />,
       });
     }
   }
-  if (flightOnly) {
-    items.push({
-      title: "Select Flight",
-      status: "finish",
-      icon: <FaPlane />,
-    });
-  }
-  if (flightOnly) {
+  if (flightOnly || hotelPlusFlight) {
     items.push({
       title: "Select Class",
-      status: pathname === `/flights/${id}/class` ? "process" : "finish",
+      status:
+        pathname === `/flights/${id}/class`
+          ? "process"
+          : pathname === "/rooms"
+          ? "wait"
+          : "finish",
       icon: <MdOutlineFlightClass />,
     });
   }
