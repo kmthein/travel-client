@@ -13,3 +13,16 @@ export const saveTravelPlan = async (payload) => {
     return error.response;
   }
 };
+
+export const getAllTravelPlan = async () => {
+  try {
+    const response = await api.get("/api/travel-plan", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response;
+  } catch (error) {
+    return error.response;
+  }
+};

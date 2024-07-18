@@ -1,6 +1,8 @@
 import { api } from "../config/axios";
 
-export const getAllNormalUser = async (token) => {
+const token = localStorage.getItem("token");
+
+export const getAllNormalUser = async () => {
   try {
     const response = await api.get("/api/user/normal-user", {
       headers: {

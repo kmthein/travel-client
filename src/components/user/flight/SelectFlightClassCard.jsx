@@ -130,6 +130,10 @@ const SelectFlightClassCard = ({
                   selectedClass &&
                   selectedClass !== item.flightClassName.toLowerCase()
                 }
+                disabled={
+                  selectedClass &&
+                  selectedClass !== item.flightClassName.toLowerCase()
+                }
               >
                 +
               </Button>
