@@ -17,12 +17,13 @@ import { reset, transportState } from "../../features/transport/TransportSlice";
 import { saveAccommodation } from "../../api/accommodation";
 import { userState } from "../../features/user/UserSlice";
 import { saveTravelPlan } from "../../api/travelplan";
+import { toast } from "react-toastify";
 
 const ConfirmationPage = () => {
   const [paymentMethod, setPaymentMethod] = useState("Visa");
   const [initialTotal, setInitialTotal] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
-  const [totalFlightCost, setTotalFlightCost] = useState(0);
+  const [totalTransportCost, setTotalTransportCost] = useState(0);
   const [serviceFee, setServiceFee] = useState(0);
   const navigate = useNavigate();
   const { selectedPlan, flightOnly, busOnly, hotelPlusFlight } =
@@ -37,18 +38,13 @@ const ConfirmationPage = () => {
 
   const { hotel, room, totalNight, totalPerson, checkInDate, checkOutDate } =
     plan;
-  const { economy, business, firstclass, flight } = useSelector(transportState);
+  const { economy, business, firstclass, transport } =
+    useSelector(transportState);
 
   useEffect(() => {
+    let totalHotelCost = 0;
     if (selectedPlan != null) {
-      const totalHotelCost =
-        selectedPlan.totalNight * selectedPlan.room.roomPrice;
-      const initialFlightCost =
-        (economy?.amount || 0) +
-        (business?.amount || 0) +
-        (firstclass?.amount || 0);
-      const newInitialTotal = totalHotelCost + initialFlightCost;
-      setTotalFlightCost(initialFlightCost);
+      totalHotelCost = selectedPlan.totalNight * selectedPlan.room.roomPrice;
       setPlan({
         ...plan,
         hotel: selectedPlan.hotel,
@@ -58,10 +54,20 @@ const ConfirmationPage = () => {
         checkInDate: selectedPlan.checkInDate,
         checkOutDate: selectedPlan.checkOutDate,
       });
-      setInitialTotal(newInitialTotal);
     }
-  }, [selectedPlan, economy, business, firstclass]);
+    let initialTransportCost = 0;
+    if (transport != {}) {
+      initialTransportCost =
+        (economy?.amount || 0) +
+        (business?.amount || 0) +
+        (firstclass?.amount || 0);
+    }
+    const newInitialTotal = totalHotelCost + initialTransportCost;
+    setTotalTransportCost(+initialTransportCost);
+    setInitialTotal(newInitialTotal);
+  }, [selectedPlan, economy, business, firstclass, transport]);
 
+  console.log(transport);
   useEffect(() => {
     const serviceFee = initialTotal * 0.05;
     setServiceFee(serviceFee);
@@ -69,6 +75,8 @@ const ConfirmationPage = () => {
   }, [initialTotal]);
 
   const dispatch = useDispatch();
+
+  console.log(typeof transport.classId);
 
   const confirmPlanSubmit = async () => {
     console.log(room);
@@ -84,14 +92,27 @@ const ConfirmationPage = () => {
       const saveHotelRes = await saveAccommodation(hotelformData);
       console.log(saveHotelRes);
       formData.append("accommodationId", saveHotelRes.data.id);
+      formData.append("startDate", checkInDate);
     }
-    formData.append("startDate", checkInDate);
-    formData.append("totalPrice", totalAmount);
+    formData.append("totalPrice", +totalAmount);
     formData.append("userId", user?.id);
+    if (transport.flightScheduleId) {
+      formData.append("flightClassId", +transport.classId);
+      formData.append("flightScheduleId", +transport.flightScheduleId);
+      formData.append("startDate", transport.departureDate);
+    } else if (transport.busScheduleId) {
+      formData.append("busClassId", +transport.classId);
+      formData.append("busScheduleId", +transport.busScheduleId);
+      formData.append("startDate", transport.departureDate);
+    }
     const res = await saveTravelPlan(formData);
     console.log(res);
-    // dispatch(reset());
-    // dispatch(resetSelect());
+    if (res.status == 200) {
+      toast.success("Travel plan made successfully");
+      dispatch(reset());
+      dispatch(resetSelect());
+      navigate("/");
+    }
     // navigate("/travelreceipt");
   };
 
@@ -239,7 +260,7 @@ const ConfirmationPage = () => {
                             </div>
                           </div>
                           <p className="text-md font-bold block">
-                            {totalFlightCost} ks
+                            {totalTransportCost} ks
                           </p>
                         </div>
                       </div>

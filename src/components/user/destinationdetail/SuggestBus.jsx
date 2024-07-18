@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Express from "../../../assets/express.png";
 const SuggestBus = ({ arrive, name }) => {
-  console.log(arrive);
   return (
     <>
       {arrive && arrive.length > 0 && (

@@ -1,16 +1,37 @@
 import { Button, Rate } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  endLoading,
+  startLoading,
+  uiState,
+} from "../../../features/ui/UiSlice";
+import { createReview } from "../../../api/review";
+import { userState } from "../../../features/user/UserSlice";
 
 const ReviewForm = ({ destination }) => {
   const [rate, setRate] = useState(0);
 
   const [input, setInput] = useState("");
 
-  const reviewSubmitHandler = () => {
+  const { loading } = useSelector(uiState);
+
+  const { user } = useSelector(userState);
+
+  const dispatch = useDispatch();
+
+  const reviewSubmitHandler = async () => {
+    dispatch(startLoading());
     console.log(rate);
     console.log(input);
-    console.log(destination.id);
+    const formData = new FormData();
+    formData.append("description", input);
+    formData.append("rating", rate);
+    formData.append("userId", user?.id);
+    const res = await createReview(formData);
+    console.log(res);
+    dispatch(endLoading());
   };
 
   return (
@@ -24,7 +45,9 @@ const ReviewForm = ({ destination }) => {
       <div className="flex justify-end mt-10 gap-5">
         <h2>Rating</h2>
         <Rate value={rate} onChange={setRate} />
-        <Button onClick={() => reviewSubmitHandler()}>Send</Button>
+        <Button onClick={() => reviewSubmitHandler()} disabled={loading}>
+          Send
+        </Button>
       </div>
     </div>
   );

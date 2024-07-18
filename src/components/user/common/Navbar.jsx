@@ -7,7 +7,15 @@ import { Avatar, Dropdown, Space } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import { logoutUser, userState } from "../../../features/user/UserSlice";
 import { BiUser } from "react-icons/bi";
-import { selectHotelPlusFlight } from "../../../features/select/SelectSlice";
+import {
+  resetSelect,
+  selectBus,
+  selectFlight,
+  selectHotel,
+  selectHotelPlusBus,
+  selectHotelPlusFlight,
+} from "../../../features/select/SelectSlice";
+import { reset } from "../../../features/transport/TransportSlice";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -18,7 +26,10 @@ const Navbar = () => {
     {
       label: (
         <span
+          className="cursor-pointer"
           onClick={() => {
+            dispatch(reset());
+            dispatch(resetSelect());
             dispatch(selectHotelPlusFlight());
             navigate("/hotels?flightpackage");
           }}
@@ -29,7 +40,19 @@ const Navbar = () => {
       key: "1",
     },
     {
-      label: <Link to="/busandhotel">Bus and Hotel</Link>,
+      label: (
+        <span
+          className="cursor-pointer"
+          onClick={() => {
+            dispatch(reset());
+            dispatch(resetSelect());
+            dispatch(selectHotelPlusBus());
+            navigate("/hotels?buspackage");
+          }}
+        >
+          Bus and Hotel
+        </span>
+      ),
       key: "2",
     },
   ];
@@ -61,16 +84,56 @@ const Navbar = () => {
               <Link to="/">Home</Link>
             </li>
             <li>
-              <Link to="/destination">Destination</Link>
+              <span
+                className="cursor-pointer"
+                onClick={() => {
+                  dispatch(reset());
+                  dispatch(resetSelect());
+                  dispatch(selectHotel());
+                  navigate("/destination");
+                }}
+              >
+                Destination
+              </span>
             </li>
             <li>
-              <Link to="/hotels">Hotels</Link>
+              <span
+                className="cursor-pointer"
+                onClick={() => {
+                  dispatch(reset());
+                  dispatch(resetSelect());
+                  dispatch(selectHotel());
+                  navigate("/hotels");
+                }}
+              >
+                Hotels
+              </span>
             </li>
             <li>
-              <Link to="/flights">Flights</Link>
+              <span
+                className="cursor-pointer"
+                onClick={() => {
+                  dispatch(reset());
+                  dispatch(resetSelect());
+                  dispatch(selectFlight());
+                  navigate("/flights");
+                }}
+              >
+                Flights
+              </span>
             </li>
             <li>
-              <Link to="/buses">Bus</Link>
+              <span
+                className="cursor-pointer"
+                onClick={() => {
+                  dispatch(reset());
+                  dispatch(resetSelect());
+                  dispatch(selectBus());
+                  navigate("/buses");
+                }}
+              >
+                Bus
+              </span>
             </li>
 
             <li>

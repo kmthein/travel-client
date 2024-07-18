@@ -71,7 +71,7 @@ const TransportTicketSearch = ({ choice, isFlight }) => {
         ]}
       />
       <Select
-        placeholder="Flying From"
+        placeholder={isFlight ? "Flying From" : "From"}
         style={{
           width: "130px",
         }}
