@@ -7,9 +7,6 @@ import AirlinePage from "./pages/admin/AirlinePage";
 import BusServicePage from "./pages/admin/BusServicePage";
 import Hotelpage from "./pages/user/Hotelpage";
 import Destinationpage from "./pages/user/Destinationpage";
-import FlightAndHotelConfirmation from "./pages/user/FlightAndHotelConfirmation";
-import FlightAndHotelSelectFlight from "./pages/user/FlightAndHotelSelectFlight";
-import FlightAndHotelSelectHotel from "./pages/user/FlightAndHotelSelectHotel";
 import DestinationDetailpage from "./pages/user/DestinationDetailpage";
 import Aboutpage from "./pages/user/Aboutpage";
 import FlightClassPage from "./pages/admin/FlightClassPage";
@@ -18,14 +15,9 @@ import FlightSchedulePage from "./pages/admin/FlightSchedulePage";
 import BusSchedulePage from "./pages/admin/BusSchedulePage";
 import Flightpage from "./pages/user/Flightpage";
 import Buspage from "./pages/user/Buspage";
-import FlightAndHotelSelectRoom from "./pages/user/FlightAndHotelSelectRoom";
 import useSearch from "./hooks/useSearch";
 import DestinationPage from "./pages/admin/DestinationPage";
 import HotelPage from "./pages/admin/HotelPage";
-import BusAndHotelSelectBus from "./pages/user/BusAndHotelSelectBus";
-import BusAndHotelSelectHotel from "./pages/user/BusAndHotelSelectHotel";
-import BusAndHotelSelectRoom from "./pages/user/BusAndHotelSelectRoom";
-import BusAndHotelConfirmation from "./pages/user/BusAndHotelConfirmation";
 import MemberPage from "./pages/admin/MemberPage";
 import "react-toastify/dist/ReactToastify.css";
 import RoomPage from "./pages/user/RoomPage";
@@ -103,41 +95,8 @@ function App() {
           element: <SelectBusClass />,
         },
         {
-          path: "/flightandhotel",
-          element: <FlightAndHotelSelectHotel />,
-        },
-        {
-          path: "/flightandroom",
-          element: <FlightAndHotelSelectRoom />,
-        },
-        {
-          path: "/flight",
-          element: <FlightAndHotelSelectFlight />,
-        },
-
-        {
-          path: "/flightconfirmation",
-          element: <FlightAndHotelConfirmation />,
-        },
-        {
           path: "/travelreceipt",
           element: <TravelReceipt />,
-        },
-        {
-          path: "/busandhotel",
-          element: <BusAndHotelSelectHotel />,
-        },
-        {
-          path: "/busandroom",
-          element: <BusAndHotelSelectRoom />,
-        },
-        {
-          path: "/bus",
-          element: <BusAndHotelSelectBus />,
-        },
-        {
-          path: "/busconfirmation",
-          element: <BusAndHotelConfirmation />,
         },
         {
           path: "/user-profile",
