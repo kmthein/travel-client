@@ -12,17 +12,18 @@ import React, { useEffect, useState } from "react";
 import { FaPlus, FaTrashAlt } from "react-icons/fa";
 import firebase from "firebase/compat/app";
 import "firebase/compat/storage";
-import { createHotel, updateHotel, getHotelById } from "../../../api/hotelapi";
-import TextArea from "antd/es/input/TextArea";
+import { createRoom, updateRoom, getRoomById } from "../../../api/roomapi";
 import { getAllDestinations } from "../../../api/destination";
 
-const HotelForm = ({
+const RoomForm = ({
   open,
   setOpen,
   editForm,
   setEditForm,
   selectedHotelId,
-  getHotels,
+  selectedRoomId,
+  setSelectedRoomId,
+  getRooms,
   form,
   images,
   setImages,
@@ -33,34 +34,18 @@ const HotelForm = ({
   const [imgCount, setImgCount] = useState(0);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [deleteImgIds, setDeleteImgIds] = useState([]);
-  const [destinations, setDestinations] = useState([]);
+  const [locationOption, setLocationOption] = useState([]);
 
-  const getAllDestinationHandler = async () => {
+  const getOldRoomHandler = async () => {
     try {
-      const response = await getAllDestinations();
-      const modifiedData = response.data.map((d) => {
-        return {
-          value: d.id,
-          label: d.name,
-        };
-      });
-      setDestinations(modifiedData);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+      const response = await getRoomById(selectedRoomId);
+      const { roomType, validRoom, roomPrice } = response.data;
+      form.setFieldValue("roomType", roomType);
+      form.setFieldValue("validRoom", validRoom);
+      form.setFieldValue("roomPrice", roomPrice);
 
-  const getOldHotelHandler = async () => {
-    try {
-      const response = await getHotelById(selectedHotelId);
-      const { name, description, rating, destinationId } = response.data;
-      form.setFieldValue("name", name);
-      form.setFieldValue("rating", rating);
-      form.setFieldValue("description", description);
-      form.setFieldValue("destinationId", destinationId);
-
-      const oldImages = response.data.imgUrlList.map((i) => {
-        return i;
+      const oldImages = response.data.image.map((i) => {
+        return i.imgUrl;
       });
 
       setPreviewImg((prev) => prev.concat(oldImages));
@@ -87,11 +72,10 @@ const HotelForm = ({
     setImages([]);
     getLocationOption();
     // setDeleteImgIds([]);
-    getAllDestinationHandler();
-    if (editForm) {
-      getOldHotelHandler();
+    if (selectedRoomId !== null) {
+      getOldRoomHandler();
     }
-  }, [editForm, selectedHotelId]);
+  }, [editForm, selectedRoomId]);
 
   const onCreate = async (values) => {
     setConfirmLoading(true);
@@ -125,15 +109,16 @@ const HotelForm = ({
       }
     }
     formData.append("imgUrlList", imgAry);
+    formData.append("hotelId", selectedHotelId);
 
     let response;
     if (editForm) {
       // if (deleteImgIds.length > 0) {
       //   formData.append("delete_ids", deleteImgIds);
       // }
-      response = await updateHotel(selectedHotelId, formData);
+      response = await updateRoom(selectedRoomId, formData);
     } else {
-      response = await createHotel(formData);
+      response = await createRoom(formData);
     }
 
     setConfirmLoading(false);
@@ -145,7 +130,7 @@ const HotelForm = ({
     form.resetFields();
     setOpen(false);
 
-    getHotels();
+    getRooms();
   };
 
   const handleCancel = () => {
@@ -206,61 +191,45 @@ const HotelForm = ({
         onFinish={(values) => onCreate(values)}
       >
         <h1 className=" text-xl mb-3 font-medium">
-          {editForm ? "Edit" : "Add New"} Hotel
+          {editForm ? "Edit" : "Add New"} Room
         </h1>
         <Form.Item
-          name="name"
-          label="Name"
+          name="roomType"
+          label="Room Type"
           rules={[
             {
               required: true,
-              message: "Please input the name of hotel!",
+              message: "Please input the room type of the hotel!",
             },
           ]}
         >
           <Input />
         </Form.Item>
         <Form.Item
-          name="description"
-          label="Description"
+          name="validRoom"
+          label="Valid Room"
           rules={[
             {
               required: true,
-              message: "Please input the description of hotel!",
+              message: "Please select the number of the valid room!",
             },
           ]}
         >
-          <TextArea rows={4} />
+          <Input />
         </Form.Item>
-        <div className="flex gap-2">
-          <Form.Item
-            name="rating"
-            label="Rating"
-            className="w-[50%]"
-            rules={[
-              {
-                required: true,
-                message: "Please input the rating of hotel!",
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="destinationId"
-            label="Location"
-            className="w-[50%]"
-            rules={[
-              {
-                required: true,
-                message: "Please select the location of hotel!",
-              },
-            ]}
-          >
-            <Select defaultValue={"Select One"} options={destinations} />
-          </Form.Item>
-        </div>
-        <Form.Item name="img" label="Hotel Image">
+        <Form.Item
+          name="roomPrice"
+          label="Room Price"
+          ruleR={[
+            {
+              required: true,
+              message: "Please input the price of room!",
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item name="img" label="Room Image">
           <div className=" flex gap-2 my-2">
             {previewImg &&
               previewImg.map((img, index) => (
@@ -298,4 +267,4 @@ const HotelForm = ({
   );
 };
 
-export default HotelForm;
+export default RoomForm;

@@ -133,6 +133,10 @@ function App() {
           element: <HotelPage getColumnSearchProps={getColumnSearchProps} />,
         },
         {
+          path: "room/:id",
+          element: <RoomPage getColumnSearchProps={getColumnSearchProps} />,
+        },
+        {
           path: "airline",
           element: <AirlinePage getColumnSearchProps={getColumnSearchProps} />,
         },
