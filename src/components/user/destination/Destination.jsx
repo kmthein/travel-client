@@ -2,10 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Checkbox, Collapse, Input, Radio } from "antd";
 import { CiSearch } from "react-icons/ci";
 import DestinationCard from "./DestinationCard";
-import {
-  getAllDestinations,
-  searchDestinationByKeyword,
-} from "../../../api/destination";
+import { getDes, searchDestinationByKeyword } from "../../../api/destination";
 import { toast } from "react-toastify";
 import { CgClose } from "react-icons/cg";
 
@@ -41,8 +38,6 @@ const Destination = () => {
     setFilteredDestinations(filterByCountry);
   };
 
-  console.log(destinations);
-
   const items = [
     {
       key: "1",
@@ -55,7 +50,7 @@ const Destination = () => {
           {countries &&
             countries.length > 0 &&
             countries.map((country) => (
-              <div className="flex flex-col mb-1">
+              <div className="flex flex-col mb-1" key={country}>
                 <Radio value={country}>{country}</Radio>
               </div>
             ))}
@@ -78,7 +73,7 @@ const Destination = () => {
   ];
 
   const getAllDestinationHandler = async () => {
-    const res = await getAllDestinations();
+    const res = await getDes();
     if (res.status == 200) {
       setDestinations(res.data);
       const uniqueCountries = getUniqueCountries(res.data);
@@ -140,7 +135,7 @@ const Destination = () => {
             className="bg-blue-50/50"
             expandIconPosition="end"
             ghost
-            defaultActiveKey={["1", "2"]}
+            defaultActiveKey={["1"]}
           />
         </div>
         <div className="flex-1">

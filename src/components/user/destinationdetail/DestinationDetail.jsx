@@ -3,7 +3,6 @@ import noImg from "../../../assets/img/common/no_img.jpg";
 
 const DestinationDetail = ({ destination }) => {
   const [selectImgIndex, setSelectImgIndex] = useState(0);
-
   return (
     <div className="flex items-start gap-8 min-h-[85vh]">
       <div className="w-[45%]">

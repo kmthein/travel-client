@@ -9,6 +9,15 @@ export const getAllDestinations = async () => {
   }
 };
 
+export const getDes = async () => {
+  try {
+    const response = await api.get("/api/destination/all");
+    return response;
+  } catch (error) {
+    return error.response;
+  }
+};
+
 export const getDestinationById = async ({ id }) => {
   try {
     const response = await api.get(`/api/destination/${id}`);

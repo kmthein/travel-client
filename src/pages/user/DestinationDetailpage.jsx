@@ -15,19 +15,19 @@ const DestinationDetailpage = () => {
 
   const getDestinationDetailsHandler = async () => {
     const res = await getDestinationById({ id });
-    const { highlight, topPlace } = res.data;
-    const trimHighlight = highlight.replaceAll(" ", "");
-    const newHighlight = trimHighlight.split(",");
-    const trimTopPlace = topPlace.replaceAll(" ", "");
-    const newTopPlace = trimTopPlace.split(",");
-    await setDestination({
-      ...res.data,
-      highlight: newHighlight,
-      topPlace: newTopPlace,
-    });
+    if (res.data.highlight && res.data.topPlace) {
+      const { highlight, topPlace } = res.data;
+      const trimHighlight = highlight.replaceAll(" ", "");
+      const newHighlight = trimHighlight.split(",");
+      const trimTopPlace = topPlace.replaceAll(" ", "");
+      const newTopPlace = trimTopPlace.split(",");
+      await setDestination({
+        ...res.data,
+        highlight: newHighlight,
+        topPlace: newTopPlace,
+      });
+    }
   };
-
-  console.log(destination);
 
   useEffect(() => {
     getDestinationDetailsHandler();

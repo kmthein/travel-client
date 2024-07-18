@@ -34,30 +34,26 @@ const DestinationCard = ({
         description={
           <div>
             <div className="flex justify-between items-center mt-3">
-              {hotel && (
-                <div className="flex flex-col items-center">
-                  <FaHotel className="text-blue-500" />
-                  <p className="text-sm text-gray-600">
-                    {hotel} Hotel{hotel === 1 ? "" : "s"}
-                  </p>
-                </div>
-              )}
-              {bus && (
-                <div className="flex flex-col items-center">
-                  <FaBus className="text-green-500" />
-                  <p className="text-sm text-gray-600">
-                    {bus} Transfer{bus === 1 ? "" : "s"}
-                  </p>
-                </div>
-              )}
-              {flight && (
-                <div className="flex flex-col items-center">
-                  <MdOutlineFlight className="text-red-500" />
-                  <p className="text-sm text-gray-600">
-                    {flight} Flight{flight === 1 ? "" : "s"}
-                  </p>
-                </div>
-              )}
+              <div className="flex flex-col items-center">
+                <FaHotel className="text-blue-500" />
+                <p className="text-sm text-gray-600">
+                  {hotel} Hotel{hotel === 1 ? "" : "s"}
+                </p>
+              </div>
+
+              <div className="flex flex-col items-center">
+                <FaBus className="text-green-500" />
+                <p className="text-sm text-gray-600">
+                  {bus} Transfer{bus === 1 ? "" : "s"}
+                </p>
+              </div>
+
+              <div className="flex flex-col items-center">
+                <MdOutlineFlight className="text-red-500" />
+                <p className="text-sm text-gray-600">
+                  {flight} Flight{flight === 1 ? "" : "s"}
+                </p>
+              </div>
             </div>
             <p className="mt-4 text-sm text-gray-700 list-disc list-inside">
               {description.slice(0, 80)}
