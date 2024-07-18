@@ -4,8 +4,9 @@ import SelectStep from "./SelectStep";
 import { IoReturnUpBack } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 
-const ScheduleItem = ({ data, goto }) => {
+const ScheduleItem = ({ data }) => {
   const navigate = useNavigate();
+
   return (
     <div className="my-10">
       <div className="flex justify-end mb-8">
@@ -20,7 +21,7 @@ const ScheduleItem = ({ data, goto }) => {
             <div className="flex items-center justify-between p-4">
               <div className="flex flex-col items-center justify-center">
                 <img
-                  src={item.ariLineImg}
+                  src={item.img}
                   alt="airline logo"
                   className="w-[100px] h-[100px] object-contain rounded-full"
                 />
@@ -44,12 +45,6 @@ const ScheduleItem = ({ data, goto }) => {
                   <p className="text-md text-gray-600">{item.arrivalPlace}</p>
                 </div>
               </div>
-              <Button
-                className="bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                onClick={() => goto(item.airlineId, item)}
-              >
-                Select
-              </Button>
             </div>
           </Card>
         </div>

@@ -43,3 +43,11 @@ export const updateBusClass = async (id, payload) => {
     return error.response;
   }
 };
+export const getAllBusClassBybus = async (busId) => {
+  try {
+    const response = await api.get(`/api/bus-class/${busId}/class`);
+    return response;
+  } catch (error) {
+    return error.response;
+  }
+};

@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from "react";
-import BusTicketSearch from "../../components/user/common/BusTicketSearch";
-import { selectBus } from "../../features/select/SelectSlice";
-import { getAllAvailableBus } from "../../api/busschedule";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { getAllAvailableBus, getUserBusSchedule } from "../../api/busschedule";
 import ScheduleItem from "../../components/user/common/ScheduleItem";
+import TransportTicketSearch from "../../components/user/common/TransportTicketSearch";
+import { dateformat } from "../../utils/dateformat";
+import FilterBusClass from "../../components/user/bus/FilterBusClass";
 
 const Buspage = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
   const [allbus, setAllBus] = useState([]);
+  const [filterBus, setFilterBus] = useState(null);
+
   useEffect(() => {
     busSchedule();
   }, []);
+
   const busSchedule = async () => {
     try {
       const res = await getAllAvailableBus();
@@ -21,7 +20,7 @@ const Buspage = () => {
       let modifiedData = data.map((item) => {
         return {
           ...item,
-          ariLineImg: item.ariLineImg[0].imgUrl,
+          img: item.img[0].imgUrl,
         };
       });
       setAllBus(modifiedData);
@@ -29,14 +28,27 @@ const Buspage = () => {
       console.log(error.message);
     }
   };
-  const goto = (id) => {
-    dispatch(selectBus());
-    navigate(`/bus/${id}/class`);
+  const choice = async (departurePlace, destination, departureDate) => {
+    const form = new FormData();
+    form.append("departurePlaceId", departurePlace);
+    form.append("arrivalPlaceId", destination);
+    form.append("departureDate", dateformat(departureDate));
+    let res = await getUserBusSchedule(form);
+    setFilterBus(res.data);
   };
+
   return (
     <div className="w-[70%] mx-auto">
-      <BusTicketSearch />
-      <ScheduleItem data={allbus} goto={goto} />
+      <TransportTicketSearch isFlight={false} choice={choice} />
+      {filterBus === null ? (
+        <ScheduleItem data={allbus} isFlight={false} />
+      ) : filterBus.length > 0 ? (
+        <>
+          <FilterBusClass filterBus={filterBus} />
+        </>
+      ) : (
+        <p className="text-center my-5">No Buses Found</p>
+      )}
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import { Steps } from "antd";
 import React from "react";
-import { FaBed, FaCheckCircle, FaHotel, FaPlane } from "react-icons/fa";
+import { FaBed, FaBus, FaCheckCircle, FaHotel, FaPlane } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { selectState } from "../../../features/select/SelectSlice";
 import { useLocation, useParams } from "react-router-dom";
@@ -59,6 +59,20 @@ const SelectStep = () => {
           : pathname === "/hotels" || pathname === "/flights"
           ? "wait"
           : "finish",
+      icon: <MdOutlineFlightClass />,
+    });
+  }
+  if (busOnly || hotelPlusBus) {
+    items.push({
+      title: "Select Flight",
+      status: "finish",
+      icon: <FaBus />,
+    });
+  }
+  if (busOnly) {
+    items.push({
+      title: "Select Class",
+      status: pathname === `/buses/${id}/class` ? "process" : "finish",
       icon: <MdOutlineFlightClass />,
     });
   }

@@ -1,7 +1,7 @@
 import { Button, Card } from "antd";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectFlight } from "../../../features/select/SelectSlice";
+import { selectBus, selectFlight } from "../../../features/select/SelectSlice";
 import { useNavigate } from "react-router-dom";
 import {
   addBusiness,
@@ -13,16 +13,12 @@ import {
   transportState,
 } from "../../../features/transport/TransportSlice";
 
-const SelectFlightClassCard = ({
-  flightClassDTOList,
-  airlineName,
-  airlineImg,
-}) => {
+const SelectBusClassCard = ({ busClassDTOList, busServiceName, busImg }) => {
   const { economy, business, firstclass } = useSelector(transportState);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const goto = () => {
-    dispatch(selectFlight);
+    dispatch(selectBus());
     navigate("/confirmation");
   };
   const handleTicket = (type, action, validseat, amount) => {
@@ -47,21 +43,21 @@ const SelectFlightClassCard = ({
 
   return (
     <div className="my-10">
-      {flightClassDTOList.map((item) => (
-        <Card key={item.airlineId} className="shadow-lg rounded-lg mb-6">
+      {busClassDTOList.map((item) => (
+        <Card key={item.busClassId} className="shadow-lg rounded-lg mb-6">
           <div className="flex justify-between items-center p-4">
             <img
-              src={airlineImg}
+              src={busImg}
               alt=""
               className="w-24 h-24 object-cover rounded-full"
             />
             <div className="flex flex-col items-center text-center mx-2">
               <h2 className="text-lg font-semibold">Airline Name</h2>
-              <p className="text-gray-600">{airlineName}</p>
+              <p className="text-gray-600">{busServiceName}</p>
             </div>
             <div className="flex flex-col items-center text-center mx-2">
               <h2 className="text-lg font-semibold">Class</h2>
-              <p className="text-gray-600">{item.flightClassName}</p>
+              <p className="text-gray-600">{item.busClassName}</p>
             </div>
             <div className="flex flex-col items-center text-center mx-2">
               <h2 className="text-lg font-semibold">Valid Seat</h2>
@@ -76,7 +72,7 @@ const SelectFlightClassCard = ({
                 className="mx-1 bg-gray-200 rounded-full hover:bg-gray-300"
                 onClick={() =>
                   handleTicket(
-                    item.flightClassName,
+                    item.busClassName,
                     "reduce",
                     item.availableSeat,
                     item.price
@@ -86,18 +82,18 @@ const SelectFlightClassCard = ({
                 -
               </Button>
               <Button className="mx-1 bg-white rounded-full">
-                {item.flightClassName.toLowerCase() === "economy" &&
+                {item.busClassName.toLowerCase() === "economy" &&
                   economy.ticket}
-                {item.flightClassName.toLowerCase() === "business" &&
+                {item.busClassName.toLowerCase() === "business" &&
                   business.ticket}
-                {item.flightClassName.toLowerCase() === "firstclass" &&
+                {item.busClassName.toLowerCase() === "firstclass" &&
                   firstclass.ticket}
               </Button>
               <Button
                 className="mx-1 bg-gray-200 rounded-full hover:bg-gray-300"
                 onClick={() =>
                   handleTicket(
-                    item.flightClassName,
+                    item.busClassName,
                     "add",
                     item.availableSeat,
                     item.price
@@ -124,4 +120,4 @@ const SelectFlightClassCard = ({
   );
 };
 
-export default SelectFlightClassCard;
+export default SelectBusClassCard;

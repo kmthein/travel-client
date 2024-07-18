@@ -51,3 +51,12 @@ export const updateFlightSchedule = async (id, payload) => {
     return error.response;
   }
 };
+
+export const getUserFlightSchedule = async (payload) => {
+  try {
+    const response = await api.post(`/api/flight-schedule/findFlight`, payload);
+    return response;
+  } catch (error) {
+    return error.response;
+  }
+};

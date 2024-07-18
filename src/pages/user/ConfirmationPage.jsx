@@ -13,7 +13,7 @@ import SelectStep from "../../components/user/common/SelectStep";
 import { useDispatch, useSelector } from "react-redux";
 import { resetSelect, selectState } from "../../features/select/SelectSlice";
 import { IoReturnUpBack } from "react-icons/io5";
-import { reset, ticketState } from "../../features/flight/FlightTicketSlice";
+import { reset, transportState } from "../../features/transport/TransportSlice";
 import { saveAccommodation } from "../../api/accommodation";
 import { userState } from "../../features/user/UserSlice";
 import { saveTravelPlan } from "../../api/travelplan";
@@ -25,9 +25,9 @@ const ConfirmationPage = () => {
   const [totalFlightCost, setTotalFlightCost] = useState(0);
   const [serviceFee, setServiceFee] = useState(0);
   const navigate = useNavigate();
-  const { user } = useSelector(userState);
-  const { selectedPlan, flightOnly, hotelPlusFlight } =
+  const { selectedPlan, flightOnly, busOnly, hotelPlusFlight } =
     useSelector(selectState);
+  const { user } = useSelector(userState);
 
   const [plan, setPlan] = useState({
     hotel: null,
@@ -37,7 +37,7 @@ const ConfirmationPage = () => {
 
   const { hotel, room, totalNight, totalPerson, checkInDate, checkOutDate } =
     plan;
-  const { economy, business, firstclass, flight } = useSelector(ticketState);
+  const { economy, business, firstclass, flight } = useSelector(transportState);
 
   useEffect(() => {
     if (selectedPlan != null) {
@@ -90,6 +90,7 @@ const ConfirmationPage = () => {
     formData.append("userId", user?.id);
     const res = await saveTravelPlan(formData);
     console.log(res);
+    // dispatch(reset());
     // dispatch(resetSelect());
     // navigate("/travelreceipt");
   };
@@ -204,13 +205,13 @@ const ConfirmationPage = () => {
                 <Divider className="my-4 bg-gray-200" />
               </>
             )}
-            {(hotelPlusFlight || flightOnly) && (
+            {(hotelPlusFlight || flightOnly || busOnly) && (
               <>
                 <div>
                   <p className="text-md m-5">Flight</p>
                   <div className="flex justify-between items-center p-3">
                     <img
-                      src={flight.ariLineImg}
+                      src={transport.img}
                       width="100px"
                       height="100px"
                       className="p-3 object-contain rounded-lg shadow-md"
@@ -221,19 +222,19 @@ const ConfirmationPage = () => {
                           <div className="flex items-center space-x-5">
                             <div>
                               <p className="text-md font-bold block">
-                                {flight.departurePlace}
+                                {transport.departurePlace}
                               </p>
                               <Text className="text-md text-gray-500">
-                                {flight.departureTime}
+                                {transport.departureTime}
                               </Text>
                             </div>
                             <FaLongArrowAltRight className="text-2xl text-gray-500" />
                             <div>
                               <p className="text-md font-bold block">
-                                {flight.arrivalPlace}
+                                {transport.arrivalPlace}
                               </p>
                               <Text className="text-md text-gray-500">
-                                {flight.arrivalTime}
+                                {transport.arrivalTime}
                               </Text>
                             </div>
                           </div>
@@ -242,7 +243,9 @@ const ConfirmationPage = () => {
                           </p>
                         </div>
                       </div>
-                      <Text className="text-lg mt-3 block">{flight.name}</Text>
+                      <Text className="text-lg mt-3 block">
+                        {transport.name}
+                      </Text>
                       <div>
                         {economy.ticket > 0 && (
                           <Text className="block">
@@ -288,6 +291,7 @@ const ConfirmationPage = () => {
                 className=" m-4 w-32 text-white bg-red-500"
                 onClick={() => {
                   dispatch(resetSelect());
+                  dispatch(reset());
                   navigate("/");
                 }}
               >

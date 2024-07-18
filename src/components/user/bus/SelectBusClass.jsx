@@ -1,37 +1,37 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { IoReturnUpBack } from "react-icons/io5";
 import SelectStep from "../common/SelectStep";
-import SelectFlightClassCard from "./SelectFlightClassCard";
 import { useDispatch } from "react-redux";
 import { reset } from "../../../features/transport/TransportSlice";
+import SelectBusClassCard from "./SelectBusClassCard";
 
-const SelectFlightClass = () => {
+const SelectBusClass = () => {
   const location = useLocation();
-  const { flightClassDTOList, airlineName, airlineImg } = location.state || {};
+  const { busClassDTOList, busServiceName, busImg } = location.state || {};
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const handleBack = () => {
     navigate(-1);
     dispatch(reset());
   };
+
   return (
     <div className="w-[70%] mx-auto">
-      <div className="my-10">
-        <SelectStep />
-      </div>
+      <SelectStep />
       <div className="flex justify-end my-5">
         <IoReturnUpBack
           onClick={handleBack}
           className="text-3xl cursor-pointer"
         />
       </div>
-      <SelectFlightClassCard
-        flightClassDTOList={flightClassDTOList}
-        airlineName={airlineName}
-        airlineImg={airlineImg}
+      <SelectBusClassCard
+        busClassDTOList={busClassDTOList}
+        busServiceName={busServiceName}
+        busImg={busImg}
       />
     </div>
   );
 };
 
-export default SelectFlightClass;
+export default SelectBusClass;

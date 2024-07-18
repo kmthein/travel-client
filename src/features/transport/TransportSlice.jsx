@@ -13,15 +13,15 @@ const initialState = {
     ticket: 0,
     amount: 0,
   },
-  flight: {},
+  transport: {},
 };
 
-const FlightTicketSlice = createSlice({
-  name: "flightTicket",
+const TransportSlice = createSlice({
+  name: "transport",
   initialState,
   reducers: {
-    addFlight: (state, action) => {
-      state.flight = action.payload;
+    addTransport: (state, action) => {
+      state.transport = action.payload;
     },
     addEconomy: (state, action) => {
       if (state.economy.ticket < action.payload.validseat) {
@@ -65,10 +65,10 @@ const FlightTicketSlice = createSlice({
   },
 });
 
-export const ticketState = (state) => state.flightTicket;
+export const transportState = (state) => state.transport;
 
 export const {
-  addFlight,
+  addTransport,
   addEconomy,
   reduceEconomy,
   addBusiness,
@@ -76,6 +76,6 @@ export const {
   addFirstClass,
   reduceFirstClass,
   reset,
-} = FlightTicketSlice.actions;
+} = TransportSlice.actions;
 
-export default FlightTicketSlice.reducer;
+export default TransportSlice.reducer;
