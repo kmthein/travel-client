@@ -1,24 +1,54 @@
 import React from "react";
-import { IoMdPerson } from "react-icons/io";
-import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { IoMdArrowDropdown, IoMdPerson } from "react-icons/io";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import { openModal } from "../../../features/ui/UiSlice";
-import { Dropdown, Space } from "antd";
+import { Avatar, Dropdown, Space } from "antd";
 import { DownOutlined } from "@ant-design/icons";
-
-const items = [
-  {
-    label: <Link to="/flightandhotel">Flight And Hotel</Link>,
-    key: "1",
-  },
-  {
-    label: <Link to="/busandhotel">Bus and Hotel</Link>,
-    key: "2",
-  },
-];
+import { logoutUser, userState } from "../../../features/user/UserSlice";
+import { BiUser } from "react-icons/bi";
+import { selectHotelPlusFlight } from "../../../features/select/SelectSlice";
 
 const Navbar = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { user } = useSelector(userState);
+
+  const items = [
+    {
+      label: (
+        <span
+          onClick={() => {
+            dispatch(selectHotelPlusFlight());
+            navigate("/hotels?flightpackage");
+          }}
+        >
+          Flight And Hotel
+        </span>
+      ),
+      key: "1",
+    },
+    {
+      label: <Link to="/busandhotel">Bus and Hotel</Link>,
+      key: "2",
+    },
+  ];
+
+  const userItems = [
+    user?.role === "ADMIN" && {
+      label: <Link to="/admin">Admin Dashboard</Link>,
+      key: "1",
+    },
+    {
+      label: <Link to="/user-profile">My Profile</Link>,
+      key: "2",
+    },
+    {
+      label: <span onClick={() => dispatch(logoutUser())}>Logout</span>,
+      key: "3",
+    },
+  ];
+
   return (
     <div>
       <div className="w-[70%] mx-auto flex justify-between py-10 z-20">
@@ -52,7 +82,7 @@ const Navbar = () => {
                 <a className="cursor-pointer">
                   <Space>
                     Packages
-                    <DownOutlined />
+                    <IoMdArrowDropdown classID="text-sm" />
                   </Space>
                 </a>
               </Dropdown>
@@ -60,9 +90,26 @@ const Navbar = () => {
             <li>
               <Link to="/about">About</Link>
             </li>
-            <li className="cursor-pointer">
-              <IoMdPerson onClick={() => dispatch(openModal())} />
-            </li>
+            {user ? (
+              <li>
+                <Dropdown menu={{ items: userItems }}>
+                  <Avatar
+                    className="cursor-pointer"
+                    icon={
+                      user?.image?.length != 0 ? (
+                        <img src={user?.image[0]?.imgUrl} />
+                      ) : (
+                        <BiUser />
+                      )
+                    }
+                  />
+                </Dropdown>
+              </li>
+            ) : (
+              <li className="cursor-pointer">
+                <IoMdPerson onClick={() => dispatch(openModal())} />
+              </li>
+            )}
           </ul>
         </nav>
       </div>

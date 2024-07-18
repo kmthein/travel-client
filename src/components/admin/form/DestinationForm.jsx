@@ -8,6 +8,7 @@ import {
   getDestinationById,
   updateDestination,
 } from "../../../api/destination";
+import TextArea from "antd/es/input/TextArea";
 
 const DestinationForm = ({
   open,
@@ -51,7 +52,7 @@ const DestinationForm = ({
     setImages([]);
     setDeleteImgIds([]);
     getOldDestinationHandler();
-  }, [editForm, selectedId]);
+  }, [editForm]);
 
   const onCreate = async (values) => {
     setConfirmLoading(true);
@@ -123,6 +124,8 @@ const DestinationForm = ({
     setPreviewImg((prev) => prev.concat(previewImagesArray));
   };
 
+  console.log(images);
+
   return (
     <Modal
       open={open}
@@ -183,7 +186,7 @@ const DestinationForm = ({
             },
           ]}
         >
-          <Input />
+          <TextArea rows={4} />
         </Form.Item>
         <Form.Item name="highlight" label="Highlight">
           <Input />

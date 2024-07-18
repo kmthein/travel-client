@@ -13,11 +13,23 @@ import {
 import { FaCalendarAlt, FaSearch, FaUser } from "react-icons/fa";
 import beachImg from "../../../assets/img/hotel/beach_hotel_1.jpg";
 import { FaLocationDot } from "react-icons/fa6";
-import { getAllHotels } from "../../../api/hotel";
+import { getAllHotels, getAvailableHotels } from "../../../api/hotel";
 import noImg from "../../../assets/img/common/no_img.jpg";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { addPlan, saveHotel } from "../../../features/select/SelectSlice";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addPlan,
+  selectHotel,
+  selectState,
+} from "../../../features/select/SelectSlice";
+import {
+  calculateDaysBetween,
+  disablePastDates,
+  formattedDate,
+} from "../../../utils/utils";
+import SelectStep from "../common/SelectStep";
+import moment from "moment";
+import { toast } from "react-toastify";
 
 function Hotel() {
   const [allHotels, setAllHotels] = useState([]);
@@ -27,6 +39,38 @@ function Hotel() {
   const [numberOfGuest, setNumberOfGuest] = useState(1);
   const [notFound, setNotFound] = useState(false);
   const [filteredHotel, setFilteredHotel] = useState([]);
+  const [daysBetween, setDaysBetween] = useState(null);
+  const [disabled, setDisabled] = useState(true);
+
+  const items = [
+    {
+      key: "2",
+      label: <h2 className="font-bold text-lg">Rating</h2>,
+      children: (
+        <div className="flex flex-wrap flex-col gap-2">
+          <Checkbox>5 Stars +</Checkbox>
+          <Checkbox>4 Stars +</Checkbox>
+          <Checkbox>3 Stars +</Checkbox>
+          <Checkbox>2 Stars +</Checkbox>
+          <Checkbox>1 Star +</Checkbox>
+        </div>
+      ),
+    },
+    // {
+    //   key: "3",
+    //   label: <h2 className="font-bold text-lg">Price</h2>,
+    //   children: (
+    //     <div className="flex flex-col gap-2">
+    //       <div>
+    //         <Checkbox>Maximum Price</Checkbox>
+    //       </div>
+    //       <div>
+    //         <Checkbox>Minimum Price</Checkbox>
+    //       </div>
+    //     </div>
+    //   ),
+    // },
+  ];
 
   const [form] = Form.useForm();
 
@@ -54,55 +98,6 @@ function Hotel() {
 
   const navigate = useNavigate();
 
-  const items = [
-    {
-      key: "1",
-      label: <h2 className="font-bold text-lg">Property Type</h2>,
-      children: (
-        <div className="flex flex-col gap-2">
-          <div>
-            <Checkbox>Hotel</Checkbox>
-          </div>
-          <div>
-            <Checkbox>Resort</Checkbox>
-          </div>
-          <div>
-            <Checkbox>Guesthouse</Checkbox>
-          </div>
-        </div>
-      ),
-    },
-    {
-      key: "2",
-      label: <h2 className="font-bold text-lg">Rating</h2>,
-      children: (
-        <div>
-          <div>
-            <Checkbox>5 Stars +</Checkbox>
-            <Checkbox>4 Stars +</Checkbox>
-            <Checkbox>3 Stars +</Checkbox>
-            <Checkbox>2 Stars +</Checkbox>
-            <Checkbox>1 Star +</Checkbox>
-          </div>
-        </div>
-      ),
-    },
-    {
-      key: "3",
-      label: <h2 className="font-bold text-lg">Price</h2>,
-      children: (
-        <div className="flex flex-col gap-2">
-          <div>
-            <Checkbox>Maximum Price</Checkbox>
-          </div>
-          <div>
-            <Checkbox>Minimum Price</Checkbox>
-          </div>
-        </div>
-      ),
-    },
-  ];
-
   const dispatch = useDispatch();
 
   const disabledCheckInDate = (current) => {
@@ -114,38 +109,48 @@ function Hotel() {
     return current && current < new Date();
   };
 
-  console.log(input);
-
   const searchHotelHandler = async (values) => {
     console.log(values);
-    const res = await getAllHotels();
-    let filteredHotels;
-    let validHotel;
-    if (id) {
-      filteredHotels = filteredHotel.map((hotel) => ({
-        ...hotel,
-        roomList: hotel.roomList.filter((room) => room.validRoom > 0),
-      }));
-      validHotel = filteredHotels.filter((hotel) => hotel.roomList.length > 0);
-    } else {
-      filteredHotels = allHotels.map((hotel) => ({
-        ...hotel,
-        roomList: hotel.roomList.filter((room) => room.validRoom > 0),
-      }));
-      validHotel = filteredHotels.filter((hotel) => hotel.roomList.length > 0);
+    let totalPerson = values.guest;
+    if (!values.guest) {
+      totalPerson = 1;
     }
-    if (validHotel.length > 0) {
-      setNotFound(true);
+    dispatch(addPlan({ totalPerson }));
+    setCheckInDate(formattedDate(values.checkin));
+    setCheckOutDate(formattedDate(values.checkout));
+    const totalNight = calculateDaysBetween(
+      formattedDate(values.checkin),
+      formattedDate(values.checkout)
+    );
+    setDaysBetween(totalNight);
+    const formData = new FormData();
+    formData.append("checkInDate", formattedDate(values.checkin));
+    const res = await getAvailableHotels(formData);
+    if (res.data.length > 0) {
+      setFilteredHotel(res.data);
     }
-    setFilteredHotel(validHotel);
+    setDisabled(false);
   };
 
-  const formattedDate = (date) => {
-    date.format("YYYY-MM-DD");
+  const { hotelPlusFlight } = useSelector(selectState);
+
+  const { search } = useLocation();
+
+  const disableCurrentAndPastDates = (current) => {
+    // Can not select current or past dates
+    return current && current <= moment(checkInDate).endOf("day");
   };
 
   return (
     <div className="p-8 w-[70%] mx-auto rounded-xl">
+      <h2 className="text-lg font-semibold mb-10">
+        Please choose check in and check out time to search available hotel
+      </h2>
+      {hotelPlusFlight && (
+        <div className="mb-10">
+          <SelectStep />
+        </div>
+      )}
       <div>
         <Form
           layout="vertical"
@@ -153,53 +158,38 @@ function Hotel() {
           onFinish={searchHotelHandler}
           className="flex justify-between items-center bg-white p-4 py-0 rounded-lg shadow-md mb-8"
         >
-          <Form.Item
-            name="hotel"
-            label="Hotel"
-            rules={[{ required: true, message: "Please select a hotel!" }]}
-          >
+          <Form.Item name="hotel" label="Hotel">
             <Input
               placeholder="Search Hotels"
-              className="w-96"
               prefix={<FaSearch className="text-gray-400" />}
             />
           </Form.Item>
           <Form.Item
             name="checkin"
             label="Check In"
-            rules={[
-              { required: true, message: "Please select a check in date!" },
-            ]}
+            rules={[{ required: true, message: "Select check in date!" }]}
           >
             <DatePicker
               placeholder="Check in"
+              disabledDate={disablePastDates}
+              onChange={(value) => setCheckInDate(formattedDate(value))}
               suffixIcon={<FaCalendarAlt />}
-              className="w-32"
             />
           </Form.Item>
           <Form.Item
             name="checkout"
             label="Check Out"
-            rules={[
-              { required: true, message: "Please select a check out date!" },
-            ]}
+            rules={[{ required: true, message: "Select check out date!" }]}
           >
             <DatePicker
               placeholder="Check Out"
+              disabledDate={disableCurrentAndPastDates}
               suffixIcon={<FaCalendarAlt />}
-              className="w-32"
             />
           </Form.Item>
-          <Form.Item
-            name="guest"
-            label="Number of Guest"
-            rules={[
-              { required: true, message: "Please select a check out date!" },
-            ]}
-          >
+          <Form.Item name="guest" label="Number of Guest">
             <Select
               defaultValue={1}
-              className="w-32"
               suffixIcon={<FaUser />}
               name="guest"
               options={[
@@ -251,19 +241,19 @@ function Hotel() {
                 <div className="w-2/3">
                   <div className="flex justify-between items-center mb-2">
                     <p className="text-lg font-bold">{hotel.name}</p>
-                    <p className="text-lg font-bold">USD 72</p>
+                    {/* <p className="text-lg font-bold">USD 72</p> */}
                   </div>
                   <Rate
                     value={hotel.rating}
                     disabled
                     className="text-sm mb-2"
                   />
-                  <div className="flex items-center mb-4">
+                  {/* <div className="flex items-center mb-4">
                     <FaLocationDot className="text-blue-400 mr-2" />
                     <p className="text-base font-semibold text-blue-400">
                       {hotel?.destination?.name}
                     </p>
-                  </div>
+                  </div> */}
                   <p className="mb-4">This property offers:</p>
                   <div className="flex justify-between">
                     <div className="flex gap-2">
@@ -274,15 +264,22 @@ function Hotel() {
                     <div>
                       <Button
                         className="bg-blue-500 text-white p-3"
+                        disabled={disabled}
                         onClick={() => {
                           dispatch(
                             addPlan({
-                              checkInDate: checkInDate,
-                              checkOutDate: checkOutDate,
+                              checkInDate,
+                              checkOutDate,
+                              hotel,
+                              totalNight: daysBetween,
                             })
                           );
-                          dispatch(saveHotel(hotel));
-                          navigate(`/rooms?hotel=${hotel.id}`);
+                          if (search == "?flightpackage") {
+                            navigate(`/rooms?flightpackage`);
+                          } else {
+                            navigate(`/rooms?hotel=${hotel.id}`);
+                            dispatch(selectHotel());
+                          }
                         }}
                       >
                         Select Room
@@ -313,19 +310,19 @@ function Hotel() {
                 <div className="w-2/3">
                   <div className="flex justify-between items-center mb-2">
                     <p className="text-lg font-bold">{hotel.name}</p>
-                    <p className="text-lg font-bold">USD 72</p>
+                    {/* <p className="text-lg font-bold">USD 72</p> */}
                   </div>
                   <Rate
                     value={hotel.rating}
                     disabled
                     className="text-sm mb-2"
                   />
-                  <div className="flex items-center mb-4">
+                  {/* <div className="flex items-center mb-4">
                     <FaLocationDot className="text-blue-400 mr-2" />
                     <p className="text-base font-semibold text-blue-400">
                       {hotel?.destination?.name}
                     </p>
-                  </div>
+                  </div> */}
                   <p className="mb-4">This property offers:</p>
                   <div className="flex justify-between">
                     <div className="flex gap-2">
@@ -336,7 +333,31 @@ function Hotel() {
                     <div>
                       <Button
                         className="bg-blue-500 text-white p-3"
-                        onClick={() => navigate("/rooms")}
+                        disabled={disabled}
+                        onClick={() => {
+                          if (!checkInDate) {
+                            toast.error("Check In Date can't be empty");
+                            return;
+                          }
+                          if (!checkOutDate) {
+                            toast.error("Check Out Date can't be empty");
+                            return;
+                          }
+                          dispatch(
+                            addPlan({
+                              checkInDate,
+                              checkOutDate,
+                              hotel,
+                              totalNight: daysBetween,
+                            })
+                          );
+                          if (search == "?flightpackage") {
+                            navigate(`/rooms?flightpackage`);
+                          } else {
+                            navigate(`/rooms?hotel=${hotel.id}`);
+                            dispatch(selectHotel());
+                          }
+                        }}
                       >
                         Select Room
                       </Button>
@@ -345,7 +366,9 @@ function Hotel() {
                 </div>
               </div>
             ))}
-          {filteredHotel.length == 0 && <h5>Hotel Not Available</h5>}
+          {filteredHotel.length == 0 && allHotels.length == 0 && (
+            <h5>Hotel Not Available</h5>
+          )}
         </div>
       </div>
     </div>

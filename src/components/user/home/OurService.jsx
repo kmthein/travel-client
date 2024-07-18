@@ -56,15 +56,15 @@ const OurService = () => {
             className="py-10"
             cover={
               <img
-                alt="Restaurant Booking"
+                alt="Car Ticket"
                 src={Bus}
                 className="h-16 w-16 object-contain mx-auto"
               />
             }
           >
             <Meta
-              title="Restaurant Booking"
-              description="Reserve tables at the finest restaurants to enjoy exquisite cuisine during your travels."
+              title="Car Ticket Booking"
+              description="We offer competitive prices on cars with the best cars to your desired destinations."
             />
           </Card>
           <Card

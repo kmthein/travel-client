@@ -1,31 +1,11 @@
-import { Button, Table } from "antd";
-import React, { useState } from "react";
+import { Button, Form, Table } from "antd";
+import React, { useEffect, useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import { Link } from "react-router-dom";
 import ClassForm from "../../components/admin/form/ClassForm";
+import { getAllAirlineClass } from "../../api/airlineclass";
 
 const FlightClassPage = ({ getColumnSearchProps }) => {
-  const dataSource = [
-    {
-      key: "1",
-      image:
-        "https://firebasestorage.googleapis.com/v0/b/travel-3b0bf.appspot.com/o/ngwesaung1.png?alt=media&token=53cc4e2e-b1a3-4856-b71f-f651e0130942",
-      name: "Economy Class",
-      price: 57,
-      seat: 34,
-      airline: "Air Bagan Airlines",
-    },
-    {
-      key: "2",
-      image:
-        "https://firebasestorage.googleapis.com/v0/b/travel-3b0bf.appspot.com/o/ngwesaung2.png?alt=media&token=94433001-e67c-40f4-8909-0ab108086406",
-      name: "Premium Economy Class",
-      price: 68,
-      seat: 52,
-      airline: "Myanmar National Airlines",
-    },
-  ];
-
   const columns = [
     {
       title: "Name",
@@ -66,7 +46,7 @@ const FlightClassPage = ({ getColumnSearchProps }) => {
           <span
             className=" cursor-pointer"
             onClick={() => {
-              setSelectedBookId(record.key);
+              setSelectedFlightClass(record.id);
               setOpen(true);
               setEditForm(true);
             }}
@@ -84,9 +64,27 @@ const FlightClassPage = ({ getColumnSearchProps }) => {
   const [data, setData] = useState([]);
   const [editForm, setEditForm] = useState(false);
   const [open, setOpen] = useState(false);
+  const [selectedFlightClass, setSelectedFlightClass] = useState(null);
   const showModal = () => {
     setOpen(true);
   };
+  const getAirLineClass = async () => {
+    let res = await getAllAirlineClass();
+    let modifiedData = res.data.map((item) => {
+      return {
+        id: item.id,
+        key: item.id,
+        name: item.name,
+        price: item.price,
+        seat: item.validSeat,
+        airline: item.airline.name,
+      };
+    });
+    setData(modifiedData);
+  };
+  useEffect(() => {
+    getAirLineClass();
+  }, [open]);
   return (
     <>
       <div>
@@ -110,9 +108,11 @@ const FlightClassPage = ({ getColumnSearchProps }) => {
           editForm={editForm}
           setEditForm={setEditForm}
           flightClass={true}
+          selectedFlightClass={selectedFlightClass}
+          getAirLineClass={getAirLineClass}
         />
       </div>
-      <Table dataSource={dataSource} columns={columns} />
+      <Table dataSource={data} columns={columns} />
     </>
   );
 };

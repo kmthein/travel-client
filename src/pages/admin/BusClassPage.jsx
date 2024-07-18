@@ -1,8 +1,9 @@
 import { Button, Table } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import { Link } from "react-router-dom";
 import ClassForm from "../../components/admin/form/ClassForm";
+import { getAllBusClass } from "../../api/busclass";
 
 const BusClassPage = ({ getColumnSearchProps }) => {
   const dataSource = [
@@ -49,12 +50,12 @@ const BusClassPage = ({ getColumnSearchProps }) => {
       ...getColumnSearchProps("seat"),
     },
     {
-      title: "Airline",
-      dataIndex: "airline",
-      key: "airline",
+      title: "Bus",
+      dataIndex: "bus",
+      key: "bus",
       width: "30%",
-      ...getColumnSearchProps("airline"),
-      sorter: (a, b) => a.airline - b.airline,
+      ...getColumnSearchProps("bus"),
+      sorter: (a, b) => a.bus - b.bus,
       sortDirections: ["descend", "ascend"],
     },
     {
@@ -66,7 +67,7 @@ const BusClassPage = ({ getColumnSearchProps }) => {
           <span
             className=" cursor-pointer"
             onClick={() => {
-              setSelectedBookId(record.key);
+              setSelectedBusClass(record.key);
               setOpen(true);
               setEditForm(true);
             }}
@@ -84,9 +85,27 @@ const BusClassPage = ({ getColumnSearchProps }) => {
   const [data, setData] = useState([]);
   const [editForm, setEditForm] = useState(false);
   const [open, setOpen] = useState(false);
+  const [selectedBusClass, setSelectedBusClass] = useState(null);
   const showModal = () => {
     setOpen(true);
   };
+  const getBusClass = async () => {
+    let res = await getAllBusClass();
+    let modifiedData = res.data.map((item) => {
+      return {
+        id: item.id,
+        key: item.id,
+        name: item.name,
+        price: item.price,
+        seat: item.validSeat,
+        bus: item.busService.name,
+      };
+    });
+    setData(modifiedData);
+  };
+  useEffect(() => {
+    getBusClass();
+  }, [open]);
   return (
     <>
       <div>
@@ -110,9 +129,10 @@ const BusClassPage = ({ getColumnSearchProps }) => {
           editForm={editForm}
           setEditForm={setEditForm}
           flightClass={false}
+          selectedBusClass={selectedBusClass}
         />
       </div>
-      <Table dataSource={dataSource} columns={columns} />
+      <Table dataSource={data} columns={columns} />
     </>
   );
 };

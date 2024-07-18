@@ -2,7 +2,6 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Homepage from "./pages/user/Homepage";
 import Userlayout from "./layouts/Userlayout";
 import TravelReceipt from "./pages/user/TravelReceipt";
-import AdminLayout from "./layouts/AdminLayout";
 import DashboardPage from "./pages/admin/DashboardPage";
 import AirlinePage from "./pages/admin/AirlinePage";
 import BusServicePage from "./pages/admin/BusServicePage";
@@ -28,7 +27,13 @@ import BusAndHotelSelectHotel from "./pages/user/BusAndHotelSelectHotel";
 import BusAndHotelSelectRoom from "./pages/user/BusAndHotelSelectRoom";
 import BusAndHotelConfirmation from "./pages/user/BusAndHotelConfirmation";
 import MemberPage from "./pages/admin/MemberPage";
-import RoomPage from "./pages/admin/RoomPage";
+import "react-toastify/dist/ReactToastify.css";
+import RoomPage from "./pages/user/RoomPage";
+import ConfirmationPage from "./pages/user/ConfirmationPage";
+import AdminProvider from "./providers/AdminProvider";
+import ConfirmProvider from "./providers/ConfirmProvider";
+import SelectFlightClass from "./components/user/flight/SelectFlightClass";
+import UserProfilePage from "./pages/user/UserProfilePage";
 
 function App() {
   const {
@@ -39,6 +44,7 @@ function App() {
     handleSearch,
     handleReset,
     getColumnSearchProps,
+    selectedPlan,
   } = useSearch();
 
   const router = createBrowserRouter([
@@ -53,6 +59,18 @@ function App() {
         {
           path: "/hotels",
           element: <Hotelpage />,
+        },
+        {
+          path: "/rooms",
+          element: <RoomPage />,
+        },
+        {
+          path: "/confirmation",
+          element: (
+            <ConfirmProvider>
+              <ConfirmationPage />
+            </ConfirmProvider>
+          ),
         },
         {
           path: "/destination",
@@ -71,6 +89,10 @@ function App() {
           element: <Flightpage />,
         },
         {
+          path: "/flights/:id/class",
+          element: <SelectFlightClass />,
+        },
+        {
           path: "/buses",
           element: <Buspage />,
         },
@@ -86,6 +108,7 @@ function App() {
           path: "/flight",
           element: <FlightAndHotelSelectFlight />,
         },
+
         {
           path: "/flightconfirmation",
           element: <FlightAndHotelConfirmation />,
@@ -110,11 +133,15 @@ function App() {
           path: "/busconfirmation",
           element: <BusAndHotelConfirmation />,
         },
+        {
+          path: "/user-profile",
+          element: <UserProfilePage />,
+        },
       ],
     },
     {
       path: "/admin",
-      element: <AdminLayout />,
+      element: <AdminProvider />,
       children: [
         {
           index: true,

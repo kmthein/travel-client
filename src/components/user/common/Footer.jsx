@@ -12,7 +12,7 @@ const Footer = () => (
     <div className="flex justify-between items-start w-full">
       <div className="flex flex-col gap-3">
         <h2 className="text-3xl font-bold">
-          Travel <span className="text-blue-400">Trax</span>
+          Travel<span className="text-blue-400">Trax</span>
         </h2>
         <p>
           Travel helps companies{" "}

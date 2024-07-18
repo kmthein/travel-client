@@ -18,6 +18,15 @@ export const getDestinationById = async ({ id }) => {
   }
 };
 
+export const searchDestinationByKeyword = async ({ keyword }) => {
+  try {
+    const response = await api.get(`/api/destination/search=${keyword}`);
+    return response;
+  } catch (error) {
+    return error.response;
+  }
+};
+
 export const createDestination = async (payload) => {
   try {
     const response = await api.post("/api/destination", payload);

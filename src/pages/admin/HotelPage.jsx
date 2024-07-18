@@ -10,6 +10,7 @@ import {
   updateHotel,
   deleteHotelById,
 } from "../../api/hotelapi";
+import noImg from "../../assets/img/common/no_img.jpg";
 
 const HotelPage = ({ getColumnSearchProps }) => {
   const columns = [
@@ -18,7 +19,11 @@ const HotelPage = ({ getColumnSearchProps }) => {
       dataIndex: "image",
       key: "image",
       render: (text, record) => (
-        <img src={record.image} alt="image" style={{ width: "100%" }} />
+        <img
+          src={record.image ? record.image : noImg}
+          alt="image"
+          style={{ width: "100%" }}
+        />
       ),
       width: "10%",
     },
@@ -108,6 +113,9 @@ const HotelPage = ({ getColumnSearchProps }) => {
         return {
           ...d,
           key: d.id,
+          description: `${d.description.slice(0, 200)}${
+            d.description.length > 200 && "..."
+          }`,
           image: d.imgUrlList[0],
         };
       });
