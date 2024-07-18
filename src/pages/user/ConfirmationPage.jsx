@@ -1,4 +1,4 @@
-import { Radio, Image, Button, Divider, Typography } from "antd";
+import { Radio, Image, Button, Divider, Typography, Result, Modal } from "antd";
 import { FaBed, FaCalendarAlt, FaLongArrowAltRight } from "react-icons/fa";
 import { useEffect, useState } from "react";
 const { Text } = Typography;
@@ -25,6 +25,14 @@ const ConfirmationPage = () => {
   const [totalAmount, setTotalAmount] = useState(0);
   const [totalTransportCost, setTotalTransportCost] = useState(0);
   const [serviceFee, setServiceFee] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
   const navigate = useNavigate();
   const { selectedPlan, flightOnly, busOnly, hotelPlusFlight } =
     useSelector(selectState);
@@ -76,8 +84,6 @@ const ConfirmationPage = () => {
 
   const dispatch = useDispatch();
 
-  console.log(typeof transport.classId);
-
   const confirmPlanSubmit = async () => {
     console.log(room);
     const hotelformData = new FormData();
@@ -90,7 +96,6 @@ const ConfirmationPage = () => {
       hotelformData.append("totalPerson", totalPerson);
       hotelformData.append("roomId", room?.id);
       const saveHotelRes = await saveAccommodation(hotelformData);
-      console.log(saveHotelRes);
       formData.append("accommodationId", saveHotelRes.data.id);
       formData.append("startDate", checkInDate);
     }
@@ -106,12 +111,10 @@ const ConfirmationPage = () => {
       formData.append("startDate", transport.departureDate);
     }
     const res = await saveTravelPlan(formData);
-    console.log(res);
     if (res.status == 200) {
-      toast.success("Travel plan made successfully");
+      setIsModalOpen(true);
       dispatch(reset());
       dispatch(resetSelect());
-      navigate("/");
     }
     // navigate("/travelreceipt");
   };
@@ -324,6 +327,23 @@ const ConfirmationPage = () => {
               >
                 Confirm
               </Button>
+              <Modal
+                open={isModalOpen}
+                onOk={handleOk}
+                onCancel={handleCancel}
+                footer={null}
+              >
+                <Result
+                  status="success"
+                  title="Successfully Purchased "
+                  subTitle="Order Confirmed"
+                  extra={[
+                    <Button type="primary" onClick={() => navigate("/")}>
+                      Go To Home
+                    </Button>,
+                  ]}
+                />
+              </Modal>
             </div>
           </div>
         </div>

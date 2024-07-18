@@ -128,10 +128,6 @@ const SelectBusClassCard = ({ busClassDTOList, busServiceName, busImg }) => {
                   selectedClass &&
                   selectedClass !== item.busClassName.toLowerCase()
                 }
-                disabled={
-                  selectedClass &&
-                  selectedClass !== item.busClassName.toLowerCase()
-                }
               >
                 +
               </Button>
