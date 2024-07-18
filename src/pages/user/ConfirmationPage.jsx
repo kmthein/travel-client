@@ -13,11 +13,12 @@ import SelectStep from "../../components/user/common/SelectStep";
 import { useDispatch, useSelector } from "react-redux";
 import { resetSelect, selectState } from "../../features/select/SelectSlice";
 import { IoReturnUpBack } from "react-icons/io5";
+import { reset, transportState } from "../../features/transport/TransportSlice";
 
 const ConfirmationPage = () => {
   const [paymentMethod, setPaymentMethod] = useState("Visa");
   const navigate = useNavigate();
-  const { selectedPlan, flightOnly } = useSelector(selectState);
+  const { selectedPlan, flightOnly, busOnly } = useSelector(selectState);
   const [plan, setPlan] = useState({
     hotel: null,
     room: null,
@@ -151,7 +152,7 @@ const ConfirmationPage = () => {
                 <hr className="my-2 h-[0.5px] bg-black" />
               </>
             )}
-            {flightOnly && (
+            {(flightOnly || busOnly) && (
               <>
                 <div className="bg-white rounded-lg shadow-lg p-6">
                   <Text className="text-lg font-semibold m-5 block">
@@ -234,6 +235,7 @@ const ConfirmationPage = () => {
                 className=" m-4 w-32 text-white bg-red-500"
                 onClick={() => {
                   dispatch(resetSelect());
+                  dispatch(reset());
                   navigate("/");
                 }}
               >
@@ -243,6 +245,7 @@ const ConfirmationPage = () => {
                 className=" m-4 w-32 bg-blue-500  text-white"
                 onClick={() => {
                   dispatch(resetSelect());
+                  dispatch(reset());
                   navigate("/travelreceipt");
                 }}
               >

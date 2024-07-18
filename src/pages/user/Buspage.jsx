@@ -47,7 +47,7 @@ const Buspage = () => {
           <FilterBusClass filterBus={filterBus} />
         </>
       ) : (
-        "Not Found Buses"
+        <p className="text-center my-5">No Buses Found</p>
       )}
     </div>
   );

@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { getAllAvailableFlight } from "../../api/flightschedule";
+import {
+  getAllAvailableFlight,
+  getUserFlightSchedule,
+} from "../../api/flightschedule";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { selectFlight } from "../../features/select/SelectSlice";
@@ -7,11 +10,9 @@ import ScheduleItem from "../../components/user/common/ScheduleItem";
 import TransportTicketSearch from "../../components/user/common/TransportTicketSearch";
 import { addTransport } from "../../features/transport/TransportSlice";
 import { dateformat } from "../../utils/dateformat";
+import FilterFlightClass from "../../components/user/flight/FilterFlightClass";
 
 const Flightpage = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
   const [allFlight, setAllFlight] = useState([]);
   const [filerFlight, setFliterFlight] = useState(null);
   useEffect(() => {
@@ -32,18 +33,24 @@ const Flightpage = () => {
       console.log(error.message);
     }
   };
-  const choiceFlight = (departurePlace, destination, departureDate) => {
-    let data = {
-      departurePlaceId: departurePlace,
-      arrivalPlaceId: destination,
-      departureDate: dateformat(departureDate),
-    };
-    console.log(data);
+  const choiceFlight = async (departurePlace, destination, departureDate) => {
+    const form = new FormData();
+    form.append("departurePlaceId", departurePlace);
+    form.append("arrivalPlaceId", destination);
+    form.append("departureDate", dateformat(departureDate));
+    let res = await getUserFlightSchedule(form);
+    setFliterFlight(res.data);
   };
   return (
     <div className="w-[70%] mx-auto">
-      <TransportTicketSearch isFlight={true} choiceFlight={choiceFlight} />
-      <ScheduleItem data={allFlight} />
+      <TransportTicketSearch isFlight={true} choice={choiceFlight} />
+      {filerFlight === null ? (
+        <ScheduleItem data={allFlight} />
+      ) : filerFlight.length > 0 ? (
+        <FilterFlightClass filerFlight={filerFlight} />
+      ) : (
+        <p className="text-center my-5">No Flight Found</p>
+      )}
     </div>
   );
 };

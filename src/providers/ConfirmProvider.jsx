@@ -6,9 +6,9 @@ import { transportState } from "../features/transport/TransportSlice";
 
 const ConfirmProvider = ({ children }) => {
   const { selectedPlan } = useSelector(selectState);
-  const { flight } = useSelector(transportState);
+  const { transport } = useSelector(transportState);
 
-  return selectedPlan || flight ? <>{children}</> : <Navigate to="/" />;
+  return selectedPlan || transport ? <>{children}</> : <Navigate to="/" />;
 };
 
 export default ConfirmProvider;

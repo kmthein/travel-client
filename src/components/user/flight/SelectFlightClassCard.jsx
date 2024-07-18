@@ -13,7 +13,11 @@ import {
   transportState,
 } from "../../../features/transport/TransportSlice";
 
-const SelectFlightClassCard = ({ airlineClass }) => {
+const SelectFlightClassCard = ({
+  flightClassDTOList,
+  airlineName,
+  airlineImg,
+}) => {
   const { economy, business, firstclass } = useSelector(transportState);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -43,25 +47,25 @@ const SelectFlightClassCard = ({ airlineClass }) => {
 
   return (
     <div className="my-10">
-      {airlineClass.map((item) => (
-        <Card key={item.id} className="shadow-lg rounded-lg mb-6">
+      {flightClassDTOList.map((item) => (
+        <Card key={item.airlineId} className="shadow-lg rounded-lg mb-6">
           <div className="flex justify-between items-center p-4">
             <img
-              src={item.img}
+              src={airlineImg}
               alt=""
               className="w-24 h-24 object-cover rounded-full"
             />
             <div className="flex flex-col items-center text-center mx-2">
               <h2 className="text-lg font-semibold">Airline Name</h2>
-              <p className="text-gray-600">{item.name}</p>
+              <p className="text-gray-600">{airlineName}</p>
             </div>
             <div className="flex flex-col items-center text-center mx-2">
               <h2 className="text-lg font-semibold">Class</h2>
-              <p className="text-gray-600">{item.class}</p>
+              <p className="text-gray-600">{item.flightClassName}</p>
             </div>
             <div className="flex flex-col items-center text-center mx-2">
               <h2 className="text-lg font-semibold">Valid Seat</h2>
-              <p className="text-gray-600">{item.validSeat}</p>
+              <p className="text-gray-600">{item.availableSeat}</p>
             </div>
             <div className="flex flex-col items-center text-center mx-2">
               <h2 className="text-lg font-semibold">Price</h2>
@@ -71,20 +75,33 @@ const SelectFlightClassCard = ({ airlineClass }) => {
               <Button
                 className="mx-1 bg-gray-200 rounded-full hover:bg-gray-300"
                 onClick={() =>
-                  handleTicket(item.class, "reduce", item.validSeat, item.price)
+                  handleTicket(
+                    item.flightClassName,
+                    "reduce",
+                    item.availableSeat,
+                    item.price
+                  )
                 }
               >
                 -
               </Button>
               <Button className="mx-1 bg-white rounded-full">
-                {item.class.toLowerCase() === "economy" && economy.ticket}
-                {item.class.toLowerCase() === "business" && business.ticket}
-                {item.class.toLowerCase() === "firstclass" && firstclass.ticket}
+                {item.flightClassName.toLowerCase() === "economy" &&
+                  economy.ticket}
+                {item.flightClassName.toLowerCase() === "business" &&
+                  business.ticket}
+                {item.flightClassName.toLowerCase() === "firstclass" &&
+                  firstclass.ticket}
               </Button>
               <Button
                 className="mx-1 bg-gray-200 rounded-full hover:bg-gray-300"
                 onClick={() =>
-                  handleTicket(item.class, "add", item.validSeat, item.price)
+                  handleTicket(
+                    item.flightClassName,
+                    "add",
+                    item.availableSeat,
+                    item.price
+                  )
                 }
               >
                 +

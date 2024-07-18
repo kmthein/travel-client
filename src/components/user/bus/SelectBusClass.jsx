@@ -1,12 +1,9 @@
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { IoReturnUpBack } from "react-icons/io5";
 import SelectStep from "../common/SelectStep";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { reset } from "../../../features/transport/TransportSlice";
-import { getAllBusClassBybus } from "../../../api/busclass";
 import SelectBusClassCard from "./SelectBusClassCard";
-import { selectState } from "../../../features/select/SelectSlice";
 
 const SelectBusClass = () => {
   const location = useLocation();
@@ -18,7 +15,7 @@ const SelectBusClass = () => {
     navigate(-1);
     dispatch(reset());
   };
-  console.log(busClassDTOList);
+
   return (
     <div className="w-[70%] mx-auto">
       <SelectStep />
