@@ -42,8 +42,8 @@ const DestinationDetailpage = () => {
         name={destination?.name}
       />
       <SuggestBus arrive={destination?.busArriveTo} name={destination?.name} />
-      <ReviewForm destination={destination} />
-      <ReviewList />
+      {/* <ReviewForm destination={destination} />
+      <ReviewList /> */}
     </div>
   );
 };

@@ -138,6 +138,8 @@ const RoomPage = () => {
                         );
                         if (search == "?flightpackage") {
                           navigate("/flights?package");
+                        } else if (search == "?buspackage") {
+                          navigate("/buses?package");
                         } else {
                           navigate("/confirmation");
                         }

@@ -3,7 +3,7 @@ import { api } from "../config/axios";
 export const getAllNormalUser = async (token) => {
   try {
     const response = await api.get("/api/user/normal-user", {
-      header: {
+      headers: {
         Authorization: `Bearer ` + token,
       },
     });

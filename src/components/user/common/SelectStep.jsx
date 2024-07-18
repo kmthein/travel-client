@@ -30,25 +30,23 @@ const SelectStep = () => {
           ? "finish"
           : pathname == `/flights/${id}/class`
           ? "finish"
-          : pathname == "/flights"
+          : pathname == "/flights" || pathname == `/buses/${id}/class`
           ? "finish"
           : "wait",
       icon: <FaBed />,
     });
-    if (!hotelOnly) {
-      items.push({
-        title: "Select Flight",
-        status:
-          pathname == "/flights"
-            ? "process"
-            : pathname == "/confirmation" || pathname == `/flights/${id}/class`
-            ? "finish"
-            : "wait",
-        icon: <FaPlane />,
-      });
-    }
   }
-  if (flightOnly || hotelPlusFlight) {
+  if (flightOnly || hotelPlusFlight || !hotelPlusBus) {
+    items.push({
+      title: "Select Flight",
+      status:
+        pathname == "/flights"
+          ? "process"
+          : pathname == "/confirmation" || pathname == `/flights/${id}/class`
+          ? "finish"
+          : "wait",
+      icon: <FaPlane />,
+    });
     items.push({
       title: "Select Class",
       status:
@@ -64,8 +62,8 @@ const SelectStep = () => {
   }
   if (busOnly || hotelPlusBus) {
     items.push({
-      title: "Select Flight",
-      status: "finish",
+      title: "Select Bus",
+      status: pathname == "/rooms" ? "wait" : "finish",
       icon: <FaBus />,
     });
   }

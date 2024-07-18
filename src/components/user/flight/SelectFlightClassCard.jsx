@@ -1,5 +1,5 @@
 import { Button, Card } from "antd";
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectFlight } from "../../../features/select/SelectSlice";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +7,7 @@ import {
   addBusiness,
   addEconomy,
   addFirstClass,
+  addTransport,
   reduceBusiness,
   reduceEconomy,
   reduceFirstClass,
@@ -18,29 +19,46 @@ const SelectFlightClassCard = ({
   airlineName,
   airlineImg,
 }) => {
-  const { economy, business, firstclass } = useSelector(transportState);
+  const [classId, setClassId] = useState(null);
+  const { economy, business, firstclass, transport } =
+    useSelector(transportState);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [selectedClass, setSelectedClass] = useState(null);
+
   const goto = () => {
-    dispatch(selectFlight);
+    dispatch(addTransport({ ...transport, classId: classId }));
     navigate("/confirmation");
   };
+
   const handleTicket = (type, action, validseat, amount) => {
     if (action === "add") {
       if (type.toLowerCase() === "economy") {
         dispatch(addEconomy({ amount, validseat }));
+        setSelectedClass("economy");
       } else if (type.toLowerCase() === "business") {
         dispatch(addBusiness({ amount, validseat }));
+        setSelectedClass("business");
       } else if (type.toLowerCase() === "firstclass") {
         dispatch(addFirstClass({ amount, validseat }));
+        setSelectedClass("firstclass");
       }
     } else {
       if (type.toLowerCase() === "economy") {
         dispatch(reduceEconomy({ amount }));
+        if (economy.ticket === 1) {
+          setSelectedClass(null);
+        }
       } else if (type.toLowerCase() === "business") {
         dispatch(reduceBusiness({ amount, validseat }));
+        if (business.ticket === 1) {
+          setSelectedClass(null);
+        }
       } else if (type.toLowerCase() === "firstclass") {
         dispatch(reduceFirstClass({ amount, validseat }));
+        if (firstclass.ticket === 1) {
+          setSelectedClass(null);
+        }
       }
     }
   };
@@ -64,7 +82,7 @@ const SelectFlightClassCard = ({
               <p className="text-gray-600">{item.flightClassName}</p>
             </div>
             <div className="flex flex-col items-center text-center mx-2">
-              <h2 className="text-lg font-semibold">Valid Seat</h2>
+              <h2 className="text-lg font-semibold">Available Seat</h2>
               <p className="text-gray-600">{item.availableSeat}</p>
             </div>
             <div className="flex flex-col items-center text-center mx-2">
@@ -82,6 +100,10 @@ const SelectFlightClassCard = ({
                     item.price
                   )
                 }
+                disabled={
+                  selectedClass &&
+                  selectedClass !== item.flightClassName.toLowerCase()
+                }
               >
                 -
               </Button>
@@ -95,13 +117,18 @@ const SelectFlightClassCard = ({
               </Button>
               <Button
                 className="mx-1 bg-gray-200 rounded-full hover:bg-gray-300"
-                onClick={() =>
+                onClick={() => {
+                  setClassId(item.flightClassId);
                   handleTicket(
                     item.flightClassName,
                     "add",
                     item.availableSeat,
                     item.price
-                  )
+                  );
+                }}
+                disabled={
+                  selectedClass &&
+                  selectedClass !== item.flightClassName.toLowerCase()
                 }
               >
                 +

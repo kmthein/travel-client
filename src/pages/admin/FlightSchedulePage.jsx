@@ -101,13 +101,15 @@ const FlightSchedulePage = ({ getColumnSearchProps }) => {
         departTime: item.departureTime,
         arriveTime: item.arrivalTime,
         date: item.date,
-        from: item.departurePlace.name,
-        to: item.arrivalPlace.name,
+        from: item?.departurePlace.name,
+        to: item?.arrivalPlace.name,
         distance: item.distance,
       };
     });
     setData(modifiedData);
   };
+
+  console.log(data);
   return (
     <>
       <div>

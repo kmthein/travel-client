@@ -276,6 +276,8 @@ function Hotel() {
                           );
                           if (search == "?flightpackage") {
                             navigate(`/rooms?flightpackage`);
+                          } else if (search == "?buspackage") {
+                            navigate(`/rooms?buspackage`);
                           } else {
                             navigate(`/rooms?hotel=${hotel.id}`);
                             dispatch(selectHotel());
@@ -353,6 +355,8 @@ function Hotel() {
                           );
                           if (search == "?flightpackage") {
                             navigate(`/rooms?flightpackage`);
+                          } else if (search == "?buspackage") {
+                            navigate(`/rooms?buspackage`);
                           } else {
                             navigate(`/rooms?hotel=${hotel.id}`);
                             dispatch(selectHotel());
