@@ -16,7 +16,9 @@ const SelectFlightClass = () => {
   };
   return (
     <div className="w-[70%] mx-auto">
-      <SelectStep />
+      <div className="my-10">
+        <SelectStep />
+      </div>
       <div className="flex justify-end my-5">
         <IoReturnUpBack
           onClick={handleBack}

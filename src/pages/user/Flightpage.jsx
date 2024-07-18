@@ -11,6 +11,7 @@ import TransportTicketSearch from "../../components/user/common/TransportTicketS
 import { addTransport } from "../../features/transport/TransportSlice";
 import { dateformat } from "../../utils/dateformat";
 import FilterFlightClass from "../../components/user/flight/FilterFlightClass";
+import SelectStep from "../../components/user/common/SelectStep";
 
 const Flightpage = () => {
   const [allFlight, setAllFlight] = useState([]);
@@ -21,6 +22,7 @@ const Flightpage = () => {
   const flightSchedule = async () => {
     try {
       const res = await getAllAvailableFlight();
+      console.log(res);
       let data = res.data;
       let modifiedData = data.map((item) => {
         return {
@@ -43,6 +45,9 @@ const Flightpage = () => {
   };
   return (
     <div className="w-[70%] mx-auto">
+      <div className="my-10">
+        <SelectStep />
+      </div>
       <TransportTicketSearch isFlight={true} choice={choiceFlight} />
       {filerFlight === null ? (
         <ScheduleItem data={allFlight} />

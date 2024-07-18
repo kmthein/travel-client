@@ -14,36 +14,87 @@ import { useDispatch, useSelector } from "react-redux";
 import { resetSelect, selectState } from "../../features/select/SelectSlice";
 import { IoReturnUpBack } from "react-icons/io5";
 import { reset, transportState } from "../../features/transport/TransportSlice";
+import { saveAccommodation } from "../../api/accommodation";
+import { userState } from "../../features/user/UserSlice";
+import { saveTravelPlan } from "../../api/travelplan";
 
 const ConfirmationPage = () => {
   const [paymentMethod, setPaymentMethod] = useState("Visa");
+  const [initialTotal, setInitialTotal] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [totalFlightCost, setTotalFlightCost] = useState(0);
+  const [serviceFee, setServiceFee] = useState(0);
   const navigate = useNavigate();
-  const { selectedPlan, flightOnly, busOnly } = useSelector(selectState);
+  const { selectedPlan, flightOnly, busOnly, hotelPlusFlight } =
+    useSelector(selectState);
+  const { user } = useSelector(userState);
+
   const [plan, setPlan] = useState({
     hotel: null,
     room: null,
     totalNight: null,
   });
 
-  const { hotel, room, totalNight } = plan;
+  const { hotel, room, totalNight, totalPerson, checkInDate, checkOutDate } =
+    plan;
+  const { economy, business, firstclass, flight } = useSelector(transportState);
 
   useEffect(() => {
     if (selectedPlan != null) {
+      const totalHotelCost =
+        selectedPlan.totalNight * selectedPlan.room.roomPrice;
+      const initialFlightCost =
+        (economy?.amount || 0) +
+        (business?.amount || 0) +
+        (firstclass?.amount || 0);
+      const newInitialTotal = totalHotelCost + initialFlightCost;
+      setTotalFlightCost(initialFlightCost);
       setPlan({
         ...plan,
         hotel: selectedPlan.hotel,
         room: selectedPlan.room,
         totalNight: selectedPlan.totalNight,
+        totalPerson: selectedPlan.totalPerson,
+        checkInDate: selectedPlan.checkInDate,
+        checkOutDate: selectedPlan.checkOutDate,
       });
+      setInitialTotal(newInitialTotal);
     }
-  }, []);
+  }, [selectedPlan, economy, business, firstclass]);
+
+  useEffect(() => {
+    const serviceFee = initialTotal * 0.05;
+    setServiceFee(serviceFee);
+    setTotalAmount(initialTotal + serviceFee);
+  }, [initialTotal]);
 
   const dispatch = useDispatch();
 
-  const { economy, business, firstclass, transport } =
-    useSelector(transportState);
-  let totalAmount = economy.amount + business.amount + firstclass.amount;
-  let serviceFee = totalAmount * 0.05;
+  const confirmPlanSubmit = async () => {
+    console.log(room);
+    const hotelformData = new FormData();
+    const formData = new FormData();
+    hotelformData.append("totalPrice", totalAmount);
+    let accommodationId;
+    if (hotel) {
+      hotelformData.append("checkIn", checkInDate);
+      hotelformData.append("checkOut", checkOutDate);
+      hotelformData.append("totalPerson", totalPerson);
+      hotelformData.append("roomId", room?.id);
+      const saveHotelRes = await saveAccommodation(hotelformData);
+      console.log(saveHotelRes);
+      formData.append("accommodationId", saveHotelRes.data.id);
+    }
+    formData.append("startDate", checkInDate);
+    formData.append("totalPrice", totalAmount);
+    formData.append("userId", user?.id);
+    const res = await saveTravelPlan(formData);
+    console.log(res);
+    // dispatch(reset());
+    // dispatch(resetSelect());
+    // navigate("/travelreceipt");
+  };
+
   return (
     <>
       <div
@@ -123,7 +174,9 @@ const ConfirmationPage = () => {
                 <div>
                   <p className="text-md m-5">Hotel</p>
                   <div className="flex ">
-                    <Image
+                    <img
+                      width="150px"
+                      height="120px"
                       src={hotel?.imgUrlList[0]}
                       className="p-3 object-cover"
                     />
@@ -144,47 +197,50 @@ const ConfirmationPage = () => {
                       </div>
                       <div className="flex items-center text-md m-2">
                         <FaBed />
-                        <p className="ml-2">1 x Deluxe Room</p>
+                        <p className="ml-2">1 x {room?.roomType}</p>
                       </div>
                     </div>
                   </div>
                 </div>
-                <hr className="my-2 h-[0.5px] bg-black" />
+                <Divider className="my-4 bg-gray-200" />
               </>
             )}
-            {(flightOnly || busOnly) && (
+            {(hotelPlusFlight || flightOnly || busOnly) && (
               <>
-                <div className="bg-white rounded-lg shadow-lg p-6">
-                  <Text className="text-lg font-semibold m-5 block">
-                    Flight
-                  </Text>
-                  <div className="flex justify-between items-center">
-                    <Image
+                <div>
+                  <p className="text-md m-5">Flight</p>
+                  <div className="flex justify-between items-center p-3">
+                    <img
                       src={transport.img}
-                      width="200px"
-                      height="150px"
-                      className="p-3 object-cover rounded-lg shadow-md"
+                      width="100px"
+                      height="100px"
+                      className="p-3 object-contain rounded-lg shadow-md"
                     />
-                    <div className="w-full m-3">
+                    <div className="w-full m-3 ml-6">
                       <div className="flex justify-between items-center">
-                        <div className="flex items-center space-x-5">
-                          <div>
-                            <Text className="text-lg font-bold block">
-                              {transport.departurePlace}
-                            </Text>
-                            <Text className="text-md text-gray-500">
-                              {transport.departureTime}
-                            </Text>
+                        <div className="flex justify-between w-full">
+                          <div className="flex items-center space-x-5">
+                            <div>
+                              <p className="text-md font-bold block">
+                                {transport.departurePlace}
+                              </p>
+                              <Text className="text-md text-gray-500">
+                                {transport.departureTime}
+                              </Text>
+                            </div>
+                            <FaLongArrowAltRight className="text-2xl text-gray-500" />
+                            <div>
+                              <p className="text-md font-bold block">
+                                {transport.arrivalPlace}
+                              </p>
+                              <Text className="text-md text-gray-500">
+                                {transport.arrivalTime}
+                              </Text>
+                            </div>
                           </div>
-                          <FaLongArrowAltRight className="text-2xl text-gray-500" />
-                          <div>
-                            <Text className="text-lg font-bold block">
-                              {transport.arrivalPlace}
-                            </Text>
-                            <Text className="text-md text-gray-500">
-                              {transport.arrivalTime}
-                            </Text>
-                          </div>
+                          <p className="text-md font-bold block">
+                            {totalFlightCost} ks
+                          </p>
                         </div>
                       </div>
                       <Text className="text-lg mt-3 block">
@@ -211,25 +267,25 @@ const ConfirmationPage = () => {
                   </div>
                 </div>
                 <Divider className="my-4 bg-gray-200" />
-                <div className="p-4 bg-gray-50 rounded-lg shadow-inner">
-                  <div name="subtotal" className="p-2">
-                    <div className="flex justify-between text-md font-semibold m-2">
-                      <Text>Cost</Text>
-                      <Text>{totalAmount}</Text>
-                    </div>
-                    <div className="flex justify-between text-md font-semibold m-2">
-                      <Text>Service Fee</Text>
-                      <Text>{serviceFee}</Text>
-                    </div>
-                  </div>
-                  <Divider className="my-2 bg-gray-200" />
-                  <div className="flex justify-between text-md font-semibold m-2 p-2">
-                    <Text>Total</Text>
-                    <Text>{totalAmount + serviceFee}</Text>
-                  </div>
-                </div>
               </>
             )}
+            <div className="p-4 bg-gray-50 rounded-lg shadow-inner">
+              <div name="subtotal" className="p-2">
+                <div className="flex justify-between text-md font-semibold m-2">
+                  <Text>Cost</Text>
+                  <Text>{initialTotal} ks</Text>
+                </div>
+                <div className="flex justify-between text-md font-semibold m-2">
+                  <Text>Service Fee (5%)</Text>
+                  <Text>+ {serviceFee} ks</Text>
+                </div>
+              </div>
+              <Divider className="my-2 bg-gray-200" />
+              <div className="flex justify-between text-md font-semibold m-2 p-2">
+                <Text>Total</Text>
+                <Text>{totalAmount} ks</Text>
+              </div>
+            </div>
             <div className="flex justify-end ">
               <Button
                 className=" m-4 w-32 text-white bg-red-500"
@@ -243,11 +299,7 @@ const ConfirmationPage = () => {
               </Button>
               <Button
                 className=" m-4 w-32 bg-blue-500  text-white"
-                onClick={() => {
-                  dispatch(resetSelect());
-                  dispatch(reset());
-                  navigate("/travelreceipt");
-                }}
+                onClick={confirmPlanSubmit}
               >
                 Confirm
               </Button>
