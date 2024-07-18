@@ -21,6 +21,7 @@ import HotelPage from "./pages/admin/HotelPage";
 import MemberPage from "./pages/admin/MemberPage";
 import "react-toastify/dist/ReactToastify.css";
 import RoomPage from "./pages/user/RoomPage";
+import AdminRoomPage from "./pages/admin/RoomPage";
 import ConfirmationPage from "./pages/user/ConfirmationPage";
 import AdminProvider from "./providers/AdminProvider";
 import ConfirmProvider from "./providers/ConfirmProvider";
@@ -131,6 +132,12 @@ function App() {
         {
           path: "hotel",
           element: <HotelPage getColumnSearchProps={getColumnSearchProps} />,
+        },
+        {
+          path: "room/:id",
+          element: (
+            <AdminRoomPage getColumnSearchProps={getColumnSearchProps} />
+          ),
         },
         {
           path: "airline",
