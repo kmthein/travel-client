@@ -1,5 +1,5 @@
 import { Button, Card } from "antd";
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectBus, selectFlight } from "../../../features/select/SelectSlice";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +17,8 @@ const SelectBusClassCard = ({ busClassDTOList, busServiceName, busImg }) => {
   const { economy, business, firstclass } = useSelector(transportState);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [selectedClass, setSelectedClass] = useState(null);
+
   const goto = () => {
     dispatch(selectBus());
     navigate("/confirmation");
@@ -25,18 +27,30 @@ const SelectBusClassCard = ({ busClassDTOList, busServiceName, busImg }) => {
     if (action === "add") {
       if (type.toLowerCase() === "economy") {
         dispatch(addEconomy({ amount, validseat }));
+        setSelectedClass("economy");
       } else if (type.toLowerCase() === "business") {
         dispatch(addBusiness({ amount, validseat }));
+        setSelectedClass("business");
       } else if (type.toLowerCase() === "firstclass") {
         dispatch(addFirstClass({ amount, validseat }));
+        setSelectedClass("firstclass");
       }
     } else {
       if (type.toLowerCase() === "economy") {
         dispatch(reduceEconomy({ amount }));
+        if (economy.ticket === 1) {
+          setSelectedClass(null);
+        }
       } else if (type.toLowerCase() === "business") {
         dispatch(reduceBusiness({ amount, validseat }));
+        if (business.ticket === 1) {
+          setSelectedClass(null);
+        }
       } else if (type.toLowerCase() === "firstclass") {
         dispatch(reduceFirstClass({ amount, validseat }));
+        if (firstclass.ticket === 1) {
+          setSelectedClass(null);
+        }
       }
     }
   };
@@ -78,6 +92,10 @@ const SelectBusClassCard = ({ busClassDTOList, busServiceName, busImg }) => {
                     item.price
                   )
                 }
+                disabled={
+                  selectedClass &&
+                  selectedClass !== item.busClassName.toLowerCase()
+                }
               >
                 -
               </Button>
@@ -98,6 +116,10 @@ const SelectBusClassCard = ({ busClassDTOList, busServiceName, busImg }) => {
                     item.availableSeat,
                     item.price
                   )
+                }
+                disabled={
+                  selectedClass &&
+                  selectedClass !== item.busClassName.toLowerCase()
                 }
               >
                 +

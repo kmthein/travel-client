@@ -35,6 +35,7 @@ import ConfirmProvider from "./providers/ConfirmProvider";
 import SelectFlightClass from "./components/user/flight/SelectFlightClass";
 import SelectBusClass from "./components/user/bus/SelectBusClass";
 import UserProfilePage from "./pages/user/UserProfilePage";
+import TravelListPage from "./pages/admin/TravelListPage";
 
 function App() {
   const {
@@ -151,6 +152,12 @@ function App() {
         {
           index: true,
           element: <DashboardPage />,
+        },
+        {
+          path: "travel-list",
+          element: (
+            <TravelListPage getColumnSearchProps={getColumnSearchProps} />
+          ),
         },
         {
           path: "member",

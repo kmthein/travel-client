@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React from "react";
 import { BiBus } from "react-icons/bi";
-import { FaCity, FaHotel } from "react-icons/fa6";
+import { FaCity, FaEarthAsia, FaHotel } from "react-icons/fa6";
 import { ImHome3 } from "react-icons/im";
 import { MdAirlines } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
@@ -76,21 +76,33 @@ const Sidebar = () => {
         defaultSelectedKeys={["/admin"]}
         mode="inline"
       >
-        <Menu.Item key="/admin" icon={<ImHome3 style={{fontSize: "17px"}} />}>
+        <Menu.Item key="/admin" icon={<ImHome3 style={{ fontSize: "17px" }} />}>
           Dashboard
         </Menu.Item>
-        <Menu.Item key="member" icon={<BsPerson style={{fontSize: "17px"}} />}>
+        <Menu.Item
+          key="travel-list"
+          icon={<FaEarthAsia style={{ fontSize: "17px" }} />}
+        >
+          Travel List
+        </Menu.Item>
+        <Menu.Item
+          key="member"
+          icon={<BsPerson style={{ fontSize: "17px" }} />}
+        >
           Member
         </Menu.Item>
-        <Menu.Item key="destination" icon={<FaCity style={{fontSize: "17px"}} />}>
+        <Menu.Item
+          key="destination"
+          icon={<FaCity style={{ fontSize: "17px" }} />}
+        >
           Destination
         </Menu.Item>
-        <Menu.Item key="hotel" icon={<FaHotel style={{fontSize: "17px"}} />}>
+        <Menu.Item key="hotel" icon={<FaHotel style={{ fontSize: "17px" }} />}>
           Hotel
         </Menu.Item>
         <SubMenu
           key="sub1"
-          icon={<MdAirlines style={{fontSize: "17px"}} />}
+          icon={<MdAirlines style={{ fontSize: "17px" }} />}
           title="Flight Service"
         >
           <Menu.Item key="airline">Airline</Menu.Item>
@@ -99,7 +111,7 @@ const Sidebar = () => {
         </SubMenu>
         <SubMenu
           key="sub2"
-          icon={<BiBus style={{fontSize: "17px"}} />}
+          icon={<BiBus style={{ fontSize: "17px" }} />}
           title="Bus Service"
         >
           <Menu.Item key="bus">Bus Operator</Menu.Item>

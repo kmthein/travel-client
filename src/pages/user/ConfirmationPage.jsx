@@ -37,7 +37,8 @@ const ConfirmationPage = () => {
 
   const { hotel, room, totalNight, totalPerson, checkInDate, checkOutDate } =
     plan;
-  const { economy, business, firstclass, flight } = useSelector(transportState);
+  const { economy, business, firstclass, transport } =
+    useSelector(transportState);
 
   useEffect(() => {
     if (selectedPlan != null) {

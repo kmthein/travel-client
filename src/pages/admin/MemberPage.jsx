@@ -53,32 +53,17 @@ const MemberPage = ({ getColumnSearchProps }) => {
       width: "15%",
       ...getColumnSearchProps("dob"),
     },
-    {
-      title: "Action",
-      dataIndex: "",
-      key: "x",
-      render: (text, record) => (
-        <div className="flex gap-4">
-          <Link to={""}>Send Message</Link>
-        </div>
-      ),
-    },
   ];
 
   const [data, setData] = useState([]);
-  const [editForm, setEditForm] = useState(false);
-  const [open, setOpen] = useState(false);
-  const showModal = () => {
-    setOpen(true);
-  };
-  const { token } = useSelector(userState);
+
   useEffect(() => {
-    getUserList(token);
+    getUserList();
   }, []);
-  console.log(data);
-  const getUserList = async (token) => {
+
+  const getUserList = async () => {
     try {
-      let res = await getAllNormalUser(token);
+      let res = await getAllNormalUser();
       const modifiedData = res.data.map((d) => {
         return {
           ...d,
