@@ -15,6 +15,21 @@ const Header = () => {
       label: (
         <p
           onClick={() => {
+            navigate("/");
+          }}
+          className=" w-full"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Go To User Profile
+        </p>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <p
+          onClick={() => {
             dispatch(logoutUser());
             navigate("/");
           }}
