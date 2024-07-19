@@ -37,7 +37,7 @@ const RoomPage = () => {
   const { availableRoomList } = selectedPlan.hotel;
 
   const [roomList, setRoomList] = useState([]);
-
+  console.log(roomList);
   useEffect(() => {
     const roomAry = [];
     const idSet = new Set();

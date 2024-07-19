@@ -70,7 +70,7 @@ const TravelListPage = ({ getColumnSearchProps }) => {
   useEffect(() => {
     getAllPlan();
   }, []);
-  console.log(data);
+
   const getAllPlan = async () => {
     try {
       const res = await getAllTravelPlan();
@@ -93,7 +93,7 @@ const TravelListPage = ({ getColumnSearchProps }) => {
       console.log(err.message);
     }
   };
-  console.log(data);
+
   return (
     <>
       <div>
