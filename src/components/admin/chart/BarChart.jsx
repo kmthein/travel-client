@@ -1,12 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
+import { getTopHotelsCount } from "../../../api/travelplan";
 
 const BarChart = () => {
-  const series = [
-    {
-      data: [400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380],
-    },
-  ];
+  const [labels, setLabels] = useState([]);
+  const [data, setData] = useState([]);
+
+  const topVisitedHotelsHandler = async () => {
+    const res = await getTopHotelsCount();
+    let labelAry = [];
+    let dataAry = [];
+    res.data.forEach((data) => {
+      labelAry.push(data.name);
+      dataAry.push(data.totalVisited);
+    });
+    setLabels(labelAry);
+    setData([{ name: "Total Visited Hotels", data: dataAry }]);
+  };
+
+  useEffect(() => {
+    topVisitedHotelsHandler();
+  }, []);
 
   const options = {
     chart: {
@@ -24,29 +38,24 @@ const BarChart = () => {
       enabled: false,
     },
     xaxis: {
-      categories: [
-        "South Korea",
-        "Canada",
-        "United Kingdom",
-        "Netherlands",
-        "Italy",
-        "France",
-        "Japan",
-        "United States",
-        "China",
-        "Germany",
-      ],
+      categories: labels,
+    },
+    title: {
+      text: "Top Visited Hotels",
+      align: "left",
+    },
+    subtitle: {
+      align: "left",
+      style: {
+        color: "#FF0000",
+        fontSize: "14px",
+      },
     },
   };
 
   return (
     <div id="chart">
-      <ReactApexChart
-        options={options}
-        series={series}
-        type="bar"
-        height={450}
-      />
+      <ReactApexChart options={options} series={data} type="bar" height={450} />
     </div>
   );
 };

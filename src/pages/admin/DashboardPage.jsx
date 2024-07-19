@@ -39,10 +39,10 @@ const DashboardPage = () => {
         />
       </div>
       <div className="flex mt-6 gap-5">
-        <div className=" w-[70%] bg-white rounded-lg">
+        <div className=" w-[70%] bg-white rounded-lg pt-6 px-4">
           <BarChart />
         </div>
-        <div className=" w-[30%] bg-white flex items-center rounded-lg">
+        <div className=" w-[30%] bg-white rounded-lg">
           <PieChart />
         </div>
       </div>

@@ -9,6 +9,7 @@ import {
   Image,
   Rate,
   Form,
+  Radio,
 } from "antd";
 import { FaCalendarAlt, FaSearch, FaUser } from "react-icons/fa";
 import beachImg from "../../../assets/img/hotel/beach_hotel_1.jpg";
@@ -42,17 +43,38 @@ function Hotel() {
   const [daysBetween, setDaysBetween] = useState(null);
   const [disabled, setDisabled] = useState(true);
 
+  const handleFilterHotel = (e) => {
+    console.log(e.target.value);
+    const rate = e.target.value;
+    const filter = allHotels.filter((hotel) => hotel.rating == rate);
+    setFilteredHotel(filter);
+  };
+
+  console.log(filteredHotel);
+
   const items = [
     {
-      key: "2",
+      key: "1",
       label: <h2 className="font-bold text-lg">Rating</h2>,
       children: (
         <div className="flex flex-wrap flex-col gap-2">
-          <Checkbox>5 Stars +</Checkbox>
-          <Checkbox>4 Stars +</Checkbox>
-          <Checkbox>3 Stars +</Checkbox>
-          <Checkbox>2 Stars +</Checkbox>
-          <Checkbox>1 Star +</Checkbox>
+          <Radio.Group onChange={handleFilterHotel}>
+            <div className="flex flex-col mb-1">
+              <Radio value={"5"}>5 stars</Radio>
+            </div>
+            <div className="flex flex-col mb-1">
+              <Radio value={"4"}>4 stars</Radio>
+            </div>
+            <div className="flex flex-col mb-1">
+              <Radio value={"3"}>3 stars</Radio>
+            </div>
+            <div className="flex flex-col mb-1">
+              <Radio value={"2"}>2 stars</Radio>
+            </div>
+            <div className="flex flex-col mb-1">
+              <Radio value={"1"}>1 star</Radio>
+            </div>
+          </Radio.Group>
         </div>
       ),
     },

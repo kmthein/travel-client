@@ -1,13 +1,25 @@
 import { Divider, Image } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Tower from "../../assets/img/about/tower.png";
 import AboutImg from "../../assets/img/about/aboutimg.png";
 import Hotel from "../../assets/img/about/hotel.png";
 import BusandTicket from "../../assets/img/about/busandticket.png";
 import ReviewForm from "../../components/user/destinationdetail/ReviewForm";
 import ReviewList from "../../components/user/destinationdetail/ReviewList";
+import { getAllReview } from "../../api/review";
 
 const Aboutpage = () => {
+  const [allReviews, setAllReviews] = useState([]);
+
+  const getReviewsHandler = async () => {
+    const res = await getAllReview();
+    setAllReviews(res.data);
+  };
+
+  useEffect(() => {
+    getReviewsHandler();
+  }, []);
+
   return (
     <>
       <div className="bg-gray-100 pb-20">
@@ -127,8 +139,8 @@ const Aboutpage = () => {
         </div>
       </div>
       <div className=" w-[70%] mx-auto py-10">
-        <ReviewForm />
-        <ReviewList />
+        <ReviewForm getReviewsHandler={getReviewsHandler} />
+        <ReviewList allReviews={allReviews} />
       </div>
     </>
   );
