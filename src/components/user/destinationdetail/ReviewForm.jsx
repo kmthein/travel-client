@@ -24,9 +24,15 @@ const ReviewForm = ({ destination, getReviewsHandler }) => {
 
   const reviewSubmitHandler = async () => {
     if (user) {
+      if (input == "") {
+        toast.info("Please something to write review");
+        return;
+      }
+      if (rate == 0) {
+        toast.info("Rating star should be at least one");
+        return;
+      }
       dispatch(startLoading());
-      console.log(rate);
-      console.log(input);
       const formData = new FormData();
       formData.append("description", input);
       formData.append("rating", rate);

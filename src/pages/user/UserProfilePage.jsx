@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Input, Form, Avatar, Upload, Image } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import { userState } from "../../features/user/UserSlice";
+import { loginUser, userState } from "../../features/user/UserSlice";
 import { updateUser, getTravelPlanByUserId } from "../../api/userapi";
 import { FaBed, FaCalendarAlt, FaLongArrowAltRight } from "react-icons/fa";
 import noImg from "../../assets/img/common/no_img.jpg";
 import firebase from "firebase/compat/app";
 import "firebase/compat/storage";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const UserProfilePage = () => {
   const dispatch = useDispatch();
@@ -62,35 +64,44 @@ const UserProfilePage = () => {
 
   const [fileList, setFileList] = useState([]);
 
+  const navigate = useNavigate();
+
   const handleSave = async (values) => {
     setConfirmLoading(true);
-    console.log(values);
     const formData = new FormData();
     for (const key in values) {
-      formData.append(key, values[key]);
+      if (key !== "image") {
+        formData.append(key, values[key]);
+      }
     }
     const { image: images } = values;
-    // const imgAry = [];
-    // if (images) {
-    //   for (let i = 0; i < images.length; i++) {
-    //     const selectedFile = images[i].originFileObj;
-    //     const storageRef = firebase.storage().ref();
-    //     const fileRef = storageRef.child(selectedFile.name);
-    //     const snapshot = await fileRef.put(selectedFile);
-    //     const downloadURL = await snapshot.ref.getDownloadURL();
-    //     imgAry.push(downloadURL);
-    //     console.log(downloadURL);
-    //   }
-    // }
-    // formData.append("image", imgAry);
+    const imgAry = [];
+    if (images) {
+      for (let i = 0; i < images.length; i++) {
+        const selectedFile = images[i].originFileObj;
+        const storageRef = firebase.storage().ref();
+        const fileRef = storageRef.child(selectedFile.name);
+        const snapshot = await fileRef.put(selectedFile);
+        const downloadURL = await snapshot.ref.getDownloadURL();
+        imgAry.push(downloadURL);
+        console.log(downloadURL);
+      }
+      formData.append("image", imgAry);
+    }
     formData.append("role", "USER");
     let response = await updateUser(userId, formData, token);
     console.log(response);
     if (response.status == 200) {
-      setFileList([]);
+      dispatch(loginUser({ user: response.data, token }));
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(response.data));
+      toast.success("User profile updated");
+      navigate("/");
     }
     setConfirmLoading(false);
     setEditMode(false);
+    setFileList([]);
+    form.resetFields("image");
   };
 
   const normFile = (e) => {
@@ -129,7 +140,7 @@ const UserProfilePage = () => {
       {tab == "profile" && (
         <Form form={form} layout="vertical" onFinish={handleSave}>
           <div className="flex space-x-10">
-            {/* <div className="w-[30%] gap-3">
+            <div className="w-[30%] gap-3">
               <Avatar
                 size={100}
                 src={user?.image.length > 0 ? user?.image[0]?.imgUrl : noImg}
@@ -157,13 +168,13 @@ const UserProfilePage = () => {
                   </Button>
                 </Upload>
               </Form.Item>
-            </div> */}
+            </div>
             <div className="flex-1">
               <Form.Item name="username" label="Name">
                 <Input disabled={!editMode} />
               </Form.Item>
               <Form.Item name="email" label="Email">
-                <Input disabled={!editMode} />
+                <Input readOnly disabled />
               </Form.Item>
               <Form.Item name="contactNumber" label="Phone">
                 <Input disabled={!editMode} />

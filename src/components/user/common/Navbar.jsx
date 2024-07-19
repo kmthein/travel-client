@@ -157,7 +157,6 @@ const Navbar = () => {
               <li>
                 <Dropdown menu={{ items: userItems }}>
                   <Avatar
-                    size={"large"}
                     className="cursor-pointer"
                     icon={
                       user?.image?.length != 0 ? (

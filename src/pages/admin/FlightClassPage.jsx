@@ -53,9 +53,9 @@ const FlightClassPage = ({ getColumnSearchProps }) => {
           >
             Edit
           </span>
-          <Link to={""} className=" text-red-600">
+          {/* <Link to={""} className=" text-red-600">
             Delete
-          </Link>
+          </Link> */}
         </div>
       ),
     },
