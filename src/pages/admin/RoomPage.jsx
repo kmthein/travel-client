@@ -77,13 +77,13 @@ const RoomPage = ({ getColumnSearchProps }) => {
           >
             Edit
           </span>
-          <Link
+          {/* <Link
             to={""}
             className=" text-red-600"
             onClick={() => deleteRoom(record.key)}
           >
             Delete
-          </Link>
+          </Link> */}
         </div>
       ),
     },
