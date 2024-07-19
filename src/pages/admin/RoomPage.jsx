@@ -96,11 +96,12 @@ const RoomPage = ({ getColumnSearchProps }) => {
     try {
       if (selectedHotelId === null) return;
       let res = await getAllRoomByHotelId(selectedHotelId);
+      console.log(res);
       const modifiedData = res.data.map((d) => {
         return {
           ...d,
           key: d.id,
-          image: d.image[0]?.imgUrl,
+          image: d.imgUrlList[0],
         };
       });
       setData(modifiedData);
