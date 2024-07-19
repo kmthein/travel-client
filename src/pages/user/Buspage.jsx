@@ -4,6 +4,8 @@ import ScheduleItem from "../../components/user/common/ScheduleItem";
 import TransportTicketSearch from "../../components/user/common/TransportTicketSearch";
 import { dateformat } from "../../utils/dateformat";
 import FilterBusClass from "../../components/user/bus/FilterBusClass";
+import { IoReturnUpBack } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 
 const Buspage = () => {
   const [allbus, setAllBus] = useState([]);
@@ -37,6 +39,8 @@ const Buspage = () => {
     setFilterBus(res.data);
   };
 
+  const navigate = useNavigate();
+
   return (
     <div className="w-[70%] mx-auto">
       <TransportTicketSearch isFlight={false} choice={choice} />
@@ -47,7 +51,15 @@ const Buspage = () => {
           <FilterBusClass filterBus={filterBus} />
         </>
       ) : (
-        <p className="text-center my-5">No Buses Found</p>
+        <>
+          <div className="flex justify-end my-8">
+            <IoReturnUpBack
+              onClick={() => navigate(-1)}
+              className="text-3xl cursor-pointer"
+            />
+          </div>
+          <p className="text-center my-5">No Bus Found</p>
+        </>
       )}
     </div>
   );

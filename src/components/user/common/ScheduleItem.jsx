@@ -3,6 +3,7 @@ import React from "react";
 import SelectStep from "./SelectStep";
 import { IoReturnUpBack } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import moment from "moment";
 
 const ScheduleItem = ({ data }) => {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ const ScheduleItem = ({ data }) => {
         <div key={item.id}>
           <Card className="shadow-lg rounded-lg mb-6 px-5">
             <div className="flex items-center justify-between p-4">
-              <div className="flex flex-col items-center justify-center">
+              <div className="flex flex-col items-center justify-center min-w-[30%]">
                 <img
                   src={item.img}
                   alt="airline logo"
@@ -29,7 +30,9 @@ const ScheduleItem = ({ data }) => {
               </div>
               <div className="text-center">
                 <p className="text-lg font-semibold">Date</p>
-                <p className="text-md text-gray-600">{item.date}</p>
+                <p className="text-md text-gray-600">
+                  {moment(item?.date).format("DD-MM-YYYY")}
+                </p>
               </div>
               <div className="flex gap-4 items-center">
                 <div className="text-right">

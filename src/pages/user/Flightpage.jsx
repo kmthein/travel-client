@@ -12,6 +12,7 @@ import { addTransport } from "../../features/transport/TransportSlice";
 import { dateformat } from "../../utils/dateformat";
 import FilterFlightClass from "../../components/user/flight/FilterFlightClass";
 import SelectStep from "../../components/user/common/SelectStep";
+import { IoReturnUpBack } from "react-icons/io5";
 
 const Flightpage = () => {
   const [allFlight, setAllFlight] = useState([]);
@@ -43,6 +44,8 @@ const Flightpage = () => {
     let res = await getUserFlightSchedule(form);
     setFliterFlight(res.data);
   };
+
+  const navigate = useNavigate();
   return (
     <div className="w-[70%] mx-auto">
       <div className="my-10">
@@ -54,7 +57,15 @@ const Flightpage = () => {
       ) : filerFlight.length > 0 ? (
         <FilterFlightClass filerFlight={filerFlight} />
       ) : (
-        <p className="text-center my-5">No Flight Found</p>
+        <>
+          <div className="flex justify-end my-8">
+            <IoReturnUpBack
+              onClick={() => navigate(-1)}
+              className="text-3xl cursor-pointer"
+            />
+          </div>
+          <p className="text-center my-5">No Flight Found</p>
+        </>
       )}
     </div>
   );

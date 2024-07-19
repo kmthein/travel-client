@@ -9,8 +9,9 @@ import {
 } from "../../../features/ui/UiSlice";
 import { createReview } from "../../../api/review";
 import { userState } from "../../../features/user/UserSlice";
+import { toast } from "react-toastify";
 
-const ReviewForm = ({ destination }) => {
+const ReviewForm = ({ destination, getReviewsHandler }) => {
   const [rate, setRate] = useState(0);
 
   const [input, setInput] = useState("");
@@ -31,7 +32,13 @@ const ReviewForm = ({ destination }) => {
     formData.append("userId", user?.id);
     const res = await createReview(formData);
     console.log(res);
+    if (res.status == 200) {
+      setInput("");
+      setRate(0);
+      toast.success("Your review completely sent");
+    }
     dispatch(endLoading());
+    getReviewsHandler();
   };
 
   return (
@@ -41,6 +48,7 @@ const ReviewForm = ({ destination }) => {
         placeholder="write your review"
         onChange={(e) => setInput(e.target.value)}
         autoSize={{ minRows: 5, maxRows: 10 }}
+        value={input}
       />
       <div className="flex justify-end mt-10 gap-5">
         <h2>Rating</h2>

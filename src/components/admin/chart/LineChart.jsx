@@ -1,7 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
+import { getIncomeByMonth } from "../../../api/travelplan";
 
 const LineChart = () => {
+  const [data, setData] = useState([]);
+  const incomeByMonthHandler = async () => {
+    const date = new Date();
+    const currentYear = date.getFullYear();
+    const formData = new FormData();
+    formData.append("year", currentYear);
+    const res = await getIncomeByMonth(formData);
+    console.log(res.data);
+    setData([{ name: "Income By Month", data: res.data }]);
+  };
+
+  useEffect(() => {
+    incomeByMonthHandler();
+  }, []);
   const series = [
     {
       name: "Desktops",
@@ -23,7 +38,7 @@ const LineChart = () => {
       curve: "straight",
     },
     title: {
-      text: "Travel by Month",
+      text: "Income by Month",
       align: "left",
     },
     grid: {
@@ -54,7 +69,7 @@ const LineChart = () => {
     <div id="chart">
       <ReactApexChart
         options={options}
-        series={series}
+        series={data}
         type="line"
         height={450}
       />

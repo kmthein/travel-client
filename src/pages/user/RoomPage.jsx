@@ -81,7 +81,9 @@ const RoomPage = () => {
             >
               <div className="w-1/3 p-2">
                 <Image
-                  src={room?.imgUrlList ? room?.imgUrlList[0] : noImg}
+                  src={
+                    room?.imgUrlList.length > 0 ? room?.imgUrlList[0] : noImg
+                  }
                   width={"100%"}
                   height={"100%"}
                   style={{ objectFit: "cover" }}

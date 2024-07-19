@@ -41,8 +41,6 @@ const Destination = () => {
     setFilteredDestinations(filterByCountry);
   };
 
-  console.log(destinations);
-
   const items = [
     {
       key: "1",

@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { selectFlight } from "../../../features/select/SelectSlice";
 import { addTransport } from "../../../features/transport/TransportSlice";
+import { IoReturnUpBack } from "react-icons/io5";
 
 const FilterFlightClass = ({ filerFlight }) => {
   const navigate = useNavigate();

@@ -76,8 +76,6 @@ const ConfirmationPage = () => {
 
   const dispatch = useDispatch();
 
-  console.log(typeof transport.classId);
-
   const confirmPlanSubmit = async () => {
     console.log(room);
     const hotelformData = new FormData();

@@ -36,3 +36,12 @@
 .card_gap {
   width: calc(33.3% - 13.4px);
 }
+.chart-title {
+  top: 0;
+  background: #fff; /* Ensure title background is the same as container */
+  padding: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  z-index: 10; /* Ensure it stays above the chart */
+}

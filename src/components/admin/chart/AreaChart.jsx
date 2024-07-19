@@ -1,15 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
+import { getMemberByMonth, getTravelsByMonth } from "../../../api/travelplan";
 
 const AreaChart = () => {
+  const [data, setData] = useState([]);
+  const newMemberByMonthHandler = async () => {
+    const date = new Date();
+    const currentYear = date.getFullYear();
+    const formData = new FormData();
+    formData.append("year", currentYear);
+    const memberRes = await getMemberByMonth(formData);
+    const travelRes = await getTravelsByMonth(formData);
+    setData([
+      { name: "New Member By Month", data: memberRes.data },
+      { name: "Travels By Month", data: travelRes.data },
+    ]);
+  };
+
+  useEffect(() => {
+    newMemberByMonthHandler();
+  }, []);
+
   const series = [
     {
       name: "series1",
-      data: [31, 40, 28, 51, 42, 109, 100],
-    },
-    {
-      name: "series2",
-      data: [11, 32, 45, 32, 34, 52, 41],
+      data: [31, 40, 28, 51, 42, 109, 100, 243, 32, 234, 342, 23],
     },
   ];
 
@@ -24,16 +39,25 @@ const AreaChart = () => {
     stroke: {
       curve: "smooth",
     },
+    title: {
+      text: "Travel and Member Analysis",
+      align: "left",
+    },
     xaxis: {
-      type: "datetime",
+      type: "month",
       categories: [
-        "2018-09-19T00:00:00.000Z",
-        "2018-09-19T01:30:00.000Z",
-        "2018-09-19T02:30:00.000Z",
-        "2018-09-19T03:30:00.000Z",
-        "2018-09-19T04:30:00.000Z",
-        "2018-09-19T05:30:00.000Z",
-        "2018-09-19T06:30:00.000Z",
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
       ],
     },
     tooltip: {
@@ -46,7 +70,7 @@ const AreaChart = () => {
     <div id="chart">
       <ReactApexChart
         options={options}
-        series={series}
+        series={data}
         type="area"
         height={450}
       />
