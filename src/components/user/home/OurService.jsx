@@ -13,7 +13,7 @@ const { Meta } = Card;
 const OurService = () => {
   return (
     <section className="py-6">
-      <div className="max-w-screen-xl mx-auto my-10">
+      <div className="w-[70%] mx-auto my-20">
         <h2 className="text-center font-bold text-3xl mb-10">Our Services</h2>
         <div className="flex justify-center gap-10 flex-wrap text-center">
           <Card
@@ -56,15 +56,15 @@ const OurService = () => {
             className="py-10"
             cover={
               <img
-                alt="Restaurant Booking"
+                alt="Car Ticket"
                 src={Bus}
                 className="h-16 w-16 object-contain mx-auto"
               />
             }
           >
             <Meta
-              title="Restaurant Booking"
-              description="Reserve tables at the finest restaurants to enjoy exquisite cuisine during your travels."
+              title="Car Ticket Booking"
+              description="We offer competitive prices on cars with the best cars to your desired destinations."
             />
           </Card>
           <Card
@@ -86,7 +86,7 @@ const OurService = () => {
           </Card>
         </div>
       </div>
-      <div className="max-w-screen-xl mx-auto px-6 lg:px-8">
+      <div className="w-[70%] mx-auto px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row items-start gap-12">
           <div className="lg:w-1/2 space-y-6">
             <h2 className="text-4xl font-extrabold text-gray-900 mb-4">

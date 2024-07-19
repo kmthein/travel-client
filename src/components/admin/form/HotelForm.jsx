@@ -8,46 +8,156 @@ import {
   Upload,
   notification,
 } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaPlus, FaTrashAlt } from "react-icons/fa";
 import firebase from "firebase/compat/app";
 import "firebase/compat/storage";
+import { createHotel, updateHotel, getHotelById } from "../../../api/hotelapi";
+import TextArea from "antd/es/input/TextArea";
+import { getAllDestinations } from "../../../api/destination";
 
-const HotelForm = ({ open, setOpen, editForm, setEditForm }) => {
-  const [previewImg, setPreviewImg] = useState([]);
-  const [images, setImages] = useState([]);
-  const [savedImages, setSavedImages] = useState([]);
+const HotelForm = ({
+  open,
+  setOpen,
+  editForm,
+  setEditForm,
+  selectedHotelId,
+  getHotels,
+  form,
+  images,
+  setImages,
+  previewImg,
+  setPreviewImg,
+}) => {
+  const [newImages, setNewImages] = useState([]);
   const [imgCount, setImgCount] = useState(0);
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const [deleteImgIds, setDeleteImgIds] = useState([]);
+  const [destinations, setDestinations] = useState([]);
 
-  const [form] = Form.useForm();
+  const getAllDestinationHandler = async () => {
+    try {
+      const response = await getAllDestinations();
+      const modifiedData = response.data.map((d) => {
+        return {
+          value: d.id,
+          label: d.name,
+        };
+      });
+      setDestinations(modifiedData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getOldHotelHandler = async () => {
+    try {
+      const response = await getHotelById(selectedHotelId);
+      const { name, description, rating, destinationId } = response.data;
+      form.setFieldValue("name", name);
+      form.setFieldValue("rating", rating);
+      form.setFieldValue("description", description);
+      form.setFieldValue("destinationId", destinationId);
+
+      const oldImages = response.data.imgUrlList.map((i) => {
+        return i;
+      });
+
+      setPreviewImg((prev) => prev.concat(oldImages));
+      setImages((prev) => prev.concat(oldImages));
+    } catch (error) {}
+  };
+
+  const getLocationOption = async () => {
+    const response = await getAllDestinations();
+    const option = [];
+    response.data.map((d) => {
+      let location = {
+        value: d.id,
+        label: d.name,
+      };
+      option.push(location);
+    });
+    setLocationOption(option);
+  };
+
+  useEffect(() => {
+    form.resetFields();
+    setPreviewImg([]);
+    setImages([]);
+    getLocationOption();
+    // setDeleteImgIds([]);
+    getAllDestinationHandler();
+    if (editForm) {
+      getOldHotelHandler();
+    }
+  }, [editForm, selectedHotelId]);
 
   const onCreate = async (values) => {
     setConfirmLoading(true);
-    console.log(values);
-    console.log(images);
-    for (let i = 0; i < images.length; i++) {
-      const selectedFile = images[i];
-      const storageRef = firebase.storage().ref();
-      const fileRef = storageRef.child(selectedFile.name);
-
-      const snapshot = await fileRef.put(selectedFile);
-      const downloadURL = await snapshot.ref.getDownloadURL();
-      console.log(downloadURL);
+    const imgAry = [];
+    const formData = new FormData();
+    for (const key in values) {
+      formData.append(key, values[key]);
     }
-    await console.log("All image uploaded");
+    if (editForm && newImages && newImages.length > 0) {
+      images.map((i) => imgAry.push(i));
+      for (let i = 0; i < newImages.length; i++) {
+        const selectedFile = newImages[i];
+        const storageRef = firebase.storage().ref();
+        const fileRef = storageRef.child(selectedFile.name);
+
+        const snapshot = await fileRef.put(selectedFile);
+        const downloadURL = await snapshot.ref.getDownloadURL();
+        imgAry.push(downloadURL);
+        console.log(downloadURL);
+      }
+    } else if (!editForm && images && images.length > 0) {
+      for (let i = 0; i < images.length; i++) {
+        const selectedFile = images[i];
+        const storageRef = firebase.storage().ref();
+        const fileRef = storageRef.child(selectedFile.name);
+
+        const snapshot = await fileRef.put(selectedFile);
+        const downloadURL = await snapshot.ref.getDownloadURL();
+        imgAry.push(downloadURL);
+        console.log(downloadURL);
+      }
+    }
+    formData.append("imgUrlList", imgAry);
+
+    let response;
+    if (editForm) {
+      // if (deleteImgIds.length > 0) {
+      //   formData.append("delete_ids", deleteImgIds);
+      // }
+      response = await updateHotel(selectedHotelId, formData);
+    } else {
+      response = await createHotel(formData);
+    }
+
+    setConfirmLoading(false);
+    setOpen(false);
+    form.resetFields();
+    setEditForm(false);
+
     setConfirmLoading(false);
     form.resetFields();
     setOpen(false);
+
+    getHotels();
   };
 
   const handleCancel = () => {
-    form.resetFields();
+    setPreviewImg([]);
+    setImages([]);
     setOpen(false);
     setEditForm(false);
+    form.resetFields();
   };
 
   const deleteHandler = (img) => {
+    // setDeleteImgIds((prev) => [...prev, img.id]);
     const indexToDelete = previewImg.findIndex((e) => e == img);
     if (indexToDelete != -1) {
       const updatedSelectedImg = [...images];
@@ -63,8 +173,11 @@ const HotelForm = ({ open, setOpen, editForm, setEditForm }) => {
   const onChangeHandler = (e) => {
     const selectedImages = e.target.files;
     const selectedImagesArray = Array.from(selectedImages);
-    setImages(selectedImagesArray);
-
+    if (editForm) {
+      setNewImages((prev) => prev.concat(selectedImagesArray));
+    } else {
+      setImages((prev) => prev.concat(selectedImagesArray));
+    }
     setImgCount((prev) => prev + selectedImagesArray.length);
 
     const previewImagesArray = selectedImagesArray.map((img) => {
@@ -101,7 +214,7 @@ const HotelForm = ({ open, setOpen, editForm, setEditForm }) => {
           rules={[
             {
               required: true,
-              message: "Please input the name of destination!",
+              message: "Please input the name of hotel!",
             },
           ]}
         >
@@ -113,11 +226,11 @@ const HotelForm = ({ open, setOpen, editForm, setEditForm }) => {
           rules={[
             {
               required: true,
-              message: "Please select the description of destination!",
+              message: "Please input the description of hotel!",
             },
           ]}
         >
-          <Input />
+          <TextArea rows={4} />
         </Form.Item>
         <div className="flex gap-2">
           <Form.Item
@@ -127,24 +240,24 @@ const HotelForm = ({ open, setOpen, editForm, setEditForm }) => {
             rules={[
               {
                 required: true,
-                message: "Please input the rating of destination!",
+                message: "Please input the rating of hotel!",
               },
             ]}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            name="location"
+            name="destinationId"
             label="Location"
             className="w-[50%]"
             rules={[
               {
                 required: true,
-                message: "Please select the location of book!",
+                message: "Please select the location of hotel!",
               },
             ]}
           >
-            <Input />
+            <Select defaultValue={"Select One"} options={destinations} />
           </Form.Item>
         </div>
         <Form.Item name="img" label="Hotel Image">

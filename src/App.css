@@ -14,3 +14,34 @@
   font-size: 30px;
   letter-spacing: 2px;
 }
+.img_scroll::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+/* Track */
+.img_scroll::-webkit-scrollbar-track {
+  background: #f7f7f7;
+}
+
+/* Handle */
+.img_scroll::-webkit-scrollbar-thumb {
+  background: #cfcfcf;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+.img_scroll::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+.card_gap {
+  width: calc(33.3% - 13.4px);
+}
+.chart-title {
+  top: 0;
+  background: #fff; /* Ensure title background is the same as container */
+  padding: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  z-index: 10; /* Ensure it stays above the chart */
+}

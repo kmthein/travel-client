@@ -2,7 +2,6 @@ import React from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Journey from "../../../assets/img/home/journey.png";
 import NgweSaung from "../../../assets/img/home/ngwesaung.png";
 import Kalaw from "../../../assets/img/home/kalaw.png";
 import InLeLake from "../../../assets/img/home/inleLake.png";
@@ -43,8 +42,7 @@ const PopularPlace = () => {
 
   return (
     <div className="w-full py-16">
-      <img src={Journey} alt="journey" className="w-full" />
-      <div className="max-w-screen-xl mx-auto px-6 lg:px-8">
+      <div className="w-[70%] mx-auto px-6 lg:px-8">
         <h2 className="text-4xl font-extrabold text-gray-900 my-12">
           Top Destination to Visit
         </h2>

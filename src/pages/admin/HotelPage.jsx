@@ -1,40 +1,29 @@
-import { Button, Table } from "antd";
-import React, { useState } from "react";
+import { Button, Table, Form } from "antd";
+import React, { useState, useEffect } from "react";
 import { IoMdAdd } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import HotelForm from "../../components/admin/form/HotelForm";
+import RoomPage from "./RoomPage";
+import {
+  getAllHotel,
+  createHotel,
+  updateHotel,
+  deleteHotelById,
+} from "../../api/hotelapi";
+import noImg from "../../assets/img/common/no_img.jpg";
 
 const HotelPage = ({ getColumnSearchProps }) => {
-  const dataSource = [
-    {
-      key: "1",
-      image:
-        "https://firebasestorage.googleapis.com/v0/b/travel-3b0bf.appspot.com/o/ngwesaung1.png?alt=media&token=53cc4e2e-b1a3-4856-b71f-f651e0130942",
-      name: "Ngwe Saung Yacht Club & Resort",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus ut eos quasi, corrupti nostrum vitae voluptate quaerat quibusdam...",
-      location: "Ngwe Saung",
-      rating: 4.0,
-    },
-    {
-      key: "2",
-      image:
-        "https://firebasestorage.googleapis.com/v0/b/travel-3b0bf.appspot.com/o/ngwesaung2.png?alt=media&token=94433001-e67c-40f4-8909-0ab108086406",
-      name: "Eskala Hotels & Resorts",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus ut eos quasi, corrupti nostrum vitae voluptate quaerat quibusdam...",
-      location: "Ngwe Saung",
-      rating: 4.5,
-    },
-  ];
-
   const columns = [
     {
       title: "Image",
       dataIndex: "image",
       key: "image",
       render: (text, record) => (
-        <img src={record.image} alt="image" style={{ width: "100%" }} />
+        <img
+          src={record.image ? record.image : noImg}
+          alt="image"
+          style={{ width: "100%" }}
+        />
       ),
       width: "10%",
     },
@@ -44,6 +33,17 @@ const HotelPage = ({ getColumnSearchProps }) => {
       key: "name",
       width: "20%",
       ...getColumnSearchProps("name"),
+      render: (text, record) => (
+        <div className="flex gap-4">
+          <Link
+            to={`/admin/room/${record.key}`}
+            // className=" text-red-600"
+            onClick={() => setSelectedHotelId(record.key)}
+          >
+            {record.name}
+          </Link>
+        </div>
+      ),
     },
     {
       title: "Description",
@@ -63,28 +63,33 @@ const HotelPage = ({ getColumnSearchProps }) => {
       title: "Location",
       dataIndex: "location",
       key: "location",
-      width: "30%",
+      width: "10%",
       ...getColumnSearchProps("location"),
     },
     {
       title: "Action",
       dataIndex: "",
+      width: "25%",
       key: "x",
       render: (text, record) => (
         <div className="flex gap-4">
           <span
             className=" cursor-pointer"
             onClick={() => {
-              setSelectedBookId(record.key);
+              setSelectedHotelId(record.key);
               setOpen(true);
               setEditForm(true);
             }}
           >
             Edit
           </span>
-          <Link to={""} className=" text-red-600">
+          {/* <Link
+            to={""}
+            className=" text-red-600"
+            onClick={() => deleteHotel(record.key)}
+          >
             Delete
-          </Link>
+          </Link> */}
         </div>
       ),
     },
@@ -93,9 +98,53 @@ const HotelPage = ({ getColumnSearchProps }) => {
   const [data, setData] = useState([]);
   const [editForm, setEditForm] = useState(false);
   const [open, setOpen] = useState(false);
+  const [selectedHotelId, setSelectedHotelId] = useState(null);
+  const [images, setImages] = useState([]);
+  const [previewImg, setPreviewImg] = useState([]);
+
+  const [form] = Form.useForm();
+
   const showModal = () => {
     setOpen(true);
   };
+  const getHotels = async () => {
+    try {
+      let res = await getAllHotel();
+      const modifiedData = res.data.map((d) => {
+        return {
+          ...d,
+          key: d.id,
+          description: `${d.description.slice(0, 200)}${
+            d.description.length > 200 && "..."
+          }`,
+          image: d.imgUrlList[0],
+        };
+      });
+      setData(modifiedData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const createHotel = async () => {
+    try {
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const deleteHotel = async (id) => {
+    try {
+      let res = await deleteHotelById(id);
+      getHotels();
+      console.log(res);
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getHotels();
+  }, [open]);
   return (
     <>
       <div>
@@ -106,6 +155,9 @@ const HotelPage = ({ getColumnSearchProps }) => {
             icon={<IoMdAdd />}
             iconPosition={"end"}
             onClick={() => {
+              form.resetFields();
+              setPreviewImg([]);
+              setImages([]);
               showModal();
               setEditForm(false);
             }}
@@ -118,9 +170,16 @@ const HotelPage = ({ getColumnSearchProps }) => {
           setOpen={setOpen}
           editForm={editForm}
           setEditForm={setEditForm}
+          selectedHotelId={selectedHotelId}
+          getHotels={getHotels}
+          form={form}
+          images={images}
+          setImages={setImages}
+          previewImg={previewImg}
+          setPreviewImg={setPreviewImg}
         />
       </div>
-      <Table dataSource={dataSource} columns={columns} />
+      <Table dataSource={data} columns={columns} />
     </>
   );
 };

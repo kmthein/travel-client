@@ -2,18 +2,50 @@ import { Avatar, Dropdown, Space } from "antd";
 import React from "react";
 import { BiUser } from "react-icons/bi";
 import { IoIosArrowDown } from "react-icons/io";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUser, userState } from "../../../features/user/UserSlice";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const items = [
     {
       key: "1",
       label: (
-        <a target="_blank" rel="noopener noreferrer">
+        <p
+          onClick={() => {
+            navigate("/");
+          }}
+          className=" w-full"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Go To User Profile
+        </p>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <p
+          onClick={() => {
+            dispatch(logoutUser());
+            navigate("/");
+          }}
+          className=" w-full"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           Logout
-        </a>
+        </p>
       ),
     },
   ];
+
+  const { user } = useSelector(userState);
+
+  console.log(user);
   return (
     <div className=" py-6 px-6 flex justify-between bg-[#1f326d] text-white">
       <div className="ml-10">
@@ -30,12 +62,12 @@ const Header = () => {
           <a onClick={(e) => e.preventDefault()}>
             <div className="flex gap-2">
               <Avatar
-                src="https://www.shutterstock.com/image-photo/portrait-serious-confident-businessman-entrepreneur-260nw-2022462281.jpg"
+                src={user?.image[0]?.imgUrl}
                 size={44}
                 icon={<BiUser />}
               ></Avatar>
               <div>
-                <h5 className="text-sm font-medium mb-1">Admin Name</h5>
+                <h5 className="text-sm font-medium mb-1">{user?.username}</h5>
                 <p className="text-xs text-[#cecece]">Admin</p>
               </div>
               <IoIosArrowDown className="mt-1 ml-2" />
