@@ -13,16 +13,17 @@ const Header = () => {
     {
       key: "1",
       label: (
-        <span
+        <p
           onClick={() => {
             dispatch(logoutUser());
             navigate("/");
           }}
+          className=" w-full"
           target="_blank"
           rel="noopener noreferrer"
         >
           Logout
-        </span>
+        </p>
       ),
     },
   ];

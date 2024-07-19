@@ -44,7 +44,7 @@ const DestinationCard = ({
               <div className="flex flex-col items-center">
                 <FaBus className="text-green-500" />
                 <p className="text-sm text-gray-600">
-                  {bus} Transfer{bus === 1 ? "" : "s"}
+                  {bus} Bus{bus == 1 || bus == 0 ? "" : "es"}
                 </p>
               </div>
 

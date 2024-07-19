@@ -63,12 +63,13 @@ const HotelPage = ({ getColumnSearchProps }) => {
       title: "Location",
       dataIndex: "location",
       key: "location",
-      width: "30%",
+      width: "10%",
       ...getColumnSearchProps("location"),
     },
     {
       title: "Action",
       dataIndex: "",
+      width: "25%",
       key: "x",
       render: (text, record) => (
         <div className="flex gap-4">
@@ -82,13 +83,13 @@ const HotelPage = ({ getColumnSearchProps }) => {
           >
             Edit
           </span>
-          <Link
+          {/* <Link
             to={""}
             className=" text-red-600"
             onClick={() => deleteHotel(record.key)}
           >
             Delete
-          </Link>
+          </Link> */}
         </div>
       ),
     },

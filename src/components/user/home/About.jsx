@@ -9,7 +9,7 @@ const About = () => {
           <h2 className="text-4xl font-bold">
             Start Your Ultimate Travel Planning Experience
           </h2>
-          <p className="my-20 text-xl">
+          <p className="my-20 lg:text-lg text-xl">
             Welcome to TravelTrax, your trusted partner in seamless travel
             planning. Our mission is to make your travel experience as smooth
             and enjoyable as possible by offering a comprehensive platform where
@@ -17,7 +17,7 @@ const About = () => {
             variety of other travel-related services. your gateway to
             extraordinary adventures and unforgettable journeys.
           </p>
-          <p className="text-xl">
+          <p className="lg:text-lg text-xl">
             Whether you're a seasoned traveler or embarking on your first trip,
             our platform is designed to make your travel planning seamless and
             enjoyable. Explore our curated destinations, tailor your
