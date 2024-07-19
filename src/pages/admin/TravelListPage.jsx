@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getAllTravelPlan } from "../../api/travelplan";
-import { Table } from "antd";
+import { Button, Table } from "antd";
+import { CSVLink } from "react-csv";
 
 const TravelListPage = ({ getColumnSearchProps }) => {
   const columns = [
@@ -98,6 +99,9 @@ const TravelListPage = ({ getColumnSearchProps }) => {
       <div>
         <div className="flex justify-between my-4">
           <h4 className=" font-semibold">Travel Lists</h4>
+          <CSVLink data={data} filename="travel_plan.csv">
+            <Button>Export As CSV</Button>
+          </CSVLink>
         </div>
         <Table dataSource={data} columns={columns} />
       </div>

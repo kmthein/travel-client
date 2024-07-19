@@ -102,7 +102,6 @@ function Hotel() {
 
   const fetchAllHotels = async () => {
     const res = await getAllHotels();
-    console.log(res.data);
     if (res.status == 200) {
       if (id) {
         const filteredHotels = res.data.filter((hotel) => hotel.id == id);
@@ -132,7 +131,6 @@ function Hotel() {
   };
 
   const searchHotelHandler = async (values) => {
-    console.log(values);
     let totalPerson = values.guest;
     if (!values.guest) {
       totalPerson = 1;
@@ -154,7 +152,7 @@ function Hotel() {
     setDisabled(false);
   };
 
-  const { hotelPlusFlight } = useSelector(selectState);
+  const { hotelPlusFlight, hotelPlusBus } = useSelector(selectState);
 
   const { search } = useLocation();
 
@@ -168,7 +166,7 @@ function Hotel() {
       <h2 className="text-lg font-semibold mb-10">
         Please choose check in and check out time to search available hotel
       </h2>
-      {hotelPlusFlight && (
+      {(hotelPlusFlight || hotelPlusBus) && (
         <div className="mb-10">
           <SelectStep />
         </div>

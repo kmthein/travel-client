@@ -59,8 +59,6 @@ const SelectBusClassCard = ({ busClassDTOList, busServiceName, busImg }) => {
     }
   };
 
-  console.log(busClassDTOList);
-
   return (
     <div className="my-10">
       {busClassDTOList.map((item) => (
