@@ -23,22 +23,26 @@ const ReviewForm = ({ destination, getReviewsHandler }) => {
   const dispatch = useDispatch();
 
   const reviewSubmitHandler = async () => {
-    dispatch(startLoading());
-    console.log(rate);
-    console.log(input);
-    const formData = new FormData();
-    formData.append("description", input);
-    formData.append("rating", rate);
-    formData.append("userId", user?.id);
-    const res = await createReview(formData);
-    console.log(res);
-    if (res.status == 200) {
-      setInput("");
-      setRate(0);
-      toast.success("Your review completely sent");
+    if (user) {
+      dispatch(startLoading());
+      console.log(rate);
+      console.log(input);
+      const formData = new FormData();
+      formData.append("description", input);
+      formData.append("rating", rate);
+      formData.append("userId", user?.id);
+      const res = await createReview(formData);
+      console.log(res);
+      if (res.status == 200) {
+        setInput("");
+        setRate(0);
+        toast.success("Your review completely sent");
+      }
+      dispatch(endLoading());
+      getReviewsHandler();
+    } else {
+      toast.info("Log in to write a review");
     }
-    dispatch(endLoading());
-    getReviewsHandler();
   };
 
   return (
