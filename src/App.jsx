@@ -29,6 +29,7 @@ import SelectFlightClass from "./components/user/flight/SelectFlightClass";
 import SelectBusClass from "./components/user/bus/SelectBusClass";
 import UserProfilePage from "./pages/user/UserProfilePage";
 import TravelListPage from "./pages/admin/TravelListPage";
+import UserProvider from "./providers/UserProvider";
 
 function App() {
   const {
@@ -101,7 +102,11 @@ function App() {
         },
         {
           path: "/user-profile",
-          element: <UserProfilePage />,
+          element: (
+            <UserProvider>
+              <UserProfilePage />
+            </UserProvider>
+          ),
         },
       ],
     },
