@@ -42,11 +42,15 @@ function Hotel() {
   const [filteredHotel, setFilteredHotel] = useState([]);
   const [daysBetween, setDaysBetween] = useState(null);
   const [disabled, setDisabled] = useState(true);
+  const [rate, setRate] = useState("");
 
   const handleFilterHotel = (e) => {
-    console.log(e.target.value);
-    const rate = e.target.value;
-    const filter = allHotels.filter((hotel) => hotel.rating == rate);
+    setRate(e.target.value);
+    const r = e.target.value;
+    const filter =
+      r === ""
+        ? allHotels
+        : allHotels.filter((hotel) => Math.floor(hotel.rating) == r);
     setFilteredHotel(filter);
   };
 
@@ -58,7 +62,14 @@ function Hotel() {
       label: <h2 className="font-bold text-lg">Rating</h2>,
       children: (
         <div className="flex flex-wrap flex-col gap-2">
-          <Radio.Group onChange={handleFilterHotel}>
+          <Radio.Group
+            onChange={handleFilterHotel}
+            defaultValue={rate}
+            value={rate}
+          >
+            <div className="flex flex-col mb-1">
+              <Radio value={""}>default</Radio>
+            </div>
             <div className="flex flex-col mb-1">
               <Radio value={"5"}>5 stars</Radio>
             </div>
@@ -103,6 +114,7 @@ function Hotel() {
   const fetchAllHotels = async () => {
     const res = await getAllHotels();
     if (res.status == 200) {
+      setFilteredHotel(res.data);
       if (id) {
         const filteredHotels = res.data.filter((hotel) => hotel.id == id);
         filteredHotels.map((hotel) => form.setFieldValue("hotel", hotel.name));
@@ -147,8 +159,10 @@ function Hotel() {
     formData.append("checkInDate", formattedDate(values.checkin));
     const res = await getAvailableHotels(formData);
     if (res.data.length > 0) {
+      setAllHotels(res.data);
       setFilteredHotel(res.data);
     }
+    setRate("");
     setDisabled(false);
   };
 
@@ -241,158 +255,84 @@ function Hotel() {
         </div>
         <div className="w-4/5">
           <h2 className="text-2xl font-bold mb-4">All Hotels</h2>
-          {filteredHotel &&
-            filteredHotel.length > 0 &&
-            filteredHotel.map((hotel, index) => (
-              <div
-                key={index}
-                className="flex gap-4 mb-6 p-4 border border-gray-300 rounded-lg shadow-sm"
-              >
-                <div className="w-1/3">
-                  <Image
-                    src={
-                      hotel?.imgUrlList.length > 0 ? hotel.imgUrlList[0] : noImg
-                    }
-                    width="200px"
-                    height="200px"
-                    className="object-cover"
-                  />
-                </div>
-                <div className="w-2/3">
-                  <div className="flex justify-between items-center mb-2">
-                    <p className="text-lg font-bold">{hotel.name}</p>
-                    {/* <p className="text-lg font-bold">USD 72</p> */}
+          <>
+            {filteredHotel &&
+              filteredHotel.map((hotel, index) => (
+                <div
+                  key={index}
+                  className="flex gap-4 mb-6 p-4 border border-gray-300 rounded-lg shadow-sm"
+                >
+                  <div className="w-1/3">
+                    <Image
+                      src={
+                        hotel?.imgUrlList.length > 0
+                          ? hotel.imgUrlList[0]
+                          : noImg
+                      }
+                      width="200px"
+                      height="200px"
+                      className="object-cover"
+                    />
                   </div>
-                  <Rate
-                    value={hotel.rating}
-                    disabled
-                    className="text-sm mb-2"
-                  />
-                  {/* <div className="flex items-center mb-4">
+                  <div className="w-2/3">
+                    <div className="flex justify-between items-center mb-2">
+                      <p className="text-lg font-bold">{hotel.name}</p>
+                      {/* <p className="text-lg font-bold">USD 72</p> */}
+                    </div>
+                    <Rate
+                      value={hotel.rating}
+                      disabled
+                      className="text-sm mb-2"
+                    />
+                    {/* <div className="flex items-center mb-4">
                     <FaLocationDot className="text-blue-400 mr-2" />
                     <p className="text-base font-semibold text-blue-400">
                       {hotel?.destination?.name}
                     </p>
                   </div> */}
-                  <p className="mb-4">This property offers:</p>
-                  <div className="flex justify-between">
-                    <div className="flex gap-2">
-                      <Button className="rounded-lg">Breakfast</Button>
-                      <Button className="rounded-lg">Sea View</Button>
-                      <Button className="rounded-lg">Free Wifi</Button>
-                    </div>
-                    <div>
-                      <Button
-                        className="bg-blue-500 text-white p-3"
-                        disabled={disabled}
-                        onClick={() => {
-                          dispatch(
-                            addPlan({
-                              checkInDate,
-                              checkOutDate,
-                              hotel,
-                              totalNight: daysBetween,
-                            })
-                          );
-                          if (search == "?flightpackage") {
-                            navigate(`/rooms?flightpackage`);
-                          } else if (search == "?buspackage") {
-                            navigate(`/rooms?buspackage`);
-                          } else {
-                            navigate(`/rooms?hotel=${hotel.id}`);
-                            dispatch(selectHotel());
-                          }
-                        }}
-                      >
-                        Select Room
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          {filteredHotel?.length == 0 &&
-            allHotels &&
-            allHotels.length > 0 &&
-            allHotels.map((hotel, index) => (
-              <div
-                key={index}
-                className="flex gap-4 mb-6 p-4 border border-gray-300 rounded-lg shadow-sm"
-              >
-                <div className="w-1/3">
-                  <Image
-                    src={
-                      hotel?.imgUrlList.length > 0 ? hotel.imgUrlList[0] : noImg
-                    }
-                    width="200px"
-                    height="200px"
-                    className="object-cover"
-                  />
-                </div>
-                <div className="w-2/3">
-                  <div className="flex justify-between items-center mb-2">
-                    <p className="text-lg font-bold">{hotel.name}</p>
-                    {/* <p className="text-lg font-bold">USD 72</p> */}
-                  </div>
-                  <Rate
-                    value={hotel.rating}
-                    disabled
-                    className="text-sm mb-2"
-                  />
-                  {/* <div className="flex items-center mb-4">
-                    <FaLocationDot className="text-blue-400 mr-2" />
-                    <p className="text-base font-semibold text-blue-400">
-                      {hotel?.destination?.name}
-                    </p>
-                  </div> */}
-                  <p className="mb-4">This property offers:</p>
-                  <div className="flex justify-between">
-                    <div className="flex gap-2">
-                      <Button className="rounded-lg">Breakfast</Button>
-                      <Button className="rounded-lg">Sea View</Button>
-                      <Button className="rounded-lg">Free Wifi</Button>
-                    </div>
-                    <div>
-                      <Button
-                        className="bg-blue-500 text-white p-3"
-                        disabled={disabled}
-                        onClick={() => {
-                          if (!checkInDate) {
-                            toast.error("Check In Date can't be empty");
-                            return;
-                          }
-                          if (!checkOutDate) {
-                            toast.error("Check Out Date can't be empty");
-                            return;
-                          }
-                          dispatch(
-                            addPlan({
-                              checkInDate,
-                              checkOutDate,
-                              hotel,
-                              totalNight: daysBetween,
-                            })
-                          );
-                          if (search == "?flightpackage") {
-                            navigate(`/rooms?flightpackage`);
-                          } else if (search == "?buspackage") {
-                            navigate(`/rooms?buspackage`);
-                          } else {
-                            navigate(`/rooms?hotel=${hotel.id}`);
-                            dispatch(selectHotel());
-                          }
-                        }}
-                      >
-                        Select Room
-                      </Button>
+                    <p className="mb-4">This property offers:</p>
+                    <div className="flex justify-between">
+                      <div className="flex gap-2">
+                        <Button className="rounded-lg">Breakfast</Button>
+                        <Button className="rounded-lg">Sea View</Button>
+                        <Button className="rounded-lg">Free Wifi</Button>
+                      </div>
+                      <div>
+                        <Button
+                          className="bg-blue-500 text-white p-3"
+                          disabled={disabled}
+                          onClick={() => {
+                            dispatch(
+                              addPlan({
+                                checkInDate,
+                                checkOutDate,
+                                hotel,
+                                totalNight: daysBetween,
+                              })
+                            );
+                            if (search == "?flightpackage") {
+                              navigate(`/rooms?flightpackage`);
+                            } else if (search == "?buspackage") {
+                              navigate(`/rooms?buspackage`);
+                            } else {
+                              navigate(`/rooms?hotel=${hotel.id}`);
+                              dispatch(selectHotel());
+                            }
+                          }}
+                        >
+                          Select Room
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          {filteredHotel.length == 0 && allHotels.length == 0 && (
-            <h5>Hotel Not Available</h5>
-          )}
+              ))}
+          </>
+          <>
+            {filteredHotel.length === 0 && (
+              <h5 className="text-center">Hotel Not Available</h5>
+            )}
+          </>
         </div>
       </div>
     </div>
