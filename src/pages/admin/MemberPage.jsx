@@ -7,15 +7,19 @@ import { userState } from "../../features/user/UserSlice";
 
 const MemberPage = ({ getColumnSearchProps }) => {
   const columns = [
-    {
-      title: "Image",
-      dataIndex: "image",
-      key: "image",
-      render: (text, record) => (
-        <img src={record.image} alt="image" style={{ width: "100%" }} />
-      ),
-      width: "10%",
-    },
+    // {
+    //   title: "Image",
+    //   dataIndex: "image",
+    //   key: "image",
+    //   render: (text, record) => (
+    //     <img
+    //       src={record.image}
+    //       alt="image"
+    //       className=" object-cover w-[80px] h-[80px]"
+    //     />
+    //   ),
+    //   width: "10%",
+    // },
     {
       title: "Username",
       dataIndex: "username",
@@ -68,7 +72,6 @@ const MemberPage = ({ getColumnSearchProps }) => {
         return {
           ...d,
           key: d.id,
-          image: d.image[0]?.imgUrl,
         };
       });
       setData(modifiedData);
