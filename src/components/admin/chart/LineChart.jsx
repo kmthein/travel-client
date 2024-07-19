@@ -10,7 +10,6 @@ const LineChart = () => {
     const formData = new FormData();
     formData.append("year", currentYear);
     const res = await getIncomeByMonth(formData);
-    console.log(res.data);
     setData([{ name: "Income By Month", data: res.data }]);
   };
 

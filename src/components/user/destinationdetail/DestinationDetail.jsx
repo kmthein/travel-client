@@ -39,19 +39,13 @@ const DestinationDetail = ({ destination }) => {
         <div className="mt-8">
           <h2 className="text-2xl font-semibold mb-4">Highlights</h2>
           <ul className="list-disc list-inside text-gray-700 mb-4">
-            {destination?.highlight &&
-              destination.highlight.map((highlight, i) => (
-                <li key={i}>{highlight}</li>
-              ))}
+            {destination?.highlight}
           </ul>
         </div>
         <div>
           <h2 className="text-2xl font-semibold mb-4">Top Places to Visit</h2>
           <ul className="list-disc list-inside text-gray-700">
-            {destination?.topPlace &&
-              destination.topPlace.map((topPlace, i) => (
-                <li key={i}>{topPlace}</li>
-              ))}
+            {destination?.topPlace}
           </ul>
         </div>
       </div>

@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import DestinationForm from "../../components/admin/form/DestinationForm";
 import { getAllDestinations } from "../../api/destination";
 import noImg from "../../assets/img/common/no_img.jpg";
+import { CSVLink } from "react-csv";
 
 const DestinationPage = ({ getColumnSearchProps }) => {
   const [dataSource, setDataSource] = useState([]);
@@ -52,14 +53,14 @@ const DestinationPage = ({ getColumnSearchProps }) => {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      width: "20%",
+      width: "10%",
       ...getColumnSearchProps("name"),
     },
     {
       title: "Country",
       dataIndex: "country",
       key: "country",
-      width: "20%",
+      width: "10%",
       ...getColumnSearchProps("country"),
     },
     {
@@ -109,18 +110,23 @@ const DestinationPage = ({ getColumnSearchProps }) => {
       <div>
         <div className="flex justify-between my-4">
           <h4 className=" font-semibold">All Destinations</h4>
-          <Button
-            type="primary"
-            icon={<IoMdAdd />}
-            iconPosition={"end"}
-            onClick={() => {
-              showModal();
-              setEditForm(false);
-              setSelectedId(null);
-            }}
-          >
-            Add New
-          </Button>
+          <div className="flex gap-3">
+            <CSVLink data={dataSource} filename="all_destinations.csv">
+              <Button>Export As CSV</Button>
+            </CSVLink>
+            <Button
+              type="primary"
+              icon={<IoMdAdd />}
+              iconPosition={"end"}
+              onClick={() => {
+                showModal();
+                setEditForm(false);
+                setSelectedId(null);
+              }}
+            >
+              Add New
+            </Button>
+          </div>
         </div>
         <DestinationForm
           open={open}

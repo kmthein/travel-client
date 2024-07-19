@@ -23,7 +23,6 @@ const Flightpage = () => {
   const flightSchedule = async () => {
     try {
       const res = await getAllAvailableFlight();
-      console.log(res);
       let data = res.data;
       let modifiedData = data.map((item) => {
         return {

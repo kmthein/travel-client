@@ -30,50 +30,63 @@ const SelectStep = () => {
           ? "finish"
           : pathname == `/flights/${id}/class`
           ? "finish"
-          : pathname == "/flights" || pathname == `/buses/${id}/class`
+          : pathname == "/flights" ||
+            pathname == `/buses/${id}/class` ||
+            pathname == "/buses"
           ? "finish"
           : "wait",
       icon: <FaBed />,
     });
   }
   if (flightOnly || hotelPlusFlight || !hotelPlusBus) {
+    if (!hotelOnly && !busOnly) {
+      items.push({
+        title: "Select Flight",
+        status:
+          pathname == "/flights"
+            ? "process"
+            : pathname == "/confirmation" || pathname == `/flights/${id}/class`
+            ? "finish"
+            : "wait",
+        icon: <FaPlane />,
+      });
+      items.push({
+        title: "Select Class",
+        status:
+          pathname === `/flights/${id}/class`
+            ? "process"
+            : pathname === "/rooms"
+            ? "wait"
+            : pathname === "/hotels" || pathname === "/flights"
+            ? "wait"
+            : "finish",
+        icon: <MdOutlineFlightClass />,
+      });
+    }
+  }
+  if (busOnly || hotelPlusBus) {
     items.push({
-      title: "Select Flight",
+      title: "Select Bus",
       status:
-        pathname == "/flights"
+        pathname == "/rooms" || pathname == "/hotels"
+          ? "wait"
+          : pathname == "/buses"
           ? "process"
-          : pathname == "/confirmation" || pathname == `/flights/${id}/class`
-          ? "finish"
-          : "wait",
-      icon: <FaPlane />,
+          : "finish",
+      icon: <FaBus />,
     });
     items.push({
       title: "Select Class",
       status:
-        pathname === `/flights/${id}/class`
+        pathname === `/buses/${id}/class`
           ? "process"
-          : pathname === "/rooms"
-          ? "wait"
-          : pathname === "/hotels" || pathname === "/flights"
+          : pathname == "/buses" || pathname == "/hotels"
           ? "wait"
           : "finish",
       icon: <MdOutlineFlightClass />,
     });
   }
-  if (busOnly || hotelPlusBus) {
-    items.push({
-      title: "Select Bus",
-      status: pathname == "/rooms" ? "wait" : "finish",
-      icon: <FaBus />,
-    });
-  }
-  if (busOnly) {
-    items.push({
-      title: "Select Class",
-      status: pathname === `/buses/${id}/class` ? "process" : "finish",
-      icon: <MdOutlineFlightClass />,
-    });
-  }
+
   items.push({
     title: "Confirmation",
     status: pathname == "/confirmation" ? "process" : "wait",

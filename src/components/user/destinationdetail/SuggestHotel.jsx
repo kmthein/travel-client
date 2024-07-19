@@ -12,8 +12,8 @@ const SuggestHotel = ({ hotels, name }) => {
           </h2>
           <div className="flex flex-wrap gap-[20px] mb-3">
             {hotels.slice(0, 3).map((hotel, i) => (
-              <Link to={`/hotels?id=${hotel.id}`} className="card_gap">
-                <SuggestHotelItem hotel={hotel} key={i} />
+              <Link to={`/hotels?id=${hotel.id}`} key={i} className="card_gap">
+                <SuggestHotelItem hotel={hotel} />
               </Link>
             ))}
           </div>

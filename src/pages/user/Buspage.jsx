@@ -6,6 +6,7 @@ import { dateformat } from "../../utils/dateformat";
 import FilterBusClass from "../../components/user/bus/FilterBusClass";
 import { IoReturnUpBack } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import SelectStep from "../../components/user/common/SelectStep";
 
 const Buspage = () => {
   const [allbus, setAllBus] = useState([]);
@@ -43,6 +44,9 @@ const Buspage = () => {
 
   return (
     <div className="w-[70%] mx-auto">
+      <div className="my-10">
+        <SelectStep />
+      </div>
       <TransportTicketSearch isFlight={false} choice={choice} />
       {filterBus === null ? (
         <ScheduleItem data={allbus} isFlight={false} />
