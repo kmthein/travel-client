@@ -33,7 +33,7 @@ export const getRoomById = async (id) => {
 
 export const updateRoom = async (id, payload) => {
   try {
-    const response = await api.put(`/api/room/${id}`, payload, {
+    const response = await api.put(`/api/room/edit/${id}`, payload, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
